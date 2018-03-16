@@ -1,13 +1,13 @@
-import * as Koa from 'koa';
-import * as Router from 'koa-router';
-import * as koaBody from 'koa-body';
-import * as cors from '@koa/cors';
+import * as cors from "@koa/cors";
+import * as Koa from "koa";
+import * as koaBody from "koa-body";
+import * as Router from "koa-router";
 
-import { makeId } from './utils';
-import { gameReadyEvent, gameJoinEvent, playerWebsocketSet } from './events';
-import { initialState, configureStore } from './store';
+import { gameJoinEvent, gameReadyEvent, playerWebsocketSet } from "./events";
+import { configureStore, initialState } from "./store";
+import { makeId } from "./utils";
 
-const websockify = require('koa-websocket');
+const websockify = require("koa-websocket");
 
 const app = websockify(new Koa());
 const router = new Router();
@@ -16,13 +16,13 @@ app.use(cors());
 
 const store = configureStore(initialState, [ playerWebsocketSet, gameJoinEvent, gameReadyEvent ]);
 
-router.get('/ws', async (ctx) => {
-    ctx.websocket.on('message', (message: string) => {
+router.get("/ws", async (ctx) => {
+    ctx.websocket.on("message", (message: string) => {
       // tslint:disable-next-line
       console.log(message);
       const parsed = JSON.parse(message);
       store.dispatch({
-        type: 'PLAYER:WEBSOCKET:SET',
+        type: "PLAYER:WEBSOCKET:SET",
         playerId: parsed.playerId,
         payload: ctx.websocket,
       });
@@ -30,7 +30,7 @@ router.get('/ws', async (ctx) => {
     });
 });
 
-router.get('/new', async (ctx) => {
+router.get("/new", async (ctx) => {
     const gameCode = makeId();
     // const milliseconds = (new Date).getTime();
 

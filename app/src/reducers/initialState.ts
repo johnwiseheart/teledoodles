@@ -1,9 +1,9 @@
-import { Router } from 'react-router';
-import { WebsocketStatus, Page, StoreState } from '../store';
-import { TurnType } from 'teledoodles-lib';
+import { Router } from "react-router";
+import { TurnType } from "teledoodles-lib";
+import { IStoreState, Page, WebsocketStatus } from "../store";
 
 // tslint:disable
-const initialState: StoreState = {
+const initialState: IStoreState = {
     game: {
         gameCode: '',
         players: {},

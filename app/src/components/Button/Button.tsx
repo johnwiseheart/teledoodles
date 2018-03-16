@@ -1,19 +1,19 @@
-import * as React from 'react';
-import * as classNames from 'classnames';
-import './Button.scss';
+import * as classNames from "classnames";
+import * as React from "react";
+import "./Button.scss";
 
-export interface ButtonProps {
+export interface IButtonProps {
     selected?: boolean;
     className?: string;
     text: string;
     onClick: () => void;
 }
 
-export const Button = ({className, selected, text, onClick}: ButtonProps) => {
+export const Button = ({className, selected, text, onClick}: IButtonProps) => {
     const componentClassName = classNames(
-        'button',
+        "button",
         className,
-        { 'selected': selected },
+        { selected },
     );
 
     return (

@@ -1,24 +1,24 @@
-import { StoreState, Message, Page } from '../store';
-import { Dispatch } from 'react-redux';
-import actionCreatorFactory from 'typescript-fsa';
-import { getPlayerInfo } from '../util';
+import { Dispatch } from "react-redux";
+import actionCreatorFactory from "typescript-fsa";
+import { IStoreState, Message, Page } from "../store";
+import { getPlayerInfo } from "../util";
 
 const actionCreator = actionCreatorFactory();
 
-export const gameJoin = actionCreator<{gameCode: string}>('GAME:JOIN');
-export const gameReady = actionCreator<boolean>('GAME:READY');
+export const gameJoin = actionCreator<{gameCode: string}>("GAME:JOIN");
+export const gameReady = actionCreator<boolean>("GAME:READY");
 
-export const pageChange = actionCreator<Page>('PAGE:CHANGE');
+export const pageChange = actionCreator<Page>("PAGE:CHANGE");
 
-export const websocketSend = actionCreator<Message>('WEBSOCKET:SEND');
-export const websocketConnect = actionCreator<{ messages?: Message[] }>('WEBSOCKET:CONNECT');
-export const websocketDisconnect = actionCreator('WEBSOCKET:DISCONNECT');
-export const websocketOpen = actionCreator('WEBSOCKET:OPEN');
-export const websocketClose = actionCreator<{ event: Event }>('WEBSOCKET:CLOSE');
-export const websocketMessage = actionCreator<{ event: MessageEvent }>('WEBSOCKET:MESSAGE');
+export const websocketSend = actionCreator<Message>("WEBSOCKET:SEND");
+export const websocketConnect = actionCreator<{ messages?: Message[] }>("WEBSOCKET:CONNECT");
+export const websocketDisconnect = actionCreator("WEBSOCKET:DISCONNECT");
+export const websocketOpen = actionCreator("WEBSOCKET:OPEN");
+export const websocketClose = actionCreator<{ event: Event }>("WEBSOCKET:CLOSE");
+export const websocketMessage = actionCreator<{ event: MessageEvent }>("WEBSOCKET:MESSAGE");
 
 export const joinGame = (gameCode: string) => {
-    return (dispatch: Dispatch<StoreState>) => {
+    return (dispatch: Dispatch<IStoreState>) => {
         const playerInfo = getPlayerInfo();
         if (playerInfo) {
             const { id: playerId, username } = playerInfo;
@@ -27,7 +27,7 @@ export const joinGame = (gameCode: string) => {
             // tslint:disable-next-line
             console.log(gameCode);
             dispatch(websocketConnect({
-                messages: [{ type: 'GAME:JOIN', gameCode, playerId, payload: { username } }],
+                messages: [{ type: "GAME:JOIN", gameCode, playerId, payload: { username } }],
             }));
             dispatch(pageChange(Page.LOBBY));
         }
@@ -35,8 +35,8 @@ export const joinGame = (gameCode: string) => {
 };
 
 export const newGame = () => {
-    return (dispatch: Dispatch<StoreState>) => {
-        return fetch('http://localhost:5000/new')
+    return (dispatch: Dispatch<IStoreState>) => {
+        return fetch("http://localhost:5000/new")
             .then((resp: Response) => resp.json())
             .then((json) => {
                 const { gameCode } = json;
@@ -47,19 +47,19 @@ export const newGame = () => {
 };
 
 export const readyGame = (isReady: boolean) => {
-    return (dispatch: Dispatch<StoreState>, getState: () => StoreState) => {
+    return (dispatch: Dispatch<IStoreState>, getState: () => IStoreState) => {
         dispatch(websocketSend({
-            type: 'GAME:READY',
             gameCode: getState().game.gameCode,
-            playerId: getPlayerInfo().id,
             payload: { isReady },
+            playerId: getPlayerInfo().id,
+            type: "GAME:READY",
         }));
         dispatch(gameReady(isReady));
     };
 };
 
 export const changePage = (page: Page) => {
-    return (dispatch: Dispatch<StoreState>) => {
+    return (dispatch: Dispatch<IStoreState>) => {
         dispatch(pageChange(page));
-    }
-}
+    };
+};

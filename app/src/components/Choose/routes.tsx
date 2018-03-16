@@ -1,18 +1,18 @@
-import * as React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router';
-import { Button } from '../Button/Button';
-import { Input } from '../Input/Input';
-import './Choose.scss';
+import * as React from "react";
+import { RouteComponentProps, withRouter } from "react-router";
+import { Button } from "../Button/Button";
+import { Input } from "../Input/Input";
+import "./Choose.scss";
 
-export interface ChooseRouteProps extends RouteComponentProps<{}> {}
+export interface IChooseRouteProps extends RouteComponentProps<{}> {}
 
-interface ChooseRouteState {
+interface IChooseRouteState {
     text: string;
 }
 
-class UnconnectedChooseRoute extends React.Component<ChooseRouteProps, ChooseRouteState> {
-    public state: ChooseRouteState = {
-        text: '',
+class UnconnectedChooseRoute extends React.Component<IChooseRouteProps, IChooseRouteState> {
+    public state: IChooseRouteState = {
+        text: "",
     };
 
     public render() {

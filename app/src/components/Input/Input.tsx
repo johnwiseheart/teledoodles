@@ -1,14 +1,14 @@
-import * as React from 'react';
-import './Input.scss';
+import * as React from "react";
+import "./Input.scss";
 
-export interface InputProps {
+export interface IInputProps {
     autoFocus?: boolean;
     placeholder?: string;
     value: string;
     onChange: (value: string) => void;
 }
 
-export const Input = ({ autoFocus, placeholder, value, onChange }: InputProps) => {
+export const Input = ({ autoFocus, placeholder, value, onChange }: IInputProps) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         onChange(event.target.value);
     };

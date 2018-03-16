@@ -1,32 +1,34 @@
-import * as React from 'react';
-import { Button } from '../Button/Button';
-import './PlayerInfo.scss';
-import { Input } from '../Input/Input';
-import { uuidv4, getPlayerInfo } from '../../util';
-import { connect, Dispatch } from 'react-redux';
-import { StoreState } from '../../store';
-import { push as historyPush } from 'react-router-redux';
+import * as React from "react";
+import { connect, Dispatch } from "react-redux";
+import { push as historyPush } from "react-router-redux";
+import { IStoreState } from "../../store";
+import { getPlayerInfo, uuidv4 } from "../../util";
+import { Button } from "../Button/Button";
+import { Input } from "../Input/Input";
+import "./PlayerInfo.scss";
 
-export interface PlayerInfoRouteOwnProps {}
+export interface IPlayerInfoRouteOwnProps {}
 
-export interface PlayerInfoRouteStateProps {}
+export interface IPlayerInfoRouteStateProps {}
 
-export interface PlayerInfoRouteDispatchProps {
+export interface IPlayerInfoRouteDispatchProps {
     push: (route: string) => void;
 }
 
-export type PlayerInfoRouteProps = PlayerInfoRouteOwnProps & PlayerInfoRouteStateProps & PlayerInfoRouteDispatchProps;
+export type IPlayerInfoRouteProps = IPlayerInfoRouteOwnProps
+    & IPlayerInfoRouteStateProps
+    & IPlayerInfoRouteDispatchProps;
 
-interface PlayerInfoRouteState {
+interface IPlayerInfoRouteState {
     name: string;
 }
 
-class UnconnectedPlayerInfoRoute extends React.Component<PlayerInfoRouteProps, PlayerInfoRouteState> {
-    public state: PlayerInfoRouteState = {
-        name: '',
+class UnconnectedPlayerInfoRoute extends React.Component<IPlayerInfoRouteProps, IPlayerInfoRouteState> {
+    public state: IPlayerInfoRouteState = {
+        name: "",
     };
 
-    componentDidMount() {
+    public componentDidMount() {
         if (getPlayerInfo() != null) {
             this.pushToHome();
         }
@@ -50,7 +52,7 @@ class UnconnectedPlayerInfoRoute extends React.Component<PlayerInfoRouteProps, P
     private handleSubmit = () => {
         const { name } = this.state;
         if (name.length > 0) {
-            localStorage.setItem('player', JSON.stringify({
+            localStorage.setItem("player", JSON.stringify({
                 username: name,
                 id: uuidv4(),
             }));
@@ -60,20 +62,20 @@ class UnconnectedPlayerInfoRoute extends React.Component<PlayerInfoRouteProps, P
 
     private pushToHome = () => {
         const { push } = this.props;
-        push('/');
+        push("/");
     }
 }
 
-const mapStateToProps = (state: StoreState) => {
+const mapStateToProps = (state: IStoreState) => {
     return {};
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<StoreState>) => {
+const mapDispatchToProps = (dispatch: Dispatch<IStoreState>) => {
     return {
         push: (route: string) => dispatch(historyPush(route)),
     };
 };
 
 export const PlayerInfoRoute = connect<
-PlayerInfoRouteStateProps, PlayerInfoRouteDispatchProps, PlayerInfoRouteOwnProps
+IPlayerInfoRouteStateProps, IPlayerInfoRouteDispatchProps, IPlayerInfoRouteOwnProps
 >(mapStateToProps, mapDispatchToProps)(UnconnectedPlayerInfoRoute);

@@ -1,38 +1,38 @@
-import * as React from 'react';
-import { Button } from '../Button/Button';
-import './Home.scss';
-import { Input } from '../Input/Input';
-import { connect, Dispatch } from 'react-redux';
-import { StoreState } from '../../store';
-import { joinGame as joinGameAction, newGame as newGameAction } from '../../actions';
+import * as React from "react";
+import { connect, Dispatch } from "react-redux";
+import { joinGame as joinGameAction, newGame as newGameAction } from "../../actions";
+import { IStoreState } from "../../store";
+import { Button } from "../Button/Button";
+import { Input } from "../Input/Input";
+import "./Home.scss";
 
-export interface HomeRouteOwnProps {}
+export interface IHomeRouteOwnProps {}
 
-export interface HomeRouteStateProps {}
+export interface IHomeRouteStateProps {}
 
-export interface HomeRouteDispatchProps {
+export interface IHomeRouteDispatchProps {
     joinGame: (gameCode: string) => void;
     newGame: () => void;
 }
 
-export type HomeRouteProps = HomeRouteOwnProps & HomeRouteStateProps & HomeRouteDispatchProps;
+export type HomeRouteProps = IHomeRouteOwnProps & IHomeRouteStateProps & IHomeRouteDispatchProps;
 
-interface HomeRouteState {
+interface IHomeRouteState {
     isOverlayOpen: boolean;
     gameCode: string;
 }
 
-class UnconnectedHomeRoute extends React.Component<HomeRouteProps, HomeRouteState> {
-    public state: HomeRouteState = {
+class UnconnectedHomeRoute extends React.Component<HomeRouteProps, IHomeRouteState> {
+    public state: IHomeRouteState = {
+        gameCode: "",
         isOverlayOpen: false,
-        gameCode: '',
     };
 
     public render() {
         const { isOverlayOpen } = this.state;
         const { newGame } = this.props;
 
-        const playerInfo = localStorage.getItem('player');
+        const playerInfo = localStorage.getItem("player");
         const playerName = playerInfo != null
             ? JSON.parse(playerInfo).username
             : undefined;
@@ -49,7 +49,7 @@ class UnconnectedHomeRoute extends React.Component<HomeRouteProps, HomeRouteStat
                 <div className="panel">
                     <p>Teledoodles is an implementation of the telephone game (also known also as chinese whispers).</p>
                     <p>
-                        Instead of whispering, teledoodles players use their mobile devices to draw doodles{' '}
+                        Instead of whispering, teledoodles players use their mobile devices to draw doodles{" "}
                         describing the words.
                     </p>
                 </div>
@@ -94,11 +94,11 @@ class UnconnectedHomeRoute extends React.Component<HomeRouteProps, HomeRouteStat
     }
 }
 
-const mapStateToProps = (state: StoreState): HomeRouteStateProps => {
+const mapStateToProps = (state: IStoreState): IHomeRouteStateProps => {
     return {};
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<StoreState>): HomeRouteDispatchProps => {
+const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): IHomeRouteDispatchProps => {
     return {
         joinGame: (gameCode: string) => dispatch(joinGameAction(gameCode)),
         newGame: () => dispatch(newGameAction()),
@@ -106,7 +106,7 @@ const mapDispatchToProps = (dispatch: Dispatch<StoreState>): HomeRouteDispatchPr
 };
 
 export const HomeRoute = connect<
-    HomeRouteStateProps,
-    HomeRouteDispatchProps,
-    HomeRouteOwnProps
+    IHomeRouteStateProps,
+    IHomeRouteDispatchProps,
+    IHomeRouteOwnProps
 >(mapStateToProps, mapDispatchToProps)(UnconnectedHomeRoute);

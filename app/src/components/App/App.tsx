@@ -1,25 +1,24 @@
-import * as React from 'react';
-import { withRouter, RouteComponentProps, Route } from 'react-router';
-import './App.scss';
-import { HomeRoute } from '../Home/routes';
-import { LobbyRoute } from '../Lobby/routes';
-import { ChooseRoute } from '../Choose/routes';
-import { connect } from 'react-redux';
-import { StoreState, Page } from '../../store';
-import { getPlayerInfo } from '../../util';
-import { PlayerInfoRoute } from '../PlayerInfo/routes';
+import * as React from "react";
+import { connect } from "react-redux";
+import { Route, RouteComponentProps, withRouter } from "react-router";
+import { IStoreState, Page } from "../../store";
+import { getPlayerInfo } from "../../util";
+import { ChooseRoute } from "../Choose/routes";
 import { DoodleRoute } from "../Doodle/routes";
+import { HomeRoute } from "../Home/routes";
+import { LobbyRoute } from "../Lobby/routes";
+import { PlayerInfoRoute } from "../PlayerInfo/routes";
+import "./App.scss";
 
-interface AppOwnProps {}
+interface IAppOwnProps {}
 
-interface AppStateProps {
+interface IAppStateProps {
   page: Page;
 }
 
-interface AppDispatchProps {
-}
+interface IAppDispatchProps {}
 
-type AppProps = AppOwnProps & AppStateProps & AppDispatchProps & RouteComponentProps<{ gameCode: string}>;
+type AppProps = IAppOwnProps & IAppStateProps & IAppDispatchProps & RouteComponentProps<{ gameCode: string}>;
 
 class UnconnectedApp extends React.Component<AppProps, {}> {
   public render() {
@@ -57,12 +56,12 @@ class UnconnectedApp extends React.Component<AppProps, {}> {
   // }
 }
 
-const mapStateToProps = (state: StoreState) => {
+const mapStateToProps = (state: IStoreState) => {
   return {
     page: state.page,
   };
 };
 
 export const App = withRouter(
-  connect<AppStateProps, AppDispatchProps, AppOwnProps>(mapStateToProps)(UnconnectedApp)
+  connect<IAppStateProps, IAppDispatchProps, IAppOwnProps>(mapStateToProps)(UnconnectedApp),
 );

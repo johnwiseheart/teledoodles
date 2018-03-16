@@ -1,9 +1,8 @@
-import { WebsocketStatus, Page } from '../store';
-import initialState from './initialState';
-import { gameJoin, websocketMessage, websocketOpen, websocketClose, websocketConnect, pageChange } from '../actions';
-import { Action } from 'redux';
-import { isType } from 'typescript-fsa';
-import { Game } from "teledoodles-lib";
+import { Action } from "redux";
+import { isType } from "typescript-fsa";
+import { gameJoin, pageChange, websocketClose, websocketConnect, websocketMessage, websocketOpen } from "../actions";
+import { Page, WebsocketStatus } from "../store";
+import initialState from "./initialState";
 
 const page = (state: Page = initialState.page, action: Action): Page => {
   if (isType(action, pageChange)) {

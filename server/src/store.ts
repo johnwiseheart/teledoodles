@@ -1,40 +1,40 @@
-import * as events from 'events';
+import * as events from "events";
 
-import { Game, LISTENER_EVENT } from 'teledoodles-lib';
+import { IGame, LISTENER_EVENT } from "teledoodles-lib";
 
-export interface StoreState {
-    games: { [gameCode: string]: Game };
+export interface IStoreState {
+    games: { [gameCode: string]: IGame };
     players: { [playerId: string]: WebSocket };
 }
 
-export interface ListenerEvent {
+export interface IListenerEvent {
     type: string;
     playerId: string;
     // tslint:disable-next-line
     payload: any;
 }
 
-export interface GameEvent extends ListenerEvent {
+export interface IGameEvent extends IListenerEvent {
     gameCode: string;
 }
 
 // tslint:disable-next-line
-export const eventIsGameEvent = (event: any): event is GameEvent => {
-    return event.type.startsWith('GAME:');
+export const eventIsGameEvent = (event: any): event is IGameEvent => {
+    return event.type.startsWith("GAME:");
 };
 
 // export type SetState = (newState: Partial<StoreState>) => void;
 
-export type Listener = (state: StoreState, event: ListenerEvent) => StoreState;
+export type Listener = (state: IStoreState, event: IListenerEvent) => IStoreState;
 
-export type ListenerInfo = { type: string, listener: Listener };
+export interface IListenerInfo { type: string; listener: Listener; }
 
-export const configureStore = (initState: StoreState, listeners: Listener[]) => {
+export const configureStore = (initState: IStoreState, listeners: Listener[]) => {
     const eventEmitter = new events.EventEmitter();
 
-    let state: StoreState = initState;
+    let state: IStoreState = initState;
 
-    listeners.forEach(listener => {
+    listeners.forEach((listener) => {
         eventEmitter.on(LISTENER_EVENT, (data) => {
             const newState = listener(state, data);
             state = newState;
@@ -42,13 +42,13 @@ export const configureStore = (initState: StoreState, listeners: Listener[]) => 
     });
 
     return {
-        dispatch: (event: ListenerEvent) => {
+        dispatch: (event: IListenerEvent) => {
             return eventEmitter.emit(LISTENER_EVENT, event);
-        }
+        },
     };
 };
 
-export const initialState: StoreState = {
+export const initialState: IStoreState = {
     games: {},
-    players: {}
+    players: {},
 };

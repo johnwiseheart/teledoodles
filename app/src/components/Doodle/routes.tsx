@@ -1,17 +1,17 @@
-import * as React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router';
-import Canvas from '../Canvas/Canvas';
-import { Button } from '../Button/Button';
-import './Doodle.scss';
+import * as React from "react";
+import { RouteComponentProps, withRouter } from "react-router";
+import { Button } from "../Button/Button";
+import Canvas from "../Canvas/Canvas";
+import "./Doodle.scss";
 
-export interface DoodleRouteProps extends RouteComponentProps<{}> {}
+export interface IDoodleRouteProps extends RouteComponentProps<{}> {}
 
-interface DoodleRouteState {
+interface IDoodleRouteState {
     isOverlayOpen: boolean;
 }
 
-class UnconnectedDoodleRoute extends React.Component<DoodleRouteProps, DoodleRouteState> {
-    public state: DoodleRouteState = {
+class UnconnectedDoodleRoute extends React.Component<IDoodleRouteProps, IDoodleRouteState> {
+    public state: IDoodleRouteState = {
         isOverlayOpen: false,
     };
 

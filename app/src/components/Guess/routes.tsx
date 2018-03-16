@@ -1,21 +1,21 @@
-import * as React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router';
-import DoodleViewer from '../DoodleViewer/DoodleViewer';
-import { Button } from '../Button/Button';
-import { Input } from '../Input/Input';
-import './Guess.scss';
+import * as React from "react";
+import { RouteComponentProps, withRouter } from "react-router";
+import { Button } from "../Button/Button";
+import DoodleViewer from "../DoodleViewer/DoodleViewer";
+import { Input } from "../Input/Input";
+import "./Guess.scss";
 
-const arrows = require('./arrows.svg');
+const arrows = require("./arrows.svg");
 
-export interface GuessRouteProps extends RouteComponentProps<{}> {}
+export interface IGuessRouteProps extends RouteComponentProps<{}> {}
 
-interface GuessRouteState {
+interface IGuessRouteState {
     text: string;
 }
 
-class UnconnectedGuessRoute extends React.Component<GuessRouteProps, GuessRouteState> {
-    public state: GuessRouteState = {
-        text: '',
+class UnconnectedGuessRoute extends React.Component<IGuessRouteProps, IGuessRouteState> {
+    public state: IGuessRouteState = {
+        text: "",
     };
 
     public render() {

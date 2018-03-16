@@ -1,40 +1,40 @@
-import * as React from 'react';
-import * as classNames from 'classnames';
-import { RouteComponentProps } from 'react-router';
-import { Button } from '../Button/Button';
-import { connect, Dispatch } from 'react-redux';
-import { joinGame, readyGame as readyGameAction } from '../../actions';
-import { StoreState, WebsocketStatus } from '../../store';
-import { Player } from "teledoodles-lib";
-import './Lobby.scss';
+import * as classNames from "classnames";
+import * as React from "react";
+import { connect, Dispatch } from "react-redux";
+import { RouteComponentProps } from "react-router";
+import { IPlayer } from "teledoodles-lib";
+import { joinGame, readyGame as readyGameAction } from "../../actions";
+import { IStoreState, WebsocketStatus } from "../../store";
+import { Button } from "../Button/Button";
+import "./Lobby.scss";
 
-interface LobbyRouteOwnProps extends RouteComponentProps< { gameCode: string} > {
+interface ILobbyRouteOwnProps extends RouteComponentProps< { gameCode: string} > {
 
 }
 
-interface LobbyRouteStateProps {
+interface ILobbyRouteStateProps {
     gameCode: string;
-    players: { [id: string]: Player };
+    players: { [id: string]: IPlayer };
     websocketStatus: WebsocketStatus;
 }
 
-interface LobbyRouteDispatchProps {
+interface ILobbyRouteDispatchProps {
     joinGame: (gameCode: string) => void;
     readyGame: (isReady: boolean) => void;
 }
 
-type LobbyRouteProps = LobbyRouteOwnProps & LobbyRouteStateProps & LobbyRouteDispatchProps;
+type LobbyRouteProps = ILobbyRouteOwnProps & ILobbyRouteStateProps & ILobbyRouteDispatchProps;
 
-interface LobbyRouteState {
+interface ILobbyRouteState {
     isReady: boolean;
 }
 
-class UnconnectedLobbyRoute extends React.Component<LobbyRouteProps, LobbyRouteState> {
-    public state: LobbyRouteState = {
+class UnconnectedLobbyRoute extends React.Component<LobbyRouteProps, ILobbyRouteState> {
+    public state: ILobbyRouteState = {
         isReady: false,
     };
 
-    componentDidMount() {
+    public componentDidMount() {
         const { match, websocketStatus } = this.props;
         // if the websocket is closed at this point, the user has
         // entered the lobby directly, so we need to start the game here
@@ -48,7 +48,7 @@ class UnconnectedLobbyRoute extends React.Component<LobbyRouteProps, LobbyRouteS
         const { isReady } = this.state;
         const { gameCode } = this.props;
 
-        const readyText = isReady ? 'Ready to Play' : 'Not Ready';
+        const readyText = isReady ? "Ready to Play" : "Not Ready";
         return (
             <div className="lobby">
                 <h2>Lobby {gameCode}</h2>
@@ -73,17 +73,17 @@ class UnconnectedLobbyRoute extends React.Component<LobbyRouteProps, LobbyRouteS
         const { players } = this.props;
 
         return Object.keys(players)
-            .map(key => players[key])
-            .filter(player => player.isReady === isReady);
+            .map((key) => players[key])
+            .filter((player) => player.isReady === isReady);
     }
 
-    private renderPlayers = (players: Player[]) => {
+    private renderPlayers = (players: IPlayer[]) => {
         return Object.keys(players)
-            .map(key => players[key])
-            .map(player => {
-                const className = classNames('player', {
-                    'ready': player.isReady,
-                    'not-ready': !player.isReady
+            .map((key) => players[key])
+            .map((player) => {
+                const className = classNames("player", {
+                    "not-ready": !player.isReady,
+                    "ready": player.isReady,
                 });
                 return (
                     <div key={player.id} className={className}>
@@ -101,7 +101,7 @@ class UnconnectedLobbyRoute extends React.Component<LobbyRouteProps, LobbyRouteS
     }
 }
 
-const mapStateToProps = (state: StoreState): LobbyRouteStateProps => {
+const mapStateToProps = (state: IStoreState): ILobbyRouteStateProps => {
     return {
         gameCode: state.game.gameCode,
         players: state.game.players,
@@ -109,7 +109,7 @@ const mapStateToProps = (state: StoreState): LobbyRouteStateProps => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<StoreState>): LobbyRouteDispatchProps => {
+const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): ILobbyRouteDispatchProps => {
     return {
         joinGame: (gameCode: string) => dispatch(joinGame(gameCode)),
         readyGame: (isReady: boolean) => dispatch(readyGameAction(isReady)),
@@ -117,7 +117,7 @@ const mapDispatchToProps = (dispatch: Dispatch<StoreState>): LobbyRouteDispatchP
 };
 
 export const LobbyRoute = connect<
-    LobbyRouteStateProps,
-    LobbyRouteDispatchProps,
-    LobbyRouteOwnProps
+    ILobbyRouteStateProps,
+    ILobbyRouteDispatchProps,
+    ILobbyRouteOwnProps
 >(mapStateToProps, mapDispatchToProps)(UnconnectedLobbyRoute);

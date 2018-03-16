@@ -1,11 +1,11 @@
-import { WebsocketStatus, Page } from '../store';
-import initialState from './initialState';
-import { gameJoin, websocketMessage, websocketOpen, websocketClose, websocketConnect } from '../actions';
-import { Action } from 'redux';
-import { isType } from 'typescript-fsa';
-import { Game } from "teledoodles-lib";
+import { Action } from "redux";
+import { IGame } from "teledoodles-lib";
+import { isType } from "typescript-fsa";
+import { gameJoin, websocketClose, websocketConnect, websocketMessage, websocketOpen } from "../actions";
+import { Page, WebsocketStatus } from "../store";
+import initialState from "./initialState";
 
-const game = (state: Game = initialState.game, action: Action): Game => {
+const game = (state: IGame = initialState.game, action: Action): IGame => {
   if (isType(action, gameJoin)) {
     return {
       ...state,
@@ -16,7 +16,7 @@ const game = (state: Game = initialState.game, action: Action): Game => {
   if (isType(action, websocketMessage)) {
     const parsed = JSON.parse(action.payload.event.data);
 
-    if (parsed.type === 'GAME:INFO') {
+    if (parsed.type === "GAME:INFO") {
       // tslint:disable-next-line
       console.log(parsed.game.players);
       return {

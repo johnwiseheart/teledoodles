@@ -1,16 +1,16 @@
-import { Dispatch } from 'redux';
+import { Dispatch } from "redux";
+import { Action } from "redux";
+import { MiddlewareAPI } from "redux";
+import { Middleware } from "redux";
+import { isType } from "typescript-fsa";
 import {
-    websocketConnect,
-    websocketSend,
-    websocketDisconnect,
-    websocketOpen,
     websocketClose,
+    websocketConnect,
+    websocketDisconnect,
     websocketMessage,
-} from '../actions';
-import { Action } from 'redux';
-import { isType } from 'typescript-fsa';
-import { MiddlewareAPI } from 'redux';
-import { Middleware } from 'redux';
+    websocketOpen,
+    websocketSend,
+} from "../actions";
 
 let websocket: WebSocket;
 
@@ -20,14 +20,14 @@ export const middleware: Middleware =
     <A extends Action>(action: A) => {
         if (isType(action, websocketConnect)) {
             // Configure the object
-            websocket = new WebSocket('ws://localhost:5000/ws');
+            websocket = new WebSocket("ws://localhost:5000/ws");
 
             // Attach the callbacks
             websocket.onopen = () => {
                 store.dispatch(websocketOpen());
 
                 if (action.payload.messages) {
-                    action.payload.messages.forEach(element => {
+                    action.payload.messages.forEach((element) => {
                         store.dispatch(websocketSend(element));
                     });
                 }
