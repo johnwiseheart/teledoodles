@@ -1,0 +1,18 @@
+@import "../../variables.scss";
+
+.button {
+    text-transform: uppercase;
+    display: block;
+    padding: 10px 0;
+    background-color: $primary-color;
+    color: $secondary-text-color;
+    height: 25px;
+    line-height: 30px;
+    margin: 5px 0;
+    box-shadow: $box-shadow-1;
+    text-align: center;
+
+    &.selected {
+        background-color: $primary-color-dark;
+    }
+}

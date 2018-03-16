@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "importHelpers": true,
+        "jsx": "react",
+        "lib": [
+            "dom",
+            "es2015",
+            "es5"
+        ],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "target": "es5",
+        "sourceMap": true,
+        "stripInternal": true
+    }
+}

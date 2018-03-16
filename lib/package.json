@@ -1,0 +1,17 @@
+{
+    "name": "teledoodles-lib",
+    "version": "1.0.0",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "license": "MIT",
+    "dependencies": {
+      "cross-env": "5.0.5",
+      "nodemon": "^1.14.12",
+      "ts-node": "^4.1.0",
+      "typescript": "^2.7.1"
+    },
+    "scripts": {
+        "dev": "tsc --watch -d -p tsconfig.json",
+        "build": "tsc -d"
+    }
+}

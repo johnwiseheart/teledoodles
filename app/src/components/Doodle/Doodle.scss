@@ -1,0 +1,26 @@
+.doodle {
+    display: flex;
+    flex-direction: column;
+
+    .label {
+        text-transform: uppercase;
+        font-size: 10px;
+    }
+
+    // h2 {
+    //     margin: 5px;
+    // }
+
+    .buttons {
+        display: flex;
+
+        .button {
+            flex: 1;
+            margin-top: 10px;
+
+            &:first-child {
+                margin-right: 10px;
+            }
+        }
+    }
+}

@@ -1,0 +1,11 @@
+@import "../../variables.scss";
+
+.doodle-viewer {
+    border: 3px solid $primary-color;
+    margin: 5px 0;
+    background-color: $primary-color-light;
+
+    img {
+        max-width: 100%;
+    }
+}
