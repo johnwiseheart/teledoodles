@@ -7,11 +7,11 @@ import { applyMiddleware, combineReducers, compose, createStore, Middleware } fr
 import thunk from "redux-thunk";
 import { App } from "./components/App/App";
 import "./index.scss";
-import { middleware as page } from "./middleware/page";
+import { middleware as gameView } from "./middleware/gameView";
 import { middleware as websocket } from "./middleware/websocket";
-import game from "./reducers/game";
+import gameViewReducer from "./reducers/gameView";
 import initialState from "./reducers/initialState";
-import pageReducer from "./reducers/page";
+import gameReducer from "./reducers/game";
 import websocketReducer from "./reducers/websocketStatus";
 import registerServiceWorker from "./registerServiceWorker";
 
@@ -26,14 +26,14 @@ const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
 
 const store = createStore(
   combineReducers({
-    game,
-    page: pageReducer,
+    game: gameReducer,
+    gameView: gameViewReducer,
     router: routerReducer,
     websocketStatus: websocketReducer
   }),
 
   initialState,
-  composeEnhancers(applyMiddleware(page as Middleware, websocket, thunk, middleware))
+  composeEnhancers(applyMiddleware(gameView as Middleware, websocket, thunk, middleware))
 );
 
 ReactDOM.render(

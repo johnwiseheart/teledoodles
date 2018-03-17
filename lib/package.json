@@ -5,6 +5,7 @@
     "types": "./dist/index.d.ts",
     "license": "MIT",
     "dependencies": {
+        "@types/node": "^9.4.7",
         "cross-env": "5.0.5",
         "nodemon": "^1.14.12",
         "ts-node": "^4.1.0",

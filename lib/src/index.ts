@@ -70,8 +70,10 @@ export const messageIsStartMessage = (message: any): message is IStartMessage =>
 
 export interface IAddPageMessage extends IGenericMessage {
   type: "ADD_PAGE";
-  bookId: string;
-  page: IPage;
+  payload: {
+    bookId: string;
+    page: IPage;
+  }
 }
 
 export const messageIsAddPageMessage = (message: any): message is IAddPageMessage => {
