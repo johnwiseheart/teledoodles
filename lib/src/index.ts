@@ -1,12 +1,76 @@
+type PlayerId = string;
+
 export interface IGenericMessage {
   gameCode: string;
-  playerId: string;
+  playerId: PlayerId;
+}
+
+enum PageType {
+  IMAGE = "IMAGE",
+  TEXT = "TEXT"
+}
+
+enum GameMode {
+  LOBBY = "LOBBY",
+  GAME = "GAME",
+  SHOWCASE = "SHOWCASE"
+}
+
+export interface IPage {
+  playerId: PlayerId;
+  pageType: PageType;
+}
+
+export interface IBook {
+  pages: IPage[];
+}
+
+export interface ITextPage extends IPage {
+  pageType: PageType.TEXT;
+  text: string;
+}
+
+export interface IImagePage extends IPage {
+  pageType: PageType.IMAGE;
+  imageUrl: string;
+}
+
+export interface IJoinMessage extends IGenericMessage {
+  type: "JOIN";
+  payload: {
+    username: string;
+  };
+}
+
+export interface IReadyMessage extends IGenericMessage {
+  type: "READY";
+  payload: {
+    isReady: boolean;
+  };
+}
+
+export interface IStartMessage extends IGenericMessage {
+  type: "START";
+}
+
+export interface IAddPage extends IGenericMessage {
+  type: "ADD_PAGE";
+  bookId: string;
+  page: IPage;
+}
+
+export interface IInfo extends IGenericMessage {
+  type: "INFO";
+  game: IGame;
 }
 
 export interface IPlayer {
-  username: string;
   id: string;
+  username: string;
   isReady: boolean;
+  prev: PlayerId;
+  next: PlayerId;
+  books: IBook[]
 }
 
 export const LISTENER_EVENT = "LISTENER_EVENT";
@@ -21,6 +85,8 @@ export enum TurnType {
 
 export interface IGame {
   gameCode: string;
+  books: { [id: string]: IBook };
   players: { [id: string]: IPlayer };
-  turnType: TurnType;
+  host: PlayerId;
+  gameMode: GameMode;
 }
