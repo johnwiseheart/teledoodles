@@ -18,7 +18,7 @@ export const sendGameInfo = (allGames: IStoreState, gameCode: string) => {
     .forEach(player => {
       const playerSocket = allGames.players[player.id];
       if (playerSocket.readyState === playerSocket.OPEN) {
-        playerSocket.send(JSON.stringify({ type: "GAME:INFO", game: allGames.games[gameCode] }));
+        playerSocket.send(JSON.stringify({ type: "INFO", game: allGames.games[gameCode] }));
       } else {
         // remove player
       }
@@ -63,7 +63,7 @@ export const handleReadyMessage = (allGames: IStoreState, message: IReadyMessage
   }
 
   // Set player to ready
-  allGames.games[message.gameCode].players[message.playerId].isReady = true;
+  allGames.games[message.gameCode].players[message.playerId].isReady = message.payload.isReady;
 
   // If all players are now ready && number of players is >= 4, set lobby state to LOBBY_READY
   if (Object.keys(allGames.games[message.gameCode].players).length >= 4) {
@@ -90,6 +90,24 @@ export const handleStartMessage = (allGames: IStoreState, message: IStartMessage
     return allGames;
   }
 
+  // Set prev/next for all players now that the game is ready to begin
+  let prevKey, firstKey = undefined;
+  for (var key in allGames.games[message.gameCode].players) {
+    if (firstKey === undefined) {
+      firstKey = key;
+    }
+    if (prevKey !== undefined) {
+      allGames.games[message.gameCode].players[prevKey].next = key;
+    }
+    allGames.games[message.gameCode].players[key].prev = prevKey;
+    prevKey = key;
+  }
+  // The above loop doesnt set the prev for the first player or next for the last player
+  // set those here:
+  allGames.games[message.gameCode].players[firstKey].prev = prevKey;
+  allGames.games[message.gameCode].players[prevKey].next = firstKey;
+
+  // set game mode to GAME
   allGames.games[message.gameCode].gameMode = GameMode.GAME;
 
   sendGameInfo(allGames, message.gameCode);
