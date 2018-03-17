@@ -8,6 +8,7 @@ const actionCreator = actionCreatorFactory();
 
 export const gameJoin = actionCreator<{ gameCode: string }>("GAME:JOIN");
 export const gameReady = actionCreator<boolean>("GAME:READY");
+export const gameStart = actionCreator("GAME:START");
 
 export const pageChange = actionCreator<Page>("PAGE:CHANGE");
 
@@ -32,7 +33,7 @@ export const joinGame = (gameCode: string) => {
           messages: [{ type: "JOIN", gameCode, playerId, payload: { username } }]
         })
       );
-      dispatch(pageChange(Page.LOBBY));
+      // dispatch(pageChange(Page.LOBBY));
     }
   };
 };
@@ -62,6 +63,21 @@ export const readyGame = (isReady: boolean) => {
     dispatch(gameReady(isReady));
   };
 };
+
+export const startGame = () => {
+  return (dispatch: Dispatch<IStoreState>, getState: () => IStoreState) => {
+    dispatch(
+      websocketSend({
+        gameCode: getState().game.gameCode,
+        playerId: getPlayerInfo().id,
+        type: "START",
+        payload: {}
+      })
+    );
+    dispatch(gameStart());
+  };
+};
+
 
 export const changePage = (page: Page) => {
   return (dispatch: Dispatch<IStoreState>) => {

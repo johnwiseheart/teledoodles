@@ -9,6 +9,7 @@ import { HomeRoute } from "../Home/routes";
 import { LobbyRoute } from "../Lobby/routes";
 import { PlayerInfoRoute } from "../PlayerInfo/routes";
 import "./App.scss";
+import { DebugScreen } from '../DebugScreen/DebugScreen';
 
 type AppProps = RouteComponentProps<{ gameCode: string }>;
 
@@ -22,6 +23,7 @@ class UnconnectedApp extends React.Component<AppProps, {}> {
             <Route exact={true} path="/" component={HomeRoute} />
             <Route path="/room/:gameCode" component={LobbyRoute} />
             <Route exact={true} path="/doodle" component={DoodleRoute} />
+            <Route exact={true} path="/debug" component={DebugScreen} />
             {/* <Route path="/guess" component={GuessRoute}/> */}
             {/* <Route path="/choose" component={ChooseRoute}/> */}
             {/* <Route path="/player" component={PlayerInfoRoute}/> */}

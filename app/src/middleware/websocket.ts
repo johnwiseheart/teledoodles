@@ -40,6 +40,7 @@ export const middleware: Middleware = (store: MiddlewareAPI<void>) => (next: Dis
   }
 
   if (isType(action, websocketSend)) {
+    console.log(action)
     websocket.send(JSON.stringify(action.payload));
   }
 
