@@ -4,96 +4,103 @@ import {
   IJoinMessage,
   IReadyMessage,
   IStartMessage,
-  messageIsJoinMessage
+  messageIsJoinMessage,
+  GameMode
 } from "teledoodles-lib";
-import { IStoreState, Listener } from "./store";
+import { IStoreState } from "./store";
 
-export const sendGameInfo = (state: IStoreState, gameCode: string) => {
+export const sendGameInfo = (allGames: IStoreState, gameCode: string) => {
   // tslint:disable-next-line
-  console.log(state.games);
-  const gamePlayers = state.games[gameCode].players;
+  console.log(allGames.games);
+  const gamePlayers = allGames.games[gameCode].players;
   Object.keys(gamePlayers)
     .map(key => gamePlayers[key])
     .forEach(player => {
-      const playerSocket = state.players[player.id];
+      const playerSocket = allGames.players[player.id];
       if (playerSocket.readyState === playerSocket.OPEN) {
-        playerSocket.send(JSON.stringify({ type: "GAME:INFO", game: state.games[gameCode] }));
+        playerSocket.send(JSON.stringify({ type: "GAME:INFO", game: allGames.games[gameCode] }));
       } else {
         // remove player
       }
     });
 };
 
-export const handleJoinMessage = (gameInfo: IStoreState, message: IJoinMessage) => {
-  return gameInfo;
+export const handleJoinMessage = (allGames: IStoreState, message: IJoinMessage) => {
+  // if no game exists, create a new game with user as host
+  if (allGames.games[message.gameCode] === undefined) {
+    allGames.games[message.gameCode] = {
+      gameCode: message.gameCode,
+      books: {},
+      players: {},
+      host: message.playerId,
+      gameMode: GameMode.LOBBY,
+      errorMessage: undefined
+    };
+  }
+
+  // Add user to game with readyState false
+  allGames.games[message.gameCode].players[message.playerId] = {
+    id: message.playerId,
+    username: message.payload.username,
+    isReady: false,
+    prev: undefined, // Prev/next are set when the game is ready to begin
+    next: undefined,
+    books: [{pages : []}], // array with empty book
+  };
+  // Add empty book for user
+  allGames.games[message.gameCode].books[message.playerId] = {pages: []};
+  sendGameInfo(allGames, message.gameCode);
+  return allGames;
 };
 
-export const handleReadyMessage = (gameInfo: IStoreState, message: IReadyMessage) => {
-  return gameInfo;
+export const handleReadyMessage = (allGames: IStoreState, message: IReadyMessage) => {
+  // If we get a join message for a game that doesnt exist, return error
+  if (allGames.games[message.gameCode] === undefined) {
+    allGames[message.gameCode] = {errorMessage: 'Tried to ready up for a game that doesnt exist.'}
+    return allGames;
+  } else if (allGames.games[message.gameCode].players[message.playerId] === undefined) {
+    allGames[message.gameCode] = {errorMessage: 'Tried to ready a player which doesnt exist'};
+  }
+
+  // Set player to ready
+  allGames.games[message.gameCode].players[message.playerId].isReady = true;
+
+  // If all players are now ready && number of players is >= 4, set lobby state to LOBBY_READY
+  if (Object.keys(allGames.games[message.gameCode].players).length >= 4) {
+    let allReady = true;
+    for (var key in allGames.games[message.gameCode].players) {
+      if (allGames.games[message.gameCode].players[key].isReady !== true) {
+        allReady = false;
+        break;
+      }
+    }
+    if (allReady) {
+      allGames.games[message.gameCode].gameMode = GameMode.LOBBY_READY;
+    }
+  }
+
+  sendGameInfo(allGames, message.gameCode);
+  return allGames;
 };
 
-export const handleStartMessage = (gameInfo: IStoreState, message: IStartMessage) => {
-  return gameInfo;
+export const handleStartMessage = (allGames: IStoreState, message: IStartMessage) => {
+  // If we're trying to start a game that doesnt exist, return error
+  if (allGames.games[message.gameCode] === undefined) {
+    allGames[message.gameCode] = {errorMessage: 'Tried to start a game that doesnt exist.'}
+    return allGames;
+  }
+
+  allGames.games[message.gameCode].gameMode = GameMode.GAME;
+
+  sendGameInfo(allGames, message.gameCode);
+  return allGames;
 };
 
-export const handleAddPageMessage = (gameInfo: IStoreState, message: IAddPageMessage) => {
-  return gameInfo;
+export const handleAddPageMessage = (allGames: IStoreState, message: IAddPageMessage) => {
+  return allGames;
 };
 
-// export const gameJoinEvent: Listener = (state, message) => {
-//   if (messageIsJoinMessage(message)) {
-//     const { gameCode, playerId, payload: { username } } = event;
-//     const newState = iassign(state, s => {
-//       if (state.games[gameCode] === undefined) {
-//         s.games[gameCode] = {
-//           gameCode,
-//           players: {},
-//           turnType: TurnType.LOBBY
-//         };
-//       }
-
-//       s.games[gameCode].players[playerId] = {
-//         id: playerId,
-//         isReady: false,
-//         username
-//       };
-//       return s;
-//     });
-//     sendGameInfo(newState, gameCode);
-//     return newState;
-//   }
-//   return state;
-// };
-
-// export const gameReadyEvent: Listener = (state, event) => {
-//   if (eventIsGameEvent(event) && event.type === "GAME:READY") {
-//     const { gameCode, playerId, payload: { isReady } } = event;
-
-//     // check if all players are ready and theres atleast 4 player
-//     let newState = iassign(state, s => {
-//       s.games[gameCode].players[playerId].isReady = isReady;
-//       return s;
-//     });
-
-//     const readyPlayers = Object.keys(newState.games[gameCode].players)
-//       .map(key => newState.games[gameCode].players[key])
-//       .filter(player => player.isReady);
-
-//     if (readyPlayers.length === 4) {
-//       newState = iassign(state, s => {
-//         s.games[gameCode].turnType = TurnType.CHOOSE_WORD;
-//         return s;
-//       });
-//     }
-
-//     sendGameInfo(newState, gameCode);
-//     return newState;
-//   }
-
-//   return state;
-// };
-
-export const handlePlayerWebsocketSet: Listener = (state, event) => {
+export const handlePlayerWebsocketSet = (state, event) => {
   const { playerId, payload } = event;
   return iassign(state, s => {
     s.players[playerId] = payload;

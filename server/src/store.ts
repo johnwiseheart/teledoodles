@@ -22,29 +22,22 @@ export interface IStoreState {
   players: { [playerId: string]: WebSocket };
 }
 
-export type Listener = (state: IStoreState, message: IGenericMessage) => IStoreState;
-
-export interface IListenerInfo {
-  type: string;
-  listener: Listener;
-}
-
 export const configureStore = (initState: IStoreState) => {
   const eventEmitter = new events.EventEmitter();
 
-  let gameInfo: IStoreState = initState;
+  let allGames: IStoreState = initState;
 
   eventEmitter.on(LISTENER_EVENT, message => {
     if (messageIsJoinMessage(message)) {
-      gameInfo = handleJoinMessage(gameInfo, message);
+      allGames = handleJoinMessage(allGames, message);
     } else if (messageIsReadyMessage(message)) {
-      gameInfo = handleReadyMessage(gameInfo, message);
+      allGames = handleReadyMessage(allGames, message);
     } else if (messageIsStartMessage(message)) {
-      gameInfo = handleStartMessage(gameInfo, message);
+      allGames = handleStartMessage(allGames, message);
     } else if (messageIsAddPageMessage(message)) {
-      gameInfo = handleAddPageMessage(gameInfo, message);
+      allGames = handleAddPageMessage(allGames, message);
     } else if (message.type === "PLAYER:WEBSOCKET:SET") {
-      gameInfo = handlePlayerWebsocketSet(gameInfo, message);
+      allGames = handlePlayerWebsocketSet(allGames, message);
     }
   });
 

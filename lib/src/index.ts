@@ -65,7 +65,7 @@ export interface IStartMessage extends IGenericMessage {
 }
 
 export const messageIsStartMessage = (message: any): message is IStartMessage => {
-  return message.type === "STATE";
+  return message.type === "START";
 };
 
 export interface IAddPageMessage extends IGenericMessage {
@@ -112,4 +112,5 @@ export interface IGame {
   players: { [id: string]: IPlayer };
   host: PlayerId;
   gameMode: GameMode;
+  errorMessage?: string;
 }
