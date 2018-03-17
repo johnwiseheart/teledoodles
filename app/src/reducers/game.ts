@@ -1,7 +1,13 @@
 import { Action } from "redux";
 import { IGame } from "teledoodles-lib";
 import { isType } from "typescript-fsa";
-import { gameJoin, websocketClose, websocketConnect, websocketMessage, websocketOpen } from "../actions";
+import {
+  gameJoin,
+  websocketClose,
+  websocketConnect,
+  websocketMessage,
+  websocketOpen
+} from "../actions";
 import { Page, WebsocketStatus } from "../store";
 import initialState from "./initialState";
 
@@ -9,7 +15,7 @@ const game = (state: IGame = initialState.game, action: Action): IGame => {
   if (isType(action, gameJoin)) {
     return {
       ...state,
-      gameCode: action.payload.gameCode,
+      gameCode: action.payload.gameCode
     };
   }
 
@@ -21,7 +27,7 @@ const game = (state: IGame = initialState.game, action: Action): IGame => {
       console.log(parsed.game.players);
       return {
         ...state,
-        players: parsed.game.players,
+        players: parsed.game.players
       };
     }
   }

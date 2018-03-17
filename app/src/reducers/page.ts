@@ -1,6 +1,13 @@
 import { Action } from "redux";
 import { isType } from "typescript-fsa";
-import { gameJoin, pageChange, websocketClose, websocketConnect, websocketMessage, websocketOpen } from "../actions";
+import {
+  gameJoin,
+  pageChange,
+  websocketClose,
+  websocketConnect,
+  websocketMessage,
+  websocketOpen
+} from "../actions";
 import { Page, WebsocketStatus } from "../store";
 import initialState from "./initialState";
 

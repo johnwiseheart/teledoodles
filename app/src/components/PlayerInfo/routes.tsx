@@ -8,68 +8,75 @@ import { Input } from "../Input/Input";
 import "./PlayerInfo.scss";
 
 export interface IPlayerInfoRouteDispatchProps {
-    push: (route: string) => void;
+  push: (route: string) => void;
 }
 
 export type IPlayerInfoRouteProps = IPlayerInfoRouteDispatchProps;
 
 interface IPlayerInfoRouteState {
-    name: string;
+  name: string;
 }
 
-class UnconnectedPlayerInfoRoute extends React.Component<IPlayerInfoRouteProps, IPlayerInfoRouteState> {
-    public state: IPlayerInfoRouteState = {
-        name: "",
-    };
+class UnconnectedPlayerInfoRoute extends React.Component<
+  IPlayerInfoRouteProps,
+  IPlayerInfoRouteState
+> {
+  public state: IPlayerInfoRouteState = {
+    name: ""
+  };
 
-    public componentDidMount() {
-        if (getPlayerInfo() != null) {
-            this.pushToHome();
-        }
+  public componentDidMount() {
+    if (getPlayerInfo() != null) {
+      this.pushToHome();
     }
+  }
 
-    public render() {
-        const { name } = this.state;
-        return (
-            <div className="player">
-                <h1>Player Name</h1>
-                <Input value={name} onChange={this.handleNameChange} />
-                <Button text="Submit" onClick={this.handleSubmit} />
-            </div>
-        );
-    }
+  public render() {
+    const { name } = this.state;
+    return (
+      <div className="player">
+        <h1>Player Name</h1>
+        <Input value={name} onChange={this.handleNameChange} />
+        <Button text="Submit" onClick={this.handleSubmit} />
+      </div>
+    );
+  }
 
-    private handleNameChange = (name: string) => {
-        this.setState({ name });
-    }
+  private handleNameChange = (name: string) => {
+    this.setState({ name });
+  };
 
-    private handleSubmit = () => {
-        const { name } = this.state;
-        if (name.length > 0) {
-            localStorage.setItem("player", JSON.stringify({
-                id: uuidv4(),
-                username: name,
-            }));
-            this.pushToHome();
-        }
+  private handleSubmit = () => {
+    const { name } = this.state;
+    if (name.length > 0) {
+      localStorage.setItem(
+        "player",
+        JSON.stringify({
+          id: uuidv4(),
+          username: name
+        })
+      );
+      this.pushToHome();
     }
+  };
 
-    private pushToHome = () => {
-        const { push } = this.props;
-        push("/");
-    }
+  private pushToHome = () => {
+    const { push } = this.props;
+    push("/");
+  };
 }
 
 const mapStateToProps = (state: IStoreState) => {
-    return {};
+  return {};
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<IStoreState>) => {
-    return {
-        push: (route: string) => dispatch(historyPush(route)),
-    };
+  return {
+    push: (route: string) => dispatch(historyPush(route))
+  };
 };
 
-export const PlayerInfoRoute = connect<
-    {}, IPlayerInfoRouteDispatchProps, {}
->(mapStateToProps, mapDispatchToProps)(UnconnectedPlayerInfoRoute);
+export const PlayerInfoRoute = connect<{}, IPlayerInfoRouteDispatchProps, {}>(
+  mapStateToProps,
+  mapDispatchToProps
+)(UnconnectedPlayerInfoRoute);

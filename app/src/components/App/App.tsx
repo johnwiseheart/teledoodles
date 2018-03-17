@@ -10,22 +10,22 @@ import { LobbyRoute } from "../Lobby/routes";
 import { PlayerInfoRoute } from "../PlayerInfo/routes";
 import "./App.scss";
 
-type AppProps = RouteComponentProps<{ gameCode: string}>;
+type AppProps = RouteComponentProps<{ gameCode: string }>;
 
 class UnconnectedApp extends React.Component<AppProps, {}> {
   public render() {
     return (
       <div className="app">
         <div className="body">
-            <div className="body-inner">
-              {/* {this.getRoute()} */}
-              <Route exact={true} path="/" component={HomeRoute}/>
-              <Route path="/room/:gameCode" component={LobbyRoute}/>
-              <Route exact={true} path="/doodle" component={DoodleRoute}/>
-              {/* <Route path="/guess" component={GuessRoute}/> */}
-              {/* <Route path="/choose" component={ChooseRoute}/> */}
-              {/* <Route path="/player" component={PlayerInfoRoute}/> */}
-            </div>
+          <div className="body-inner">
+            {/* {this.getRoute()} */}
+            <Route exact={true} path="/" component={HomeRoute} />
+            <Route path="/room/:gameCode" component={LobbyRoute} />
+            <Route exact={true} path="/doodle" component={DoodleRoute} />
+            {/* <Route path="/guess" component={GuessRoute}/> */}
+            {/* <Route path="/choose" component={ChooseRoute}/> */}
+            {/* <Route path="/player" component={PlayerInfoRoute}/> */}
+          </div>
         </div>
       </div>
     );

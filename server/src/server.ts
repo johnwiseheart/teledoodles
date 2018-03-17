@@ -15,30 +15,30 @@ const router = new Router();
 app.use(koaBody());
 app.use(cors());
 
-const store = configureStore(initialState, [ playerWebsocketSet, gameJoinEvent, gameReadyEvent ]);
+const store = configureStore(initialState, [playerWebsocketSet, gameJoinEvent, gameReadyEvent]);
 
-router.get("/ws", async (ctx) => {
-    ctx.websocket.on("message", (message: string) => {
-      // tslint:disable-next-line
-      console.log(message);
-      const parsed = JSON.parse(message);
-      store.dispatch({
-        payload: ctx.websocket,
-        playerId: parsed.playerId,
-        type: "PLAYER:WEBSOCKET:SET",
-      });
-      store.dispatch(parsed);
+router.get("/ws", async ctx => {
+  ctx.websocket.on("message", (message: string) => {
+    // tslint:disable-next-line
+    console.log(message);
+    const parsed = JSON.parse(message);
+    store.dispatch({
+      payload: ctx.websocket,
+      playerId: parsed.playerId,
+      type: "PLAYER:WEBSOCKET:SET"
     });
+    store.dispatch(parsed);
+  });
 });
 
-router.get("/new", async (ctx) => {
-    const gameCode = makeId();
-    // const milliseconds = (new Date).getTime();
+router.get("/new", async ctx => {
+  const gameCode = makeId();
+  // const milliseconds = (new Date).getTime();
 
-    // return it
-    ctx.body = {
-        gameCode,
-    };
+  // return it
+  ctx.body = {
+    gameCode
+  };
 });
 
 app.use(router.routes());
@@ -47,4 +47,4 @@ app.ws.use(router.routes());
 
 app.listen(5000);
 // tslint:disable-next-line
-console.log('Server running on port 5000');
+console.log("Server running on port 5000");

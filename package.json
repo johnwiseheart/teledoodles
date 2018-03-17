@@ -10,6 +10,6 @@
     "lib"
   ],
   "devDependencies": {
-    "tslint-react": "^3.5.1"
+    "prettier": "1.11.1"
   }
 }

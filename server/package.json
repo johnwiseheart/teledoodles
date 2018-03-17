@@ -3,29 +3,35 @@
     "version": "1.0.0",
     "license": "MIT",
     "dependencies": {
-      "cross-env": "5.0.5",
-      "teledoodles-lib": "1.0.0",
-      "@koa/cors": "2",
-      "@types/koa": "^2.0.44",
-      "@types/koa-route": "^3.2.3",
-      "@types/koa-router": "^7.0.27",
-      "@types/koa-websocket": "^2.1.2",
-      "@types/node-fetch": "^1.6.7",
-      "immutable-assign": "^2.0.4",
-      "koa": "^2.4.1",
-      "koa-body": "^2.5.0",
-      "koa-route": "^3.2.0",
-      "koa-router": "^7.4.0",
-      "koa-websocket": "^4.1.0",
-      "node-fetch": "^2.0.0",
-      "nodemon": "^1.14.12",
-      "sqlite3": "^3.1.13",
-      "ts-node": "^4.1.0",
-      "typescript": "^2.7.1"
+        "@koa/cors": "2",
+        "@types/koa": "^2.0.44",
+        "@types/koa-route": "^3.2.3",
+        "@types/koa-router": "^7.0.27",
+        "@types/koa-websocket": "^2.1.2",
+        "@types/node-fetch": "^1.6.7",
+        "cross-env": "5.0.5",
+        "immutable-assign": "^2.0.4",
+        "koa": "^2.4.1",
+        "koa-body": "^2.5.0",
+        "koa-route": "^3.2.0",
+        "koa-router": "^7.4.0",
+        "koa-websocket": "^4.1.0",
+        "node-fetch": "^2.0.0",
+        "nodemon": "^1.14.12",
+        "sqlite3": "^3.1.13",
+        "teledoodles-lib": "1.0.0",
+        "ts-node": "^4.1.0",
+        "typescript": "^2.7.1"
     },
     "scripts": {
         "dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/server.ts",
         "start": "tsc && node ./dist/server.js",
-        "build": "tsc"
+        "build": "tsc",
+        "prettier": "prettier \"src/**/*.ts*\" --write"
+    },
+    "devDependencies": {
+        "prettier": "1.11.1",
+        "tslint": "^5.9.1",
+        "tslint-config-prettier": "^1.10.0"
     }
 }

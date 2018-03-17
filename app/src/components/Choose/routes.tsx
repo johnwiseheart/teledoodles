@@ -7,32 +7,32 @@ import "./Choose.scss";
 export interface IChooseRouteProps extends RouteComponentProps<{}> {}
 
 interface IChooseRouteState {
-    text: string;
+  text: string;
 }
 
 class UnconnectedChooseRoute extends React.Component<IChooseRouteProps, IChooseRouteState> {
-    public state: IChooseRouteState = {
-        text: "",
-    };
+  public state: IChooseRouteState = {
+    text: ""
+  };
 
-    public render() {
-        const { text } = this.state;
-        return (
-            <div className="choose">
-                Pick a word or phrase for the other players to sketch.
-                <Input value={text} onChange={this.handleChange} />
-                <Button text="Submit" onClick={this.handleSubmit} />
-            </div>
-        );
-    }
+  public render() {
+    const { text } = this.state;
+    return (
+      <div className="choose">
+        Pick a word or phrase for the other players to sketch.
+        <Input value={text} onChange={this.handleChange} />
+        <Button text="Submit" onClick={this.handleSubmit} />
+      </div>
+    );
+  }
 
-    public handleChange = (text: string) => {
-        this.setState({ text });
-    }
+  public handleChange = (text: string) => {
+    this.setState({ text });
+  };
 
-    public handleSubmit = () => {
-        return;
-    }
+  public handleSubmit = () => {
+    return;
+  };
 }
 
 export const ChooseRoute = withRouter(UnconnectedChooseRoute);

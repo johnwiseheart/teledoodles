@@ -29,13 +29,11 @@ const store = createStore(
     game,
     page: pageReducer,
     router: routerReducer,
-    websocketStatus: websocketReducer,
+    websocketStatus: websocketReducer
   }),
 
   initialState,
-  composeEnhancers(
-    applyMiddleware(page as Middleware, websocket, thunk, middleware),
-  ),
+  composeEnhancers(applyMiddleware(page as Middleware, websocket, thunk, middleware))
 );
 
 ReactDOM.render(
@@ -44,6 +42,6 @@ ReactDOM.render(
       <App />
     </ConnectedRouter>
   </Provider>,
-  document.getElementById("root") as HTMLElement,
+  document.getElementById("root") as HTMLElement
 );
 registerServiceWorker();

@@ -13,7 +13,9 @@ export default class Canvas extends React.Component<{}, {}> {
 
   private canvas: HTMLCanvasElement;
   private refHandlers = {
-    canvas: (canvasElement: HTMLCanvasElement) => { this.canvas = canvasElement; },
+    canvas: (canvasElement: HTMLCanvasElement) => {
+      this.canvas = canvasElement;
+    }
   };
 
   public componentDidMount() {
@@ -23,7 +25,6 @@ export default class Canvas extends React.Component<{}, {}> {
   }
 
   public render() {
-
     return (
       <div className="canvas">
         <canvas ref={this.refHandlers.canvas} />
@@ -34,10 +35,12 @@ export default class Canvas extends React.Component<{}, {}> {
 
   public clearCanvas = () => {
     const ctx = this.canvas.getContext("2d");
-    if (ctx == null) { return; }
+    if (ctx == null) {
+      return;
+    }
 
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  }
+  };
 
   private setupCanvas = () => {
     this.canvas.addEventListener("mousemove", this.handleDraw, false);
@@ -50,9 +53,11 @@ export default class Canvas extends React.Component<{}, {}> {
     this.canvas.addEventListener("touchend", this.handleTouchEnd, false);
 
     const ctx = this.canvas.getContext("2d");
-    if (ctx == null) { return; }
+    if (ctx == null) {
+      return;
+    }
     ctx.strokeStyle = "#3a3937";
-  }
+  };
 
   private handleTouchMove = (e: TouchEvent) => {
     if (e.target === this.canvas) {
@@ -62,7 +67,7 @@ export default class Canvas extends React.Component<{}, {}> {
     const { clientX, clientY } = e.touches[0];
     const mouseEvent = new MouseEvent("mousemove", { clientX, clientY });
     this.canvas.dispatchEvent(mouseEvent);
-  }
+  };
 
   private handleTouchStart = (e: TouchEvent) => {
     if (e.target === this.canvas) {
@@ -72,7 +77,7 @@ export default class Canvas extends React.Component<{}, {}> {
     const { clientX, clientY } = e.touches[0];
     const mouseEvent = new MouseEvent("mousedown", { clientX, clientY });
     this.canvas.dispatchEvent(mouseEvent);
-  }
+  };
 
   private handleTouchEnd = (e: TouchEvent) => {
     if (e.target === this.canvas) {
@@ -81,39 +86,43 @@ export default class Canvas extends React.Component<{}, {}> {
 
     const mouseEvent = new MouseEvent("mouseup", {});
     this.canvas.dispatchEvent(mouseEvent);
-  }
+  };
 
   private handleStartDrawing = (e: MouseEvent) => {
     const canvas = this.canvas;
     const ctx = this.canvas.getContext("2d");
-    if (ctx == null) { return; }
+    if (ctx == null) {
+      return;
+    }
 
     this.prevMouse = this.currMouse;
     this.currMouse = {
       x: e.clientX - canvas.offsetLeft,
-      y: e.clientY - canvas.offsetTop,
+      y: e.clientY - canvas.offsetTop
     };
 
     this.isDrawing = true;
     ctx.beginPath();
     ctx.fillRect(this.currMouse.x, this.currMouse.y, 2, 2);
     ctx.closePath();
-  }
+  };
 
   private handleStopDrawing = (e: MouseEvent) => {
     this.isDrawing = false;
-  }
+  };
 
   private handleDraw = (e: MouseEvent) => {
     const canvas = this.canvas;
     const ctx = this.canvas.getContext("2d");
-    if (ctx == null) { return; }
+    if (ctx == null) {
+      return;
+    }
 
     if (this.isDrawing) {
       this.prevMouse = this.currMouse;
       this.currMouse = {
         x: e.clientX - canvas.offsetLeft,
-        y: e.clientY - canvas.offsetTop,
+        y: e.clientY - canvas.offsetTop
       };
 
       ctx.beginPath();
@@ -124,11 +133,13 @@ export default class Canvas extends React.Component<{}, {}> {
       ctx.stroke();
       ctx.closePath();
     }
-  }
+  };
 
   private handleWindowResize = () => {
     const ctx = this.canvas.getContext("2d");
-    if (ctx == null) { return; }
+    if (ctx == null) {
+      return;
+    }
 
     const imgData = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
     const size = Math.min(window.innerWidth - 26, 500);
@@ -137,17 +148,16 @@ export default class Canvas extends React.Component<{}, {}> {
     this.canvas.height = size;
 
     ctx.putImageData(imgData, 0, 0);
-  }
+  };
 
   private export = () => {
     if (this.canvas != null) {
       // tslint:disable-next-line
-      console.log(this.canvas.toDataURL())
-      this.canvas.toBlob((result) => {
+      console.log(this.canvas.toDataURL());
+      this.canvas.toBlob(result => {
         // tslint:disable-next-line
         console.log(result);
       });
     }
-  }
-
+  };
 }
