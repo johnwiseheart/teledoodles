@@ -2,6 +2,7 @@ import { Dispatch } from "react-redux";
 import actionCreatorFactory from "typescript-fsa";
 import { IStoreState, Message, Page } from "../store";
 import { getPlayerInfo } from "../util";
+import { IJoinMessage } from "teledoodles-lib";
 
 const actionCreator = actionCreatorFactory();
 
@@ -28,7 +29,7 @@ export const joinGame = (gameCode: string) => {
       console.log(gameCode);
       dispatch(
         websocketConnect({
-          messages: [{ type: "GAME:JOIN", gameCode, playerId, payload: { username } }]
+          messages: [{ type: "JOIN", gameCode, playerId, payload: { username } }]
         })
       );
       dispatch(pageChange(Page.LOBBY));
@@ -55,7 +56,7 @@ export const readyGame = (isReady: boolean) => {
         gameCode: getState().game.gameCode,
         payload: { isReady },
         playerId: getPlayerInfo().id,
-        type: "GAME:READY"
+        type: "READY"
       })
     );
     dispatch(gameReady(isReady));

@@ -1,12 +1,26 @@
 import * as events from "events";
 
-import { IGame, IGenericMessage, LISTENER_EVENT, messageIsAddPageMessage, messageIsJoinMessage, messageIsReadyMessage, messageIsStartMessage } from "teledoodles-lib";
+import {
+  IGame,
+  IGenericMessage,
+  LISTENER_EVENT,
+  messageIsAddPageMessage,
+  messageIsJoinMessage,
+  messageIsReadyMessage,
+  messageIsStartMessage
+} from "teledoodles-lib";
+import {
+  handleAddPageMessage,
+  handleJoinMessage,
+  handlePlayerWebsocketSet,
+  handleReadyMessage,
+  handleStartMessage
+} from "./events";
 
 export interface IStoreState {
   games: { [gameCode: string]: IGame };
   players: { [playerId: string]: WebSocket };
 }
-
 
 export type Listener = (state: IStoreState, message: IGenericMessage) => IStoreState;
 
@@ -15,7 +29,7 @@ export interface IListenerInfo {
   listener: Listener;
 }
 
-export const configureStore = (initState: IStoreState, listeners: Listener[]) => {
+export const configureStore = (initState: IStoreState) => {
   const eventEmitter = new events.EventEmitter();
 
   let gameInfo: IStoreState = initState;
@@ -29,6 +43,8 @@ export const configureStore = (initState: IStoreState, listeners: Listener[]) =>
       gameInfo = handleStartMessage(gameInfo, message);
     } else if (messageIsAddPageMessage(message)) {
       gameInfo = handleAddPageMessage(gameInfo, message);
+    } else if (message.type === "PLAYER:WEBSOCKET:SET") {
+      gameInfo = handlePlayerWebsocketSet(gameInfo, message);
     }
   });
 

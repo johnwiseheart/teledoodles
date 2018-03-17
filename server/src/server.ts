@@ -3,7 +3,6 @@ import * as Koa from "koa";
 import * as koaBody from "koa-body";
 import * as Router from "koa-router";
 
-import { gameJoinEvent, gameReadyEvent, playerWebsocketSet } from "./events";
 import { configureStore, initialState } from "./store";
 import { makeId } from "./utils";
 
@@ -15,7 +14,7 @@ const router = new Router();
 app.use(koaBody());
 app.use(cors());
 
-const store = configureStore(initialState, [playerWebsocketSet, gameJoinEvent, gameReadyEvent]);
+const store = configureStore(initialState);
 
 router.get("/ws", async ctx => {
   ctx.websocket.on("message", (message: string) => {
@@ -35,7 +34,6 @@ router.get("/ws", async ctx => {
 router.get("/new", async ctx => {
   const gameCode = makeId();
   // const milliseconds = (new Date).getTime();
-
   // return it
   ctx.body = {
     gameCode

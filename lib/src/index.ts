@@ -68,7 +68,6 @@ export const messageIsStartMessage = (message: any): message is IStartMessage =>
   return message.type === "STATE";
 };
 
-
 export interface IAddPageMessage extends IGenericMessage {
   type: "ADD_PAGE";
   bookId: string;
@@ -78,7 +77,6 @@ export interface IAddPageMessage extends IGenericMessage {
 export const messageIsAddPageMessage = (message: any): message is IAddPageMessage => {
   return message.type === "ADD_PAGE";
 };
-
 
 export interface IInfo extends IGenericMessage {
   type: "INFO";
@@ -95,7 +93,7 @@ export interface IPlayer {
   isReady: boolean;
   prev: PlayerId;
   next: PlayerId;
-  books: IBook[]
+  books: IBook[];
 }
 
 export const LISTENER_EVENT = "LISTENER_EVENT";

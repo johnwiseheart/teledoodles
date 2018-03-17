@@ -6,8 +6,10 @@ import { IStoreState, Page, WebsocketStatus } from "../store";
 const initialState: IStoreState = {
   game: {
     gameCode: "",
+    books: {},
     players: {},
-    turnType: undefined
+    host: undefined,
+    gameMode: undefined
   },
   router: {} as Router,
   websocketStatus: WebsocketStatus.CLOSED,

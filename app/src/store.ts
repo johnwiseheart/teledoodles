@@ -1,21 +1,14 @@
 import { Router } from "react-router";
-import { IGame, IGenericMessage } from "teledoodles-lib";
+import {
+  IGame,
+  IGenericMessage,
+  IJoinMessage,
+  IReadyMessage,
+  IStartMessage,
+  IAddPageMessage
+} from "teledoodles-lib";
 
-export interface IGameJoinMessage extends IGenericMessage {
-  type: "GAME:JOIN";
-  payload: {
-    username: string;
-  };
-}
-
-export interface IGameReadyMessage extends IGenericMessage {
-  type: "GAME:READY";
-  payload: {
-    isReady: boolean;
-  };
-}
-
-export type Message = IGameJoinMessage | IGameReadyMessage;
+export type Message = IJoinMessage | IReadyMessage | IStartMessage | IAddPageMessage;
 
 export enum WebsocketStatus {
   CLOSED = "CLOSED",
