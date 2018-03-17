@@ -7,6 +7,7 @@ import { gameJoinEvent, gameReadyEvent, playerWebsocketSet } from "./events";
 import { configureStore, initialState } from "./store";
 import { makeId } from "./utils";
 
+// tslint:disable-next-line
 const websockify = require("koa-websocket");
 
 const app = websockify(new Koa());
@@ -22,9 +23,9 @@ router.get("/ws", async (ctx) => {
       console.log(message);
       const parsed = JSON.parse(message);
       store.dispatch({
-        type: "PLAYER:WEBSOCKET:SET",
-        playerId: parsed.playerId,
         payload: ctx.websocket,
+        playerId: parsed.playerId,
+        type: "PLAYER:WEBSOCKET:SET",
       });
       store.dispatch(parsed);
     });

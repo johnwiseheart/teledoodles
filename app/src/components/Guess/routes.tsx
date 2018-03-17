@@ -5,6 +5,7 @@ import DoodleViewer from "../DoodleViewer/DoodleViewer";
 import { Input } from "../Input/Input";
 import "./Guess.scss";
 
+// tslint:disable-next-line
 const arrows = require("./arrows.svg");
 
 export interface IGuessRouteProps extends RouteComponentProps<{}> {}

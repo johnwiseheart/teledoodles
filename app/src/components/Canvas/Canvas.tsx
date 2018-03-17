@@ -6,11 +6,7 @@ interface IPoint {
   y: number;
 }
 
-interface ICanvasState {
-
-}
-
-export default class Canvas extends React.Component<{}, ICanvasState> {
+export default class Canvas extends React.Component<{}, {}> {
   private isDrawing = false;
   private prevMouse: IPoint;
   private currMouse: IPoint;

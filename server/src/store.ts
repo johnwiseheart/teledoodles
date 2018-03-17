@@ -10,7 +10,6 @@ export interface IStoreState {
 export interface IListenerEvent {
     type: string;
     playerId: string;
-    // tslint:disable-next-line
     payload: any;
 }
 
@@ -22,8 +21,6 @@ export interface IGameEvent extends IListenerEvent {
 export const eventIsGameEvent = (event: any): event is IGameEvent => {
     return event.type.startsWith("GAME:");
 };
-
-// export type SetState = (newState: Partial<StoreState>) => void;
 
 export type Listener = (state: IStoreState, event: IListenerEvent) => IStoreState;
 

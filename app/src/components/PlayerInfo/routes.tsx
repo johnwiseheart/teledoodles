@@ -7,17 +7,11 @@ import { Button } from "../Button/Button";
 import { Input } from "../Input/Input";
 import "./PlayerInfo.scss";
 
-export interface IPlayerInfoRouteOwnProps {}
-
-export interface IPlayerInfoRouteStateProps {}
-
 export interface IPlayerInfoRouteDispatchProps {
     push: (route: string) => void;
 }
 
-export type IPlayerInfoRouteProps = IPlayerInfoRouteOwnProps
-    & IPlayerInfoRouteStateProps
-    & IPlayerInfoRouteDispatchProps;
+export type IPlayerInfoRouteProps = IPlayerInfoRouteDispatchProps;
 
 interface IPlayerInfoRouteState {
     name: string;
@@ -53,8 +47,8 @@ class UnconnectedPlayerInfoRoute extends React.Component<IPlayerInfoRouteProps, 
         const { name } = this.state;
         if (name.length > 0) {
             localStorage.setItem("player", JSON.stringify({
-                username: name,
                 id: uuidv4(),
+                username: name,
             }));
             this.pushToHome();
         }
@@ -77,5 +71,5 @@ const mapDispatchToProps = (dispatch: Dispatch<IStoreState>) => {
 };
 
 export const PlayerInfoRoute = connect<
-IPlayerInfoRouteStateProps, IPlayerInfoRouteDispatchProps, IPlayerInfoRouteOwnProps
+    {}, IPlayerInfoRouteDispatchProps, {}
 >(mapStateToProps, mapDispatchToProps)(UnconnectedPlayerInfoRoute);

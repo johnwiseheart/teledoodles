@@ -10,15 +10,7 @@ import { LobbyRoute } from "../Lobby/routes";
 import { PlayerInfoRoute } from "../PlayerInfo/routes";
 import "./App.scss";
 
-interface IAppOwnProps {}
-
-interface IAppStateProps {
-  page: Page;
-}
-
-interface IAppDispatchProps {}
-
-type AppProps = IAppOwnProps & IAppStateProps & IAppDispatchProps & RouteComponentProps<{ gameCode: string}>;
+type AppProps = RouteComponentProps<{ gameCode: string}>;
 
 class UnconnectedApp extends React.Component<AppProps, {}> {
   public render() {
@@ -30,38 +22,14 @@ class UnconnectedApp extends React.Component<AppProps, {}> {
               <Route exact={true} path="/" component={HomeRoute}/>
               <Route path="/room/:gameCode" component={LobbyRoute}/>
               <Route exact={true} path="/doodle" component={DoodleRoute}/>
-              {/* <Route path="/guess" component={GuessRoute}/>
-              <Route path="/choose" component={ChooseRoute}/>
-              <Route path="/player" component={PlayerInfoRoute}/> */}
+              {/* <Route path="/guess" component={GuessRoute}/> */}
+              {/* <Route path="/choose" component={ChooseRoute}/> */}
+              {/* <Route path="/player" component={PlayerInfoRoute}/> */}
             </div>
         </div>
       </div>
     );
   }
-
-  // public getRoute = () => {
-  //   const { page, match, location, history } = this.props;
-  //   if (getPlayerInfo() == null) {
-  //     return <PlayerInfoRoute />;
-  //   }
-
-  //   switch (page) {
-  //       case Page.LOBBY:
-  //           return <LobbyRoute match={match} location={location} history={history} />;
-  //       case Page.CHOOSE_WORD:
-  //           return <ChooseRoute />;
-  //       default:
-  //           return <HomeRoute />;
-  //   }
-  // }
 }
 
-const mapStateToProps = (state: IStoreState) => {
-  return {
-    page: state.page,
-  };
-};
-
-export const App = withRouter(
-  connect<IAppStateProps, IAppDispatchProps, IAppOwnProps>(mapStateToProps)(UnconnectedApp),
-);
+export const App = withRouter(UnconnectedApp);

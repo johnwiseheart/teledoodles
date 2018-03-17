@@ -6,16 +6,12 @@ import { Button } from "../Button/Button";
 import { Input } from "../Input/Input";
 import "./Home.scss";
 
-export interface IHomeRouteOwnProps {}
-
-export interface IHomeRouteStateProps {}
-
 export interface IHomeRouteDispatchProps {
     joinGame: (gameCode: string) => void;
     newGame: () => void;
 }
 
-export type HomeRouteProps = IHomeRouteOwnProps & IHomeRouteStateProps & IHomeRouteDispatchProps;
+export type HomeRouteProps = IHomeRouteDispatchProps;
 
 interface IHomeRouteState {
     isOverlayOpen: boolean;
@@ -94,7 +90,7 @@ class UnconnectedHomeRoute extends React.Component<HomeRouteProps, IHomeRouteSta
     }
 }
 
-const mapStateToProps = (state: IStoreState): IHomeRouteStateProps => {
+const mapStateToProps = (state: IStoreState): {} => {
     return {};
 };
 
@@ -105,8 +101,8 @@ const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): IHomeRouteDispatch
     };
 };
 
-export const HomeRoute = connect<
-    IHomeRouteStateProps,
+export const HomeRoute = connect <
+    {},
     IHomeRouteDispatchProps,
-    IHomeRouteOwnProps
+    {}
 >(mapStateToProps, mapDispatchToProps)(UnconnectedHomeRoute);

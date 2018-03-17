@@ -4,5 +4,12 @@
   "main": "index.js",
   "license": "MIT",
   "private": true,
-  "workspaces": ["server", "app", "lib"]
+  "workspaces": [
+    "server",
+    "app",
+    "lib"
+  ],
+  "devDependencies": {
+    "tslint-react": "^3.5.1"
+  }
 }
