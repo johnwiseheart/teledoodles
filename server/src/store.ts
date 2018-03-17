@@ -1,28 +1,14 @@
 import * as events from "events";
 
-import { IGame, LISTENER_EVENT } from "teledoodles-lib";
+import { IGame, IGenericMessage, LISTENER_EVENT, messageIsAddPageMessage, messageIsJoinMessage, messageIsReadyMessage, messageIsStartMessage } from "teledoodles-lib";
 
 export interface IStoreState {
   games: { [gameCode: string]: IGame };
   players: { [playerId: string]: WebSocket };
 }
 
-export interface IListenerEvent {
-  type: string;
-  playerId: string;
-  payload: any;
-}
 
-export interface IGameEvent extends IListenerEvent {
-  gameCode: string;
-}
-
-// tslint:disable-next-line
-export const eventIsGameEvent = (event: any): event is IGameEvent => {
-  return event.type.startsWith("GAME:");
-};
-
-export type Listener = (state: IStoreState, event: IListenerEvent) => IStoreState;
+export type Listener = (state: IStoreState, message: IGenericMessage) => IStoreState;
 
 export interface IListenerInfo {
   type: string;
@@ -32,17 +18,22 @@ export interface IListenerInfo {
 export const configureStore = (initState: IStoreState, listeners: Listener[]) => {
   const eventEmitter = new events.EventEmitter();
 
-  let state: IStoreState = initState;
+  let gameInfo: IStoreState = initState;
 
-  listeners.forEach(listener => {
-    eventEmitter.on(LISTENER_EVENT, data => {
-      const newState = listener(state, data);
-      state = newState;
-    });
+  eventEmitter.on(LISTENER_EVENT, message => {
+    if (messageIsJoinMessage(message)) {
+      gameInfo = handleJoinMessage(gameInfo, message);
+    } else if (messageIsReadyMessage(message)) {
+      gameInfo = handleReadyMessage(gameInfo, message);
+    } else if (messageIsStartMessage(message)) {
+      gameInfo = handleStartMessage(gameInfo, message);
+    } else if (messageIsAddPageMessage(message)) {
+      gameInfo = handleAddPageMessage(gameInfo, message);
+    }
   });
 
   return {
-    dispatch: (event: IListenerEvent) => {
+    dispatch: (event: IGenericMessage) => {
       return eventEmitter.emit(LISTENER_EVENT, event);
     }
   };

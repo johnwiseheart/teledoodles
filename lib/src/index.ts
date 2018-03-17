@@ -1,16 +1,17 @@
-type PlayerId = string;
+export type PlayerId = string;
 
 export interface IGenericMessage {
+  type: string;
   gameCode: string;
   playerId: PlayerId;
 }
 
-enum PageType {
+export enum PageType {
   IMAGE = "IMAGE",
   TEXT = "TEXT"
 }
 
-enum GameMode {
+export enum GameMode {
   LOBBY = "LOBBY",
   GAME = "GAME",
   SHOWCASE = "SHOWCASE"
@@ -42,6 +43,10 @@ export interface IJoinMessage extends IGenericMessage {
   };
 }
 
+export const messageIsJoinMessage = (message: any): message is IJoinMessage => {
+  return message.type === "JOIN";
+};
+
 export interface IReadyMessage extends IGenericMessage {
   type: "READY";
   payload: {
@@ -49,15 +54,29 @@ export interface IReadyMessage extends IGenericMessage {
   };
 }
 
+export const messageIsReadyMessage = (message: any): message is IReadyMessage => {
+  return message.type === "READY";
+};
+
 export interface IStartMessage extends IGenericMessage {
   type: "START";
 }
 
-export interface IAddPage extends IGenericMessage {
+export const messageIsStartMessage = (message: any): message is IStartMessage => {
+  return message.type === "STATE";
+};
+
+
+export interface IAddPageMessage extends IGenericMessage {
   type: "ADD_PAGE";
   bookId: string;
   page: IPage;
 }
+
+export const messageIsAddPageMessage = (message: any): message is IAddPageMessage => {
+  return message.type === "ADD_PAGE";
+};
+
 
 export interface IInfo extends IGenericMessage {
   type: "INFO";

@@ -1,6 +1,6 @@
 import iassign from "immutable-assign";
-import { TurnType } from "teledoodles-lib";
-import { eventIsGameEvent, Listener, IStoreState } from "./store";
+import { messageIsJoinMessage, TurnType } from "teledoodles-lib";
+import { eventIsGameEvent, IStoreState, Listener } from "./store";
 
 export const sendGameInfo = (state: IStoreState, gameCode: string) => {
   // tslint:disable-next-line
@@ -18,8 +18,8 @@ export const sendGameInfo = (state: IStoreState, gameCode: string) => {
     });
 };
 
-export const gameJoinEvent: Listener = (state, event) => {
-  if (eventIsGameEvent(event) && event.type === "GAME:JOIN") {
+export const gameJoinEvent: Listener = (state, message) => {
+  if (messageIsJoinMessage(message)) {
     const { gameCode, playerId, payload: { username } } = event;
     const newState = iassign(state, s => {
       if (state.games[gameCode] === undefined) {
