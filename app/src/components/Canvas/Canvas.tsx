@@ -1,5 +1,6 @@
 import * as React from "react";
 import "./Canvas.scss";
+import { sendToS3 } from '../../util';
 
 interface IPoint {
   x: number;
@@ -152,12 +153,10 @@ export default class Canvas extends React.Component<{}, {}> {
 
   private export = () => {
     if (this.canvas != null) {
-      // tslint:disable-next-line
-      console.log(this.canvas.toDataURL());
-      this.canvas.toBlob(result => {
-        // tslint:disable-next-line
-        console.log(result);
-      });
+      this.canvas.toBlob(async blob => {
+        const fileName = await sendToS3(blob);
+        console.log(fileName)
+      })
     }
   };
 }

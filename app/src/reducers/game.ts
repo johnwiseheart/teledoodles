@@ -8,7 +8,7 @@ import {
   websocketMessage,
   websocketOpen
 } from "../actions";
-import { Page, WebsocketStatus } from "../store";
+import { GameView, WebsocketStatus } from "../store";
 import initialState from "./initialState";
 
 const game = (state: IGame = initialState.game, action: Action): IGame => {

@@ -1,7 +1,7 @@
 import * as React from "react";
-import { connect } from "react-redux";
+import { connect, Dispatch } from "react-redux";
 import { Route, RouteComponentProps, withRouter } from "react-router";
-import { IStoreState, Page } from "../../store";
+import { IStoreState, GameView } from "../../store";
 import { getPlayerInfo } from "../../util";
 import { ChooseRoute } from "../Choose/routes";
 import { DoodleRoute } from "../Doodle/routes";
@@ -10,10 +10,23 @@ import { LobbyRoute } from "../Lobby/routes";
 import { PlayerInfoRoute } from "../PlayerInfo/routes";
 import "./App.scss";
 import { DebugScreen } from '../DebugScreen/DebugScreen';
+import { changeGameView } from '../../actions';
 
-type AppProps = RouteComponentProps<{ gameCode: string }>;
+export interface IAppDispatchProps {
+  redirectToPlayerInfo: () => void;
+}
+
+type AppProps = IAppDispatchProps & RouteComponentProps<{}>;
 
 class UnconnectedApp extends React.Component<AppProps, {}> {
+
+  public componentDidMount() {
+    console.log(getPlayerInfo())
+    if (getPlayerInfo() == null) {
+      this.props.redirectToPlayerInfo();
+    }
+  }
+
   public render() {
     return (
       <div className="app">
@@ -24,9 +37,10 @@ class UnconnectedApp extends React.Component<AppProps, {}> {
             <Route path="/room/:gameCode" component={LobbyRoute} />
             <Route exact={true} path="/doodle" component={DoodleRoute} />
             <Route exact={true} path="/debug" component={DebugScreen} />
+            <Route exact={true} path="/player" component={PlayerInfoRoute}/>
             {/* <Route path="/guess" component={GuessRoute}/> */}
             {/* <Route path="/choose" component={ChooseRoute}/> */}
-            {/* <Route path="/player" component={PlayerInfoRoute}/> */}
+
           </div>
         </div>
       </div>
@@ -34,4 +48,17 @@ class UnconnectedApp extends React.Component<AppProps, {}> {
   }
 }
 
-export const App = withRouter(UnconnectedApp);
+const mapStateToProps = (state: IStoreState): {} => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): IAppDispatchProps => {
+  return {
+    redirectToPlayerInfo: () => dispatch(changeGameView(GameView.PLAYER_INFO)),
+  };
+};
+
+export const App = withRouter(connect<{}, IAppDispatchProps, {}>(
+  undefined,
+  mapDispatchToProps
+)(UnconnectedApp));
