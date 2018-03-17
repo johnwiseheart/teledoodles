@@ -4,6 +4,7 @@ export interface IGenericMessage {
   type: string;
   gameCode: string;
   playerId: PlayerId;
+  payload: any;
 }
 
 export enum PageType {
@@ -13,6 +14,7 @@ export enum PageType {
 
 export enum GameMode {
   LOBBY = "LOBBY",
+  LOBBY_READY = "LOBBY_READY",
   GAME = "GAME",
   SHOWCASE = "SHOWCASE"
 }
@@ -82,6 +84,10 @@ export interface IInfo extends IGenericMessage {
   type: "INFO";
   game: IGame;
 }
+
+export const messageIsInfoMessage = (message: any): message is IStartMessage => {
+  return message.type === "INFO";
+};
 
 export interface IPlayer {
   id: string;

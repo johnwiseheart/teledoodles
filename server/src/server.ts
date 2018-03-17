@@ -23,6 +23,7 @@ router.get("/ws", async ctx => {
     console.log(message);
     const parsed = JSON.parse(message);
     store.dispatch({
+      gameCode: parsed.gameCode,
       payload: ctx.websocket,
       playerId: parsed.playerId,
       type: "PLAYER:WEBSOCKET:SET"
