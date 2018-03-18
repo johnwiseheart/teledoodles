@@ -6,6 +6,7 @@ import { Input } from "../../Input/Input";
 import "./Guess.scss";
 
 interface IGuessProps {
+  imageUrl: string;
   onGuess: (text: string) => void;
 }
 
@@ -19,11 +20,12 @@ export class Guess extends React.Component<IGuessProps, IGuessState> {
   };
 
   public render() {
+    const { imageUrl } = this.props;
     const { text } = this.state;
     return (
       <div className="guess">
         What is this?
-        {/* <DoodleViewer src={arrows} /> */}
+        <DoodleViewer src={imageUrl} />
         <div className="flex-pad" />
         <Input value={text} onChange={this.handleChange} />
         <Button text="Submit" onClick={this.handleSubmit} />

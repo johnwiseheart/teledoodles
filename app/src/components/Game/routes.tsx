@@ -53,14 +53,22 @@ class UnconnectedGameRoute extends React.Component<GameRouteProps> {
 
     const playerId = getPlayerInfo().id;
     const currentBook = game.players[playerId].books[0];
+
+    if (currentBook === undefined) {
+      return <div>Waiting on {game.players[playerId].prev}</div>
+    }
     const lastPage = currentBook.pages[currentBook.pages.length - 1];
+    if (currentBook.pages.length !== 0) {
+      console.log(lastPage, pageIsTextPage(lastPage), pageIsImagePage(lastPage))
+    }
+
 
     if (currentBook.pages.length === 0) {
       return <Choose onChoose={this.handleAddTextPage} />;
     } else if (pageIsTextPage(lastPage)) {
-      return <Doodle onDoodle={this.handleAddImagePage} />;
+      return <Doodle onDoodle={this.handleAddImagePage} text={lastPage.text}/>;
     } else if (pageIsImagePage(lastPage)) {
-      return <Guess onGuess={this.handleAddTextPage} />;
+      return <Guess onGuess={this.handleAddTextPage} imageUrl={lastPage.imageUrl}/>;
     }
 
     return (

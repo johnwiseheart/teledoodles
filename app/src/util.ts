@@ -35,9 +35,36 @@ export const sendToS3 = (blob: Blob): Promise<string> => {
 
     bucket.putObject(params, function (err, data) {
       if (err) {
+        console.log(err)
         reject(err);
       } else {
         resolve(fileId);
+      }
+    });
+  });
+}
+
+export const getFromS3 = (fileId: string): Promise<string> => {
+  if (!fileId) { return undefined; };
+  return new Promise((resolve, reject) => {
+    AWS.config.region = 'us-west-2';
+    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+      IdentityPoolId: 'us-west-2:b3de8aaa-e4be-4f9c-b16a-bb5954f442ad'
+    });
+
+    var bucket = new AWS.S3();
+
+    var params = {
+      Bucket: 'teledoodles',
+      Key: `${fileId}.png`,
+    };
+
+    bucket.getSignedUrl("getObject", params, (err, data) => {
+      if (err) {
+        console.log(err)
+        reject(err);
+      } else {
+        resolve(data);
       }
     });
   });

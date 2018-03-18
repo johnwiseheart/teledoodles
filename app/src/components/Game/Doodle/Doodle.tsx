@@ -5,6 +5,7 @@ import Canvas from "../../Canvas/Canvas";
 import "./Doodle.scss";
 
 export interface IDoodleProps {
+  text: string;
   onDoodle: (doodleUrl: string) => void;
 }
 
@@ -20,7 +21,7 @@ export class Doodle extends React.Component<IDoodleProps, {}> {
     return (
       <div className="doodle">
         <span className="label">Doodle This</span>
-        <h2>Pierres Beard</h2>
+        <h2>{this.props.text}</h2>
         <div className="flex-pad" />
         <Canvas ref={this.refHandler.canvas} />
         <div className="flex-pad" />
