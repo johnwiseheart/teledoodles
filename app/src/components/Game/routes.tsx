@@ -68,10 +68,13 @@ class UnconnectedGameRoute extends React.Component<GameRouteProps> {
     const currentBook = game.players[playerId].books[0];
 
     if (currentBook === undefined) {
+      const waitingOnPlayer = this.findNearestBookOwner();
+      const username = waitingOnPlayer ? waitingOnPlayer.username : "UNKNOWN";
+
       return (
         <div className="game">
           <div className="panel">
-            Waiting on {game.players[game.players[playerId].prev].username}
+            Waiting on {username}
           </div>
         </div>
       );
@@ -118,6 +121,25 @@ class UnconnectedGameRoute extends React.Component<GameRouteProps> {
 
     this.props.addPage(currentBook.id, page);
   };
+
+  private findNearestBookOwner = (): IPlayer => {
+    const { game } = this.props;
+    const playerId = getPlayerInfo().id;
+
+    let playersProcessed = 0;
+
+    let currPlayer = game.players[game.players[playerId].prev];
+    while (currPlayer.books.length === 0 && playersProcessed <= Object.keys(game.players).length) {
+      currPlayer = game.players[game.players[playerId].prev]
+      playersProcessed += 1;
+    }
+
+    if (playersProcessed === Object.keys(game.players).length) {
+      return undefined;
+    }
+
+    return currPlayer;
+  }
 }
 
 const mapStateToProps = (state: IStoreState): IGameRouteStateProps => {

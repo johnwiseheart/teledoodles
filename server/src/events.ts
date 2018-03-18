@@ -120,6 +120,8 @@ export const handleStartMessage = (allGames: IStoreState, message: IStartMessage
 
 export const handleAddPageMessage = (allGames: IStoreState, message: IAddPageMessage) => {
   const currentGame = allGames.games[message.gameCode];
+  const numUsers = Object.keys(currentGame.players).length;
+
   // Add the page to the book map for the game
   currentGame.books[message.payload.bookId].pages.push(message.payload.page);
 
@@ -129,18 +131,19 @@ export const handleAddPageMessage = (allGames: IStoreState, message: IAddPageMes
   // Remove the book from the current player's queue and add it to the next player's queue.
   const currBook = currentGame.players[message.playerId].books.shift();
 
-  // Add book to next player's queue
+  // Only add book to next player's queue if it's not full
+
   const nextPlayer = currentGame.players[message.playerId].next;
-  // console.log("AAAAAAAAA", currentGame.players[message.playerId]);
-  // console.log("BBBBBB", currentGame.players)
-  currentGame.players[nextPlayer].books.push(currBook);
+  if (currBook.pages.length < numUsers) {
+    currentGame.players[nextPlayer].books.push(currBook);
+  }
 
   // Finally, check if the game is complete; if every book has as many pages as there are
   // players, set the game mode to SHOWCASE
   let gameOver = true;
-  const numUsers = Object.keys(currentGame.players).length;
+
   for (const key in currentGame.books) {
-    if (currentGame.books[key].pages.length !== numUsers) {
+    if (currentGame.books[key].pages.length < numUsers) {
       gameOver = false;
       break;
     }
