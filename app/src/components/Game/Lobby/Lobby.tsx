@@ -51,7 +51,7 @@ class UnconnectedLobbyRoute extends React.Component<LobbyRouteProps, ILobbyRoute
           </fieldset>
         </div>
         <Button text={readyText} selected={isReady} onClick={this.toggleReady} />
-        <Button text="Start" disabled={game.gameMode !== GameMode.LOBBY_READY} onClick={startGame} />
+        <Button text="Start"  onClick={startGame} />
       </div>
     );
   }

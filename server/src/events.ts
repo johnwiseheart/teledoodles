@@ -45,10 +45,10 @@ export const handleJoinMessage = (allGames: IStoreState, message: IJoinMessage) 
     isReady: false,
     prev: undefined, // Prev/next are set when the game is ready to begin
     next: undefined,
-    books: [{pages : []}], // array with empty book
+    books: [{pages : [], id: message.playerId }], // array with empty book
   };
   // Add empty book for user
-  allGames.games[message.gameCode].books[message.playerId] = {pages: []};
+  allGames.games[message.gameCode].books[message.playerId] = {pages: [], id: message.playerId };
   sendGameInfo(allGames, message.gameCode);
   return allGames;
 };
@@ -93,8 +93,8 @@ export const handleStartMessage = (allGames: IStoreState, message: IStartMessage
   }
 
   // Set prev/next for all players now that the game is ready to begin
-  let prevKey, firstKey = undefined;
-  for (var key in allGames.games[message.gameCode].players) {
+  let prevKey, firstKey;
+  for (let key in allGames.games[message.gameCode].players) {
     if (firstKey === undefined) {
       firstKey = key;
     }
@@ -132,7 +132,7 @@ export const handleAddPageMessage = (allGames: IStoreState, message: IAddPageMes
   // players, set the game mode to SHOWCASE
   let gameOver = true;
   let numUsers = Object.keys(currentGame.players).length;
-  for (var key in currentGame.books) {
+  for (let key in currentGame.books) {
     if (currentGame.books[key].pages.length !== numUsers) {
       gameOver = false;
       break;
