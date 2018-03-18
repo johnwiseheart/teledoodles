@@ -28,7 +28,7 @@ export const sendToS3 = (blob: Blob): Promise<string> => {
 
     var params = {
       Bucket: 'teledoodles',
-      Key: `${fileId}.png`,
+      Key: `doodle/${fileId}.png`,
       ContentType: "img/png",
       Body: blob,
     };
@@ -56,7 +56,7 @@ export const getFromS3 = (fileId: string): Promise<string> => {
 
     var params = {
       Bucket: 'teledoodles',
-      Key: `${fileId}.png`,
+      Key: `doodle/${fileId}.png`,
     };
 
     bucket.getSignedUrl("getObject", params, (err, data) => {
