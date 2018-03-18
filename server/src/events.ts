@@ -76,6 +76,8 @@ export const handleReadyMessage = (allGames: IStoreState, message: IReadyMessage
     }
     if (allReady) {
       allGames.games[message.gameCode].gameMode = GameMode.LOBBY_READY;
+    } else {
+      allGames.games[message.gameCode].gameMode = GameMode.GAME;
     }
   }
 
@@ -115,6 +117,33 @@ export const handleStartMessage = (allGames: IStoreState, message: IStartMessage
 };
 
 export const handleAddPageMessage = (allGames: IStoreState, message: IAddPageMessage) => {
+  let currentGame = allGames.games[message.gameCode];
+  // Add the page to the book map for the game
+  currentGame.books[message.bookId].pages.push(message.payload.page);
+
+  // Remove the book from the current player's queue and add it to the next player's queue.
+  let currBook = currentGame.players[message.playerId].books.shift();
+
+  // Add book to next player's queue
+  let nextPlayer = currentGame.players[message.playerId].next;
+  currentGame.players[nextPlayer].books.push(currBook);
+
+  // Finally, check if the game is complete; if every book has as many pages as there are
+  // players, set the game mode to SHOWCASE
+  let gameOver = true;
+  let numUsers = Object.keys(currentGame.players).length;
+  for (var key in currentGame.books) {
+    if (currentGame.books[key].pages.length !== numUsers) {
+      gameOver = false;
+      break;
+    }
+  }
+
+  if (gameOver) {
+    currentGame.gameMode = GameMode.SHOWCASE;
+  }
+
+  sendGameInfo(allGames, message.gameCode);
   return allGames;
 };
 
