@@ -2,22 +2,25 @@ import * as classNames from "classnames";
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 import { RouteComponentProps } from "react-router";
-import { IPlayer } from "teledoodles-lib";
-import { joinGame, readyGame as readyGameAction } from "../../actions";
+import { IPlayer, IGame, pageIsTextPage, pageIsImagePage, GameMode, IPage, PageType, ITextPage, IBook, IImagePage } from "teledoodles-lib";
+import { joinGame, readyGame as readyGameAction, addPage as addPageAction } from "../../actions";
 import { IStoreState, WebsocketStatus, GameView } from "../../store";
 import { Button } from "../Button/Button";
 import { Guess } from './Guess/Guess';
 import { Choose } from './Choose/Choose';
 import { Doodle } from './Doodle/Doodle';
 import { Lobby } from './Lobby/Lobby';
+import { getPlayerInfo } from '../../util';
 
 interface IGameRouteOwnProps extends RouteComponentProps<{ gameCode: string }> {}
 
 interface IGameRouteDispatchProps {
   joinGame: (gameCode: string) => void;
+  addPage: (bookId: string, page: IPage) => void;
 }
 
 interface IGameRouteStateProps {
+  game: IGame;
   gameView: GameView;
   websocketStatus: WebsocketStatus;
 }
@@ -31,18 +34,33 @@ class UnconnectedGameRoute extends React.Component<GameRouteProps> {
     // if the websocket is closed at this point, the user has
     // entered the lobby directly, so we need to start the game here
     if (websocketStatus === WebsocketStatus.CLOSED) {
-      console.log(match.params.gameCode)
       this.props.joinGame(match.params.gameCode);
     }
   }
 
   public render() {
-    switch (this.props.gameView) {
-      case GameView.HOME:
-      case GameView.LOBBY: return <Lobby />;
-      case GameView.CHOOSE_WORD: return <Choose />
-      case GameView.DOODLE_WORD: return <Doodle />
-      case GameView.GUESS_DOODLE: return <Guess />
+    const { gameView, game } = this.props;
+
+
+    if (game.gameMode === undefined) {
+      return null; // maybe loading state
+    }
+
+    console.log(game);
+    if (game.gameMode === GameMode.LOBBY || game.gameMode === GameMode.LOBBY_READY) {
+      return <Lobby />;
+    }
+
+    const playerId = getPlayerInfo().id;
+    const currentBook = game.players[playerId].books[0];
+    const lastPage = currentBook.pages[currentBook.pages.length - 1];
+
+    if (currentBook.pages.length === 0) {
+      return <Choose onChoose={this.handleAddTextPage} />;
+    } else if (pageIsTextPage(lastPage)) {
+      return <Doodle onDoodle={this.handleAddImagePage} />;
+    } else if (pageIsImagePage(lastPage)) {
+      return <Guess onGuess={this.handleAddTextPage} />;
     }
 
     return (
@@ -51,10 +69,41 @@ class UnconnectedGameRoute extends React.Component<GameRouteProps> {
       </div>
     );
   }
+
+  private handleAddTextPage = (text: string) => {
+    const playerId = getPlayerInfo().id;
+
+    const { gameView, game } = this.props;
+    const currentBook = game.players[playerId].books[0];
+
+    const page: ITextPage = {
+      pageType: PageType.TEXT,
+      text,
+      playerId
+    }
+
+    this.props.addPage(currentBook.id, page);
+  }
+
+  private handleAddImagePage = (imageUrl: string) => {
+    const playerId = getPlayerInfo().id;
+
+    const { gameView, game } = this.props;
+    const currentBook = game.players[playerId].books[0];
+
+    const page: IImagePage = {
+      pageType: PageType.IMAGE,
+      imageUrl,
+      playerId
+    }
+
+    this.props.addPage(currentBook.id, page);
+  }
 }
 
 const mapStateToProps = (state: IStoreState): IGameRouteStateProps => {
   return {
+    game: state.game,
     gameView: state.gameView,
     websocketStatus: state.websocketStatus
   };
@@ -63,6 +112,7 @@ const mapStateToProps = (state: IStoreState): IGameRouteStateProps => {
 const mapDispatchToProps = (dispatch: Dispatch<IStoreState>):  IGameRouteDispatchProps => {
   return {
     joinGame: (gameCode: string) => dispatch(joinGame(gameCode)),
+    addPage: (bookId: string, page: IPage) => dispatch(addPageAction(bookId, page)),
   };
 };
 

@@ -14,7 +14,7 @@ export const Button = ({ className, disabled, selected, text, onClick }: IButton
   const componentClassName = classNames("button", className, { selected });
 
   return (
-    <a className={componentClassName} onClick={!disabled && onClick}>
+    <a className={componentClassName} onClick={disabled ? undefined : onClick}>
       {text}{disabled && " (Disabled)"}
     </a>
   );

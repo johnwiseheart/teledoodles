@@ -35,13 +35,11 @@ export const middleware: Middleware = (store: MiddlewareAPI<void>) => (next: Dis
     };
     websocket.onclose = event => store.dispatch(websocketClose({ event }));
     websocket.onmessage = event => {
-      console.log("MESSAGE RECEIVD", event)
       store.dispatch(websocketMessage({ event }));
     };
   }
 
   if (isType(action, websocketSend)) {
-    console.log(action)
     websocket.send(JSON.stringify(action.payload));
   }
 

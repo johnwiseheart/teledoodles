@@ -5,15 +5,16 @@ import DoodleViewer from "../../DoodleViewer/DoodleViewer";
 import { Input } from "../../Input/Input";
 import "./Guess.scss";
 
-// tslint:disable-next-line
-// const arrows = require("./arrows.svg");
+interface IGuessProps {
+  onGuess: (text: string) => void;
+}
 
-interface IGuessRouteState {
+interface IGuessState {
   text: string;
 }
 
-export class Guess extends React.Component<{}, IGuessRouteState> {
-  public state: IGuessRouteState = {
+export class Guess extends React.Component<IGuessProps, IGuessState> {
+  public state: IGuessState = {
     text: ""
   };
 
@@ -35,6 +36,6 @@ export class Guess extends React.Component<{}, IGuessRouteState> {
   };
 
   public handleSubmit = () => {
-    return;
+    this.props.onGuess(this.state.text);
   };
 }

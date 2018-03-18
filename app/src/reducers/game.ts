@@ -22,9 +22,7 @@ const game = (state: IGame = initialState.game, action: Action): IGame => {
   if (isType(action, websocketMessage)) {
     const parsed = JSON.parse(action.payload.event.data);
 
-    if (parsed.type === "GAME:INFO") {
-      // tslint:disable-next-line
-      console.log(parsed.game);
+    if (parsed.type === "INFO") {
       return {
         ...state,
         ...parsed.game,

@@ -26,6 +26,7 @@ export interface IPage {
 
 export interface IBook {
   pages: IPage[];
+  id: string;
 }
 
 export interface ITextPage extends IPage {
@@ -33,10 +34,18 @@ export interface ITextPage extends IPage {
   text: string;
 }
 
+export const pageIsTextPage = (page: any): page is ITextPage => {
+  return page.pageType === PageType.TEXT;
+};
+
 export interface IImagePage extends IPage {
   pageType: PageType.IMAGE;
   imageUrl: string;
 }
+
+export const pageIsImagePage = (page: any): page is IImagePage => {
+  return page.pageType === PageType.IMAGE;
+};
 
 export interface IJoinMessage extends IGenericMessage {
   type: "JOIN";

@@ -25,7 +25,6 @@ type AppProps = IAppStateProps & IAppDispatchProps & IAppOwnProps;
 class UnconnectedApp extends React.Component<AppProps, {}> {
 
   public componentDidMount() {
-    console.log(getPlayerInfo())
     if (getPlayerInfo() == null) {
       this.props.redirectToPlayerInfo();
     }

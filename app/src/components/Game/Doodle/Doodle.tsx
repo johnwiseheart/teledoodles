@@ -4,15 +4,11 @@ import { Button } from "../../Button/Button";
 import Canvas from "../../Canvas/Canvas";
 import "./Doodle.scss";
 
-interface IDoodleRouteState {
-  isOverlayOpen: boolean;
+export interface IDoodleProps {
+  onDoodle: (doodleUrl: string) => void;
 }
 
-export class Doodle extends React.Component<{}, IDoodleRouteState> {
-  public state: IDoodleRouteState = {
-    isOverlayOpen: false
-  };
-
+export class Doodle extends React.Component<IDoodleProps, {}> {
   private canvas: Canvas;
   private refHandler = {
     canvas: (canvas: Canvas) => {
@@ -30,7 +26,7 @@ export class Doodle extends React.Component<{}, IDoodleRouteState> {
         <div className="flex-pad" />
         <div className="buttons">
           <Button text="Clear" onClick={this.clearCanvas} />
-          <Button text="Submit" onClick={this.clearCanvas} />
+          <Button text="Submit" onClick={this.handleSubmit} />
         </div>
       </div>
     );
@@ -39,4 +35,9 @@ export class Doodle extends React.Component<{}, IDoodleRouteState> {
   private clearCanvas = () => {
     this.canvas.clearCanvas();
   };
+
+  private handleSubmit = async () => {
+    const URL = await this.canvas.getURL();
+    this.props.onDoodle(URL);
+  }
 }

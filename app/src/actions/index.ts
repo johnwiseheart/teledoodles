@@ -21,16 +21,11 @@ export const websocketClose = actionCreator<{ event: Event }>("WEBSOCKET:CLOSE")
 export const websocketMessage = actionCreator<{ event: MessageEvent }>("WEBSOCKET:MESSAGE");
 
 export const joinGame = (gameCode: string) => {
-  console.log(gameCode);
   return (dispatch: Dispatch<IStoreState>) => {
-    console.log(gameCode)
     const playerInfo = getPlayerInfo();
     if (playerInfo) {
       const { id: playerId, username } = playerInfo;
-      console.log(gameCode)
       dispatch(gameJoin({ gameCode }));
-      // tslint:disable-next-line
-      console.log(gameCode);
       dispatch(
         websocketConnect({
           messages: [{ type: "JOIN", gameCode, playerId, payload: { username } }]

@@ -34,7 +34,7 @@ class UnconnectedLobbyRoute extends React.Component<LobbyRouteProps, ILobbyRoute
     const { isReady } = this.state;
     const { game, startGame } = this.props;
 
-    const readyText = isReady ? "Ready to Play" : "Not Ready";
+    const readyText = isReady ? "Wait a sec" : "Ready Up";
     return (
       <div className="lobby">
         <h2>Lobby {game.gameCode}</h2>

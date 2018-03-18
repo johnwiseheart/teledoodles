@@ -4,12 +4,16 @@ import { Button } from "../../Button/Button";
 import { Input } from "../../Input/Input";
 import "./Choose.scss";
 
-interface IChooseRouteState {
+interface IChooseProps {
+  onChoose: (text: string) => void;
+}
+
+interface IChooseState {
   text: string;
 }
 
-export class Choose extends React.Component<{}, IChooseRouteState> {
-  public state: IChooseRouteState = {
+export class Choose extends React.Component<IChooseProps, IChooseState> {
+  public state: IChooseState = {
     text: ""
   };
 
@@ -29,6 +33,6 @@ export class Choose extends React.Component<{}, IChooseRouteState> {
   };
 
   public handleSubmit = () => {
-    return;
+    this.props.onChoose(this.state.text);
   };
 }

@@ -29,7 +29,6 @@ export default class Canvas extends React.Component<{}, {}> {
     return (
       <div className="canvas">
         <canvas ref={this.refHandlers.canvas} />
-        <button onClick={this.export}>Export</button>
       </div>
     );
   }
@@ -42,6 +41,15 @@ export default class Canvas extends React.Component<{}, {}> {
 
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   };
+
+  public getURL = (): Promise<string> => {
+    return new Promise(resolve => {
+      this.canvas.toBlob(async blob => {
+        const fileName = await sendToS3(blob);
+        resolve(fileName)
+      })
+    })
+  }
 
   private setupCanvas = () => {
     this.canvas.addEventListener("mousemove", this.handleDraw, false);
@@ -149,14 +157,5 @@ export default class Canvas extends React.Component<{}, {}> {
     this.canvas.height = size;
 
     ctx.putImageData(imgData, 0, 0);
-  };
-
-  private export = () => {
-    if (this.canvas != null) {
-      this.canvas.toBlob(async blob => {
-        const fileName = await sendToS3(blob);
-        console.log(fileName)
-      })
-    }
   };
 }

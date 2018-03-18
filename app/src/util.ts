@@ -15,7 +15,7 @@ export const getPlayerInfo = () => {
 };
 
 
-export const sendToS3 = (blob: Blob) => {
+export const sendToS3 = (blob: Blob): Promise<string> => {
   if (!blob) { return undefined; };
   return new Promise((resolve, reject) => {
     AWS.config.region = 'us-west-2';
