@@ -7,8 +7,9 @@ import { HomeRoute } from "../Home/routes";
 import { PlayerInfoRoute } from "../PlayerInfo/routes";
 import "./App.scss";
 import { DebugScreen } from '../DebugScreen/DebugScreen';
-import { changeGameView, joinGame } from '../../actions';
+import { joinGame } from '../../actions';
 import { GameRoute } from '../Game/routes';
+import { push } from 'react-router-redux';
 
 export interface IAppOwnProps extends RouteComponentProps<{ gameCode: string }> { };
 
@@ -33,8 +34,9 @@ class UnconnectedApp extends React.Component<AppProps, {}> {
   public render() {
     return (
       <div className="app">
+        <header>Teledoodles</header>
         <div className="body">
-          <div className="body-inner">
+          {/* <div className="body-inner"> */}
             {/* {this.getRoute()} */}
             <Route exact={true} path="/" component={HomeRoute} />
             <Route path="/game/:gameCode" component={GameRoute} />
@@ -43,7 +45,7 @@ class UnconnectedApp extends React.Component<AppProps, {}> {
             {/* <Route path="/guess" component={GuessRoute}/> */}
             {/* <Route path="/choose" component={ChooseRoute}/> */}
 
-          </div>
+          {/* </div> */}
         </div>
       </div>
     );
@@ -58,7 +60,7 @@ const mapStateToProps = (state: IStoreState): IAppStateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): IAppDispatchProps => {
   return {
-    redirectToPlayerInfo: () => dispatch(changeGameView(GameView.PLAYER_INFO)),
+    redirectToPlayerInfo: () => dispatch(push("/player")),
   };
 };
 

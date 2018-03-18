@@ -45,7 +45,8 @@ module.exports = {
             inject: false,
             template: require('html-webpack-template'),
             appMountId: 'root',
-            baseHref: '/'
+            baseHref: '/',
+            headHtmlSnippet: '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
         }),
     ],
 

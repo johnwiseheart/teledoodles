@@ -11,11 +11,11 @@ export interface IButtonProps {
 }
 
 export const Button = ({ className, disabled, selected, text, onClick }: IButtonProps) => {
-  const componentClassName = classNames("button", className, { selected });
+  const componentClassName = classNames("button", className, { selected, disabled });
 
   return (
     <a className={componentClassName} onClick={disabled ? undefined : onClick}>
-      {text}{disabled && " (Disabled)"}
+      {text}
     </a>
   );
 };

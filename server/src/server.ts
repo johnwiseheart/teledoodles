@@ -33,8 +33,7 @@ router.get("/ws", async ctx => {
 
 router.get("/new", async ctx => {
   const gameCode = makeId();
-  // const milliseconds = (new Date).getTime();
-  // return it
+
   ctx.body = {
     gameCode
   };

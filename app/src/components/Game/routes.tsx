@@ -2,15 +2,29 @@ import * as classNames from "classnames";
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 import { RouteComponentProps } from "react-router";
-import { IPlayer, IGame, pageIsTextPage, pageIsImagePage, GameMode, IPage, PageType, ITextPage, IBook, IImagePage } from "teledoodles-lib";
+import {
+  IPlayer,
+  IGame,
+  pageIsTextPage,
+  pageIsImagePage,
+  GameMode,
+  IPage,
+  PageType,
+  ITextPage,
+  IBook,
+  IImagePage
+} from "teledoodles-lib";
 import { joinGame, readyGame as readyGameAction, addPage as addPageAction } from "../../actions";
 import { IStoreState, WebsocketStatus, GameView } from "../../store";
 import { Button } from "../Button/Button";
-import { Guess } from './Guess/Guess';
-import { Choose } from './Choose/Choose';
-import { Doodle } from './Doodle/Doodle';
-import { Lobby } from './Lobby/Lobby';
-import { getPlayerInfo } from '../../util';
+import { Guess } from "./Guess/Guess";
+import { Choose } from "./Choose/Choose";
+import { Doodle } from "./Doodle/Doodle";
+import { Lobby } from "./Lobby/Lobby";
+import { getPlayerInfo } from "../../util";
+import { Showcase } from "./Showcase/Showcase";
+import { push } from "react-router-redux";
+import "./Game.scss";
 
 interface IGameRouteOwnProps extends RouteComponentProps<{ gameCode: string }> {}
 
@@ -21,14 +35,12 @@ interface IGameRouteDispatchProps {
 
 interface IGameRouteStateProps {
   game: IGame;
-  gameView: GameView;
   websocketStatus: WebsocketStatus;
 }
 
 type GameRouteProps = IGameRouteOwnProps & IGameRouteStateProps & IGameRouteDispatchProps;
 
 class UnconnectedGameRoute extends React.Component<GameRouteProps> {
-
   componentDidMount() {
     const { match, websocketStatus } = this.props;
     // if the websocket is closed at this point, the user has
@@ -39,94 +51,90 @@ class UnconnectedGameRoute extends React.Component<GameRouteProps> {
   }
 
   public render() {
-    const { gameView, game } = this.props;
-
-
+    const { game } = this.props;
     if (game.gameMode === undefined) {
       return null; // maybe loading state
     }
 
-    console.log(game);
-    if (game.gameMode === GameMode.LOBBY || game.gameMode === GameMode.LOBBY_READY) {
-      return <Lobby />;
+    switch (game.gameMode) {
+      case GameMode.LOBBY:
+      case GameMode.LOBBY_READY:
+        return <Lobby />;
+      case GameMode.SHOWCASE:
+        return <Showcase game={game} />;
     }
 
     const playerId = getPlayerInfo().id;
     const currentBook = game.players[playerId].books[0];
 
     if (currentBook === undefined) {
-      return <div>Waiting on {game.players[playerId].prev}</div>
+      return (
+        <div className="game">
+          <div className="panel">
+            Waiting on {game.players[game.players[playerId].prev].username}
+          </div>
+        </div>
+      );
     }
     const lastPage = currentBook.pages[currentBook.pages.length - 1];
-    if (currentBook.pages.length !== 0) {
-      console.log(lastPage, pageIsTextPage(lastPage), pageIsImagePage(lastPage))
-    }
-
 
     if (currentBook.pages.length === 0) {
       return <Choose onChoose={this.handleAddTextPage} />;
     } else if (pageIsTextPage(lastPage)) {
-      return <Doodle onDoodle={this.handleAddImagePage} text={lastPage.text}/>;
+      return <Doodle onDoodle={this.handleAddImagePage} text={lastPage.text} />;
     } else if (pageIsImagePage(lastPage)) {
-      return <Guess onGuess={this.handleAddTextPage} imageUrl={lastPage.imageUrl}/>;
+      return <Guess onGuess={this.handleAddTextPage} imageId={lastPage.imageId} />;
     }
 
-    return (
-      <div className="game">
-        It shouldn't be possible to get here.
-      </div>
-    );
+    return <div className="game">It shouldn't be possible to get here.</div>;
   }
 
   private handleAddTextPage = (text: string) => {
     const playerId = getPlayerInfo().id;
 
-    const { gameView, game } = this.props;
+    const { game } = this.props;
     const currentBook = game.players[playerId].books[0];
 
     const page: ITextPage = {
       pageType: PageType.TEXT,
       text,
       playerId
-    }
+    };
 
     this.props.addPage(currentBook.id, page);
-  }
+  };
 
-  private handleAddImagePage = (imageUrl: string) => {
+  private handleAddImagePage = (imageId: string) => {
     const playerId = getPlayerInfo().id;
 
-    const { gameView, game } = this.props;
+    const { game } = this.props;
     const currentBook = game.players[playerId].books[0];
 
     const page: IImagePage = {
       pageType: PageType.IMAGE,
-      imageUrl,
+      imageId,
       playerId
-    }
+    };
 
     this.props.addPage(currentBook.id, page);
-  }
+  };
 }
 
 const mapStateToProps = (state: IStoreState): IGameRouteStateProps => {
   return {
     game: state.game,
-    gameView: state.gameView,
     websocketStatus: state.websocketStatus
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<IStoreState>):  IGameRouteDispatchProps => {
+const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): IGameRouteDispatchProps => {
   return {
     joinGame: (gameCode: string) => dispatch(joinGame(gameCode)),
-    addPage: (bookId: string, page: IPage) => dispatch(addPageAction(bookId, page)),
+    addPage: (bookId: string, page: IPage) => dispatch(addPageAction(bookId, page))
   };
 };
 
-
-export const GameRoute = connect<
-  IGameRouteStateProps,
-  IGameRouteDispatchProps,
-  IGameRouteOwnProps
->(mapStateToProps, mapDispatchToProps)(UnconnectedGameRoute);
+export const GameRoute = connect<IGameRouteStateProps, IGameRouteDispatchProps, IGameRouteOwnProps>(
+  mapStateToProps,
+  mapDispatchToProps
+)(UnconnectedGameRoute);

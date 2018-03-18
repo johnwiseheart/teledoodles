@@ -24,22 +24,6 @@
     }
   }
 
-  header {
-    background-color: $primary-color;
-    color: $secondary-text-color;
-    padding: 10px;
-    margin-bottom: 10px;
-    font-size: 30px;
-    box-shadow: $box-shadow-1;
-  }
-
-  .panel {
-    background-color: #fff;
-    padding: 0 5px;
-    margin: 5px 0;
-    box-shadow: $box-shadow-1;
-  }
-
   .buttons {
     display: flex;
 

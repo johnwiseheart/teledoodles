@@ -7,6 +7,7 @@ import { joinGame, readyGame as readyGameAction, startGame as startGameAction } 
 import { IStoreState, WebsocketStatus } from "../../../store";
 import { Button } from "../../Button/Button";
 import "./Lobby.scss";
+import { getPlayerInfo } from '../../../util';
 
 interface ILobbyRouteStateProps {
   game: IGame;
@@ -34,12 +35,11 @@ class UnconnectedLobbyRoute extends React.Component<LobbyRouteProps, ILobbyRoute
     const { isReady } = this.state;
     const { game, startGame } = this.props;
 
-    const readyText = isReady ? "Wait a sec" : "Ready Up";
+    const readyText = isReady ? "Un-Ready" : "Ready Up";
     return (
       <div className="lobby">
         <h2>Lobby {game.gameCode}</h2>
-        <p>All players must be ready to start the game.</p>
-        <p>There must be atleast 4 players to start the game.</p>
+        <p>At least 4 players must be ready for the host to start the game.</p>
         <div className="lobby-players">
           <fieldset name="Not ready">
             <legend>Not ready</legend>
@@ -50,10 +50,18 @@ class UnconnectedLobbyRoute extends React.Component<LobbyRouteProps, ILobbyRoute
             {this.renderPlayers(this.getPlayersLeft(true))}
           </fieldset>
         </div>
+        <div className="flex-pad" />
         <Button text={readyText} selected={isReady} onClick={this.toggleReady} />
-        <Button text="Start"  onClick={startGame} />
+        {this.maybeRenderStartButton()}
       </div>
     );
+  }
+
+  private maybeRenderStartButton = () => {
+    const { game, startGame } = this.props;
+    const playerId = getPlayerInfo().id;
+    if (playerId !== game.host) { return undefined; }
+    return <Button text="Start" disabled={game.gameMode !== GameMode.LOBBY_READY}  onClick={startGame} />
   }
 
   private getPlayersLeft = (isReady: boolean) => {

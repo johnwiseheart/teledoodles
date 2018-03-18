@@ -4,18 +4,23 @@
   text-align: center;
   display: flex;
   flex: 1;
-  background-color: $background-color;
+  flex-direction: column;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 10px;
+
+  header {
+    background: $primary-color-light;
+    color: $secondary-text-color;
+    padding: 10px 0;
+    border: 3px solid $primary-color;
+    font-size: 30px;
+    box-shadow: $box-shadow-1;
+  }
 
   .body {
-    padding: 10px;
-    max-width: 500px;
-    margin: 0 auto;
+    padding-top: 5px;
     display: flex;
     flex: 1;
-
-    &-inner {
-      display: flex;
-      flex: 1;
-    }
   }
 }

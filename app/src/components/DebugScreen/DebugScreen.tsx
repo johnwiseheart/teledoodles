@@ -57,7 +57,7 @@ class UnconnectedDebugScreen extends React.Component<HomeRouteProps, {}> {
     this.props.addPage("2", {
       playerId: getPlayerInfo().id,
       pageType: PageType.IMAGE,
-      imageUrl: "aaa.png",
+      imageId: "aaa.png",
     })
   }
 }

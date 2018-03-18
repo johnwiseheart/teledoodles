@@ -2,7 +2,6 @@ import { Router } from "react-router";
 import { TurnType } from "teledoodles-lib";
 import { IStoreState, GameView, WebsocketStatus } from "../store";
 
-// tslint:disable
 const initialState: IStoreState = {
   game: {
     gameCode: "",
@@ -13,7 +12,6 @@ const initialState: IStoreState = {
   },
   router: {} as Router,
   websocketStatus: WebsocketStatus.CLOSED,
-  gameView: GameView.HOME
 };
 
 export default initialState;

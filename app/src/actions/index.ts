@@ -3,6 +3,7 @@ import actionCreatorFactory from "typescript-fsa";
 import { IStoreState, Message, GameView } from "../store";
 import { getPlayerInfo } from "../util";
 import { IJoinMessage, IPage, IGenericMessage, IReadyMessage, IStartMessage, IAddPageMessage } from "teledoodles-lib";
+import { push } from 'react-router-redux';
 
 const actionCreator = actionCreatorFactory();
 
@@ -10,8 +11,6 @@ export const gameJoin = actionCreator<{ gameCode: string }>("GAME:JOIN");
 export const gameReady = actionCreator<boolean>("GAME:READY");
 export const gameStart = actionCreator("GAME:START");
 export const gameAddPage = actionCreator<{ bookId: string, page: IPage }>("GAME:ADD_PAGE");
-
-export const gameViewChange = actionCreator<GameView>("GAME_VIEW:CHANGE");
 
 export const websocketSend = actionCreator<Message>("WEBSOCKET:SEND");
 export const websocketConnect = actionCreator<{ messages?: Message[] }>("WEBSOCKET:CONNECT");
@@ -31,7 +30,7 @@ export const joinGame = (gameCode: string) => {
           messages: [{ type: "JOIN", gameCode, playerId, payload: { username } }]
         })
       );
-      dispatch(gameViewChange(GameView.LOBBY));
+      dispatch(push(`/game/${gameCode}`));
     }
   };
 };
@@ -88,10 +87,3 @@ export const addPage = (bookId: string, page: IPage) => {
     // dispatch(gameAddPage({ bookId, page }));
   };
 }
-
-
-export const changeGameView = (gameView: GameView) => {
-  return (dispatch: Dispatch<IStoreState>) => {
-    dispatch(gameViewChange(gameView));
-  };
-};

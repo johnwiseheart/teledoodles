@@ -3,7 +3,7 @@ import "./DoodleViewer.scss";
 import { getFromS3 } from "../../util";
 
 export interface IDoodleViewerProps {
-  src: string;
+  imageId: string;
 }
 
 export interface IDoodleViewerState {
@@ -16,7 +16,7 @@ export default class DoodleViewer extends React.Component<IDoodleViewerProps, ID
   }
 
   public async componentDidMount() {
-    const imageUrl = await getFromS3(this.props.src);
+    const imageUrl = await getFromS3(this.props.imageId);
     this.setState({ imageUrl });
   }
 

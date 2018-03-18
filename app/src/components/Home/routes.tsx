@@ -34,7 +34,6 @@ class UnconnectedHomeRoute extends React.Component<HomeRouteProps, IHomeRouteSta
     return (
       <div className="home">
         {isOverlayOpen && this.renderJoinCodeOverlay()}
-        <header>Teledoodles</header>
         <div className="panel">
           <h2>Welcome {playerName}</h2>
         </div>

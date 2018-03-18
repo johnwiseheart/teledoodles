@@ -21,8 +21,11 @@ export class Choose extends React.Component<IChooseProps, IChooseState> {
     const { text } = this.state;
     return (
       <div className="choose">
+        <div className="flex-pad" />
         Pick a word or phrase for the other players to sketch.
+        <div className="flex-pad" />
         <Input value={text} onChange={this.handleChange} />
+        <div className="flex-pad" />
         <Button text="Submit" onClick={this.handleSubmit} />
       </div>
     );

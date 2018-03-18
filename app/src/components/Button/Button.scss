@@ -13,6 +13,15 @@
     text-align: center;
 
     &.selected {
-        background-color: $primary-color-dark;
+        background-color: darken($primary-color-dark, 10%);
+    }
+
+    &.disabled {
+        background-color: lighten($primary-color-dark, 30%);
+        color: #eee;
+    }
+
+    &:not(.disabled):hover {
+        background-color: darken($primary-color-dark, 20%);
     }
 }

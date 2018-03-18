@@ -40,7 +40,7 @@ export const pageIsTextPage = (page: any): page is ITextPage => {
 
 export interface IImagePage extends IPage {
   pageType: PageType.IMAGE;
-  imageUrl: string;
+  imageId: string;
 }
 
 export const pageIsImagePage = (page: any): page is IImagePage => {

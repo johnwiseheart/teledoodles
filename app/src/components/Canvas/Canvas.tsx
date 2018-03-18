@@ -151,7 +151,7 @@ export default class Canvas extends React.Component<{}, {}> {
     }
 
     const imgData = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-    const size = Math.min(window.innerWidth - 26, 500);
+    const size = Math.min(window.innerWidth - 26, 500 - 6);
 
     this.canvas.width = size;
     this.canvas.height = size;

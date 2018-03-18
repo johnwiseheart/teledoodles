@@ -20,9 +20,10 @@ export class Doodle extends React.Component<IDoodleProps, {}> {
   public render() {
     return (
       <div className="doodle">
-        <span className="label">Doodle This</span>
-        <h2>{this.props.text}</h2>
-        <div className="flex-pad" />
+        <div className="panel">
+          <h2>{this.props.text}</h2>
+          <span className="label">Doodle This</span>
+        </div>
         <Canvas ref={this.refHandler.canvas} />
         <div className="flex-pad" />
         <div className="buttons">
