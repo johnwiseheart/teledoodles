@@ -13,6 +13,7 @@ import initialState from "./initialState";
 
 const page = (state: GameView = initialState.gameView, action: Action): GameView => {
   if (isType(action, gameViewChange)) {
+    console.log(action.payload)
     return action.payload;
   }
 

@@ -9,7 +9,7 @@ const actionCreator = actionCreatorFactory();
 export const gameJoin = actionCreator<{ gameCode: string }>("GAME:JOIN");
 export const gameReady = actionCreator<boolean>("GAME:READY");
 export const gameStart = actionCreator("GAME:START");
-export const gameAddPage = actionCreator<{ bookId: string, page: IPage }>("GAME:START");
+export const gameAddPage = actionCreator<{ bookId: string, page: IPage }>("GAME:ADD_PAGE");
 
 export const gameViewChange = actionCreator<GameView>("GAME_VIEW:CHANGE");
 
@@ -36,7 +36,7 @@ export const joinGame = (gameCode: string) => {
           messages: [{ type: "JOIN", gameCode, playerId, payload: { username } }]
         })
       );
-      // dispatch(pageChange(Page.LOBBY));
+      dispatch(gameViewChange(GameView.LOBBY));
     }
   };
 };

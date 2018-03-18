@@ -8,7 +8,7 @@ import { IStoreState, GameView } from "../store";
 
 const pages = {
   [GameView.HOME]: () => "/",
-  [GameView.LOBBY]: (gameCode: string) => `/room/${gameCode}`,
+  [GameView.LOBBY]: (gameCode: string) => `/game/${gameCode}`,
   [GameView.PLAYER_INFO]: () => "/player"
 };
 
@@ -21,7 +21,7 @@ export const middleware = (store: MiddlewareAPI<IStoreState>) => (next: Dispatch
     const newPage = action.payload;
 
     if (pages[newPage] !== undefined) {
-      return next(push(pages[newPage](store.getState().game.gameCode)));
+      store.dispatch(push(pages[newPage](store.getState().game.gameCode)));
     }
   }
 

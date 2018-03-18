@@ -66,7 +66,7 @@ export const handleReadyMessage = (allGames: IStoreState, message: IReadyMessage
   allGames.games[message.gameCode].players[message.playerId].isReady = true;
 
   // If all players are now ready && number of players is >= 4, set lobby state to LOBBY_READY
-  if (Object.keys(allGames.games[message.gameCode].players).length >= 4) {
+  if (Object.keys(allGames.games[message.gameCode].players).length >= 1) {
     let allReady = true;
     for (var key in allGames.games[message.gameCode].players) {
       if (allGames.games[message.gameCode].players[key].isReady !== true) {

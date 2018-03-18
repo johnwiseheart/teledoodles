@@ -1,20 +1,18 @@
 import * as React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import { Button } from "../Button/Button";
-import DoodleViewer from "../DoodleViewer/DoodleViewer";
-import { Input } from "../Input/Input";
+import { Button } from "../../Button/Button";
+import DoodleViewer from "../../DoodleViewer/DoodleViewer";
+import { Input } from "../../Input/Input";
 import "./Guess.scss";
 
 // tslint:disable-next-line
-const arrows = require("./arrows.svg");
-
-export interface IGuessRouteProps extends RouteComponentProps<{}> {}
+// const arrows = require("./arrows.svg");
 
 interface IGuessRouteState {
   text: string;
 }
 
-class UnconnectedGuessRoute extends React.Component<IGuessRouteProps, IGuessRouteState> {
+export class Guess extends React.Component<{}, IGuessRouteState> {
   public state: IGuessRouteState = {
     text: ""
   };
@@ -24,7 +22,7 @@ class UnconnectedGuessRoute extends React.Component<IGuessRouteProps, IGuessRout
     return (
       <div className="guess">
         What is this?
-        <DoodleViewer src={arrows} />
+        {/* <DoodleViewer src={arrows} /> */}
         <div className="flex-pad" />
         <Input value={text} onChange={this.handleChange} />
         <Button text="Submit" onClick={this.handleSubmit} />
@@ -40,5 +38,3 @@ class UnconnectedGuessRoute extends React.Component<IGuessRouteProps, IGuessRout
     return;
   };
 }
-
-export const GuessRoute = withRouter(UnconnectedGuessRoute);

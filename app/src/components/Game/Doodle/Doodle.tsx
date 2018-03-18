@@ -1,16 +1,14 @@
 import * as React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import { Button } from "../Button/Button";
-import Canvas from "../Canvas/Canvas";
+import { Button } from "../../Button/Button";
+import Canvas from "../../Canvas/Canvas";
 import "./Doodle.scss";
-
-export interface IDoodleRouteProps extends RouteComponentProps<{}> {}
 
 interface IDoodleRouteState {
   isOverlayOpen: boolean;
 }
 
-class UnconnectedDoodleRoute extends React.Component<IDoodleRouteProps, IDoodleRouteState> {
+export class Doodle extends React.Component<{}, IDoodleRouteState> {
   public state: IDoodleRouteState = {
     isOverlayOpen: false
   };
@@ -42,5 +40,3 @@ class UnconnectedDoodleRoute extends React.Component<IDoodleRouteProps, IDoodleR
     this.canvas.clearCanvas();
   };
 }
-
-export const DoodleRoute = withRouter(UnconnectedDoodleRoute);

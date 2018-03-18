@@ -1,16 +1,14 @@
 import * as React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import { Button } from "../Button/Button";
-import { Input } from "../Input/Input";
+import { Button } from "../../Button/Button";
+import { Input } from "../../Input/Input";
 import "./Choose.scss";
-
-export interface IChooseRouteProps extends RouteComponentProps<{}> {}
 
 interface IChooseRouteState {
   text: string;
 }
 
-class UnconnectedChooseRoute extends React.Component<IChooseRouteProps, IChooseRouteState> {
+export class Choose extends React.Component<{}, IChooseRouteState> {
   public state: IChooseRouteState = {
     text: ""
   };
@@ -34,5 +32,3 @@ class UnconnectedChooseRoute extends React.Component<IChooseRouteProps, IChooseR
     return;
   };
 }
-
-export const ChooseRoute = withRouter(UnconnectedChooseRoute);

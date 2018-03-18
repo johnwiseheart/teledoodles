@@ -6,15 +6,16 @@ export interface IButtonProps {
   selected?: boolean;
   className?: string;
   text: string;
+  disabled?: boolean;
   onClick: () => void;
 }
 
-export const Button = ({ className, selected, text, onClick }: IButtonProps) => {
+export const Button = ({ className, disabled, selected, text, onClick }: IButtonProps) => {
   const componentClassName = classNames("button", className, { selected });
 
   return (
-    <a className={componentClassName} onClick={onClick}>
-      {text}
+    <a className={componentClassName} onClick={!disabled && onClick}>
+      {text}{disabled && " (Disabled)"}
     </a>
   );
 };

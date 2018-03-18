@@ -24,10 +24,10 @@ const game = (state: IGame = initialState.game, action: Action): IGame => {
 
     if (parsed.type === "GAME:INFO") {
       // tslint:disable-next-line
-      console.log(parsed.game.players);
+      console.log(parsed.game);
       return {
         ...state,
-        players: parsed.game.players
+        ...parsed.game,
       };
     }
   }

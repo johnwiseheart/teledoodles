@@ -1,22 +1,26 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 import { Route, RouteComponentProps, withRouter } from "react-router";
-import { IStoreState, GameView } from "../../store";
+import { IStoreState, GameView, WebsocketStatus } from "../../store";
 import { getPlayerInfo } from "../../util";
-import { ChooseRoute } from "../Choose/routes";
-import { DoodleRoute } from "../Doodle/routes";
 import { HomeRoute } from "../Home/routes";
-import { LobbyRoute } from "../Lobby/routes";
 import { PlayerInfoRoute } from "../PlayerInfo/routes";
 import "./App.scss";
 import { DebugScreen } from '../DebugScreen/DebugScreen';
-import { changeGameView } from '../../actions';
+import { changeGameView, joinGame } from '../../actions';
+import { GameRoute } from '../Game/routes';
+
+export interface IAppOwnProps extends RouteComponentProps<{ gameCode: string }> { };
+
+export interface IAppStateProps {
+  websocketStatus: WebsocketStatus;
+}
 
 export interface IAppDispatchProps {
   redirectToPlayerInfo: () => void;
 }
 
-type AppProps = IAppDispatchProps & RouteComponentProps<{}>;
+type AppProps = IAppStateProps & IAppDispatchProps & IAppOwnProps;
 
 class UnconnectedApp extends React.Component<AppProps, {}> {
 
@@ -34,8 +38,7 @@ class UnconnectedApp extends React.Component<AppProps, {}> {
           <div className="body-inner">
             {/* {this.getRoute()} */}
             <Route exact={true} path="/" component={HomeRoute} />
-            <Route path="/room/:gameCode" component={LobbyRoute} />
-            <Route exact={true} path="/doodle" component={DoodleRoute} />
+            <Route path="/game/:gameCode" component={GameRoute} />
             <Route exact={true} path="/debug" component={DebugScreen} />
             <Route exact={true} path="/player" component={PlayerInfoRoute}/>
             {/* <Route path="/guess" component={GuessRoute}/> */}
@@ -48,8 +51,10 @@ class UnconnectedApp extends React.Component<AppProps, {}> {
   }
 }
 
-const mapStateToProps = (state: IStoreState): {} => {
-  return {};
+const mapStateToProps = (state: IStoreState): IAppStateProps => {
+  return {
+    websocketStatus: state.websocketStatus
+  };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): IAppDispatchProps => {
@@ -58,7 +63,7 @@ const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): IAppDispatchProps 
   };
 };
 
-export const App = withRouter(connect<{}, IAppDispatchProps, {}>(
-  undefined,
+export const App = withRouter(connect<IAppStateProps, IAppDispatchProps, IAppOwnProps>(
+  mapStateToProps,
   mapDispatchToProps
 )(UnconnectedApp));
