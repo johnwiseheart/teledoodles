@@ -1,9 +1,0 @@
-@import "../../variables.scss";
-
-.canvas canvas {
-    border: 3px solid $primary-color;
-    margin-top: 5px;
-    background-color: $primary-color-light;
-    vertical-align: bottom;
-    box-shadow: $box-shadow-1;
-}

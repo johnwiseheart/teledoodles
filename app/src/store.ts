@@ -1,11 +1,11 @@
 import { Router } from "react-router";
 import {
+  IAddPageMessage,
   IGame,
   IGenericMessage,
   IJoinMessage,
   IReadyMessage,
-  IStartMessage,
-  IAddPageMessage
+  IStartMessage
 } from "teledoodles-lib";
 
 export type Message = IJoinMessage | IReadyMessage | IStartMessage | IAddPageMessage;

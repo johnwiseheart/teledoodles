@@ -1,7 +1,4 @@
-import { Dispatch } from "redux";
-import { Action } from "redux";
-import { MiddlewareAPI } from "redux";
-import { Middleware } from "redux";
+import { Action, Dispatch, Middleware, MiddlewareAPI } from "redux";
 import { isType } from "typescript-fsa";
 import {
   websocketClose,
@@ -35,7 +32,6 @@ export const middleware: Middleware = (store: MiddlewareAPI<void>) => (next: Dis
     };
     websocket.onclose = event => store.dispatch(websocketClose({ event }));
     websocket.onmessage = event => {
-      console.log(event)
       store.dispatch(websocketMessage({ event }));
     };
   }

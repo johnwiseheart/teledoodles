@@ -1,3 +1,4 @@
+// tslint:disable-next-line
 import createHistory from "history/createBrowserHistory";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -5,13 +6,11 @@ import { Provider } from "react-redux";
 import { ConnectedRouter, routerMiddleware, routerReducer } from "react-router-redux";
 import { applyMiddleware, combineReducers, compose, createStore, Middleware } from "redux";
 import thunk from "redux-thunk";
-import { App } from "./components/App/App";
-import "./index.scss";
+import { App } from "./App";
 import { middleware as websocket } from "./middleware/websocket";
-import initialState from "./reducers/initialState";
 import gameReducer from "./reducers/game";
+import initialState from "./reducers/initialState";
 import websocketReducer from "./reducers/websocketStatus";
-import registerServiceWorker from "./registerServiceWorker";
 
 // Create a history of your choosing (we're using a browser history in this case)
 const history = createHistory();
@@ -41,4 +40,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("root") as HTMLElement
 );
-registerServiceWorker();

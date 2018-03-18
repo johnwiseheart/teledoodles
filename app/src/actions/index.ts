@@ -1,9 +1,9 @@
 import { Dispatch } from "react-redux";
-import actionCreatorFactory from "typescript-fsa";
-import { IStoreState, Message, GameView } from "../store";
-import { getPlayerInfo } from "../util";
-import { IJoinMessage, IPage, IGenericMessage, IReadyMessage, IStartMessage, IAddPageMessage } from "teledoodles-lib";
 import { push } from 'react-router-redux';
+import { IAddPageMessage, IGenericMessage, IJoinMessage, IPage, IReadyMessage, IStartMessage } from "teledoodles-lib";
+import actionCreatorFactory from "typescript-fsa";
+import { GameView, IStoreState, Message } from "../store";
+import { getPlayerInfo } from "../utils";
 
 const actionCreator = actionCreatorFactory();
 

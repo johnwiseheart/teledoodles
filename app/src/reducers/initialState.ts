@@ -1,15 +1,16 @@
 import { Router } from "react-router";
 import { TurnType } from "teledoodles-lib";
-import { IStoreState, GameView, WebsocketStatus } from "../store";
+import { GameView, IStoreState, WebsocketStatus } from "../store";
 
 const initialState: IStoreState = {
   game: {
-    gameCode: "",
     books: {},
-    players: {},
+    gameCode: "",
+    gameMode: undefined,
     host: undefined,
-    gameMode: undefined
+    players: {},
   },
+  // tslint:disable-next-line:no-object-literal-type-assertion
   router: {} as Router,
   websocketStatus: WebsocketStatus.CLOSED,
 };
