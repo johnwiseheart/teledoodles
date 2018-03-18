@@ -75,7 +75,7 @@ class UnconnectedGameRoute extends React.Component<GameRouteProps> {
 
       return (
         <div className={Classes.flexContainer}>
-          <div className="panel">
+          <div className={Classes.panel}>
             Waiting on {username}
           </div>
         </div>

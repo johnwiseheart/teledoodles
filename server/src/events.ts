@@ -23,25 +23,37 @@ export const sendGameInfo = (allGames: IStoreState, gameCode: string) => {
     });
 };
 
+export const sendError = (allGames: IStoreState, playerId: string, error: string) => {
+  const playerSocket = allGames.players[playerId];
+  if (playerSocket.readyState === playerSocket.OPEN) {
+    playerSocket.send(JSON.stringify({ type: "ERROR", error }));
+  } else {
+    // remove player
+  }
+};
+
 export const handleJoinMessage = (allGames: IStoreState, message: IJoinMessage) => {
+  const { playerId, gameCode } = message;
+  let currentGame = allGames.games[gameCode];
+
   // if no game exists, create a new game with user as host
-  if (allGames.games[message.gameCode] === undefined) {
-    allGames.games[message.gameCode] = {
+  if (currentGame === undefined) {
+    currentGame = {
       books: {},
       errorMessage: undefined,
-      gameCode: message.gameCode,
+      gameCode,
       gameMode: GameMode.LOBBY,
-      host: message.playerId,
+      host: playerId,
       players: {},
     };
   }
 
   // if the user is in the game already, then just send them the game info
-  if (allGames.games[message.gameCode].players[message.playerId] === undefined) {
+  if (currentGame.players[playerId] === undefined) {
     // Add user to game with readyState false
-    allGames.games[message.gameCode].players[message.playerId] = {
-      books: [{ pages: [], id: message.playerId }], // array with empty book
-      id: message.playerId,
+    currentGame.players[playerId] = {
+      books: [{ pages: [], id: playerId }], // array with empty book
+      id: playerId,
       isReady: false,
       next: undefined,
       prev: undefined, // Prev/next are set when the game is ready to begin
@@ -49,91 +61,109 @@ export const handleJoinMessage = (allGames: IStoreState, message: IJoinMessage) 
     };
 
     // Add empty book for user
-    allGames.games[message.gameCode].books[message.playerId] = { pages: [], id: message.playerId };
+    currentGame.books[playerId] = { pages: [], id: playerId };
   }
 
-  sendGameInfo(allGames, message.gameCode);
-  return allGames;
+  const newAllGames = iassign(allGames, s => {
+    s.games[gameCode] = currentGame;
+    return s;
+  });
+  sendGameInfo(newAllGames, gameCode);
+  return newAllGames;
 };
 
 export const handleReadyMessage = (allGames: IStoreState, message: IReadyMessage) => {
+  const { gameCode, playerId } = message;
+  const currentGame = allGames.games[gameCode];
+
   // If we get a join message for a game that doesnt exist, return error
-  if (allGames.games[message.gameCode] === undefined) {
-    allGames[message.gameCode] = {
-      errorMessage: "Tried to ready up for a game that doesnt exist."
-    };
+  if (currentGame === undefined) {
+    sendError(allGames, playerId, "Tried to ready up for a game that doesnt exist.")
     return allGames;
-  } else if (allGames.games[message.gameCode].players[message.playerId] === undefined) {
-    allGames[message.gameCode] = { errorMessage: "Tried to ready a player which doesnt exist" };
+  } else if (currentGame.players[playerId] === undefined) {
+    allGames[gameCode] = { errorMessage: "Tried to ready a player which doesnt exist" };
   }
 
   // Set player to ready
-  allGames.games[message.gameCode].players[message.playerId].isReady = message.payload.isReady;
+  currentGame.players[playerId].isReady = message.payload.isReady;
 
   // If all players are now ready && number of players is >= 4, set lobby state to LOBBY_READY
-  if (Object.keys(allGames.games[message.gameCode].players).length >= 1) {
+  if (Object.keys(currentGame.players).length >= 1) {
     let allReady = true;
-    for (const key in allGames.games[message.gameCode].players) {
-      if (allGames.games[message.gameCode].players[key].isReady !== true) {
+    for (const key in currentGame.players) {
+      if (currentGame.players[key].isReady !== true) {
         allReady = false;
         break;
       }
     }
-    allGames.games[message.gameCode].gameMode = allReady ? GameMode.LOBBY_READY : GameMode.LOBBY;
+    currentGame.gameMode = allReady ? GameMode.LOBBY_READY : GameMode.LOBBY;
   }
 
-  sendGameInfo(allGames, message.gameCode);
-  return allGames;
+  const newAllGames = iassign(allGames, s => {
+    s.games[gameCode] = currentGame;
+    return s;
+  });
+  sendGameInfo(newAllGames, gameCode);
+  return newAllGames;
 };
 
 export const handleStartMessage = (allGames: IStoreState, message: IStartMessage) => {
+  const { gameCode, playerId } = message;
+  const currentGame = allGames.games[gameCode];
+
   // If we're trying to start a game that doesnt exist, return error
-  if (allGames.games[message.gameCode] === undefined) {
-    allGames[message.gameCode] = { errorMessage: "Tried to start a game that doesnt exist." };
+  if (currentGame === undefined) {
+    sendError(allGames, playerId, "Tried to start a game that doesnt exist.")
     return allGames;
   }
 
   // Set prev/next for all players now that the game is ready to begin
   let prevKey: string;
   let firstKey: string;
-  Object.keys(allGames.games[message.gameCode].players).forEach(key => {
+  Object.keys(currentGame.players).forEach(key => {
     if (firstKey === undefined) {
       firstKey = key;
     }
     if (prevKey !== undefined) {
-      allGames.games[message.gameCode].players[prevKey].next = key;
+      currentGame.players[prevKey].next = key;
     }
-    allGames.games[message.gameCode].players[key].prev = prevKey;
+    currentGame.players[key].prev = prevKey;
     prevKey = key;
   })
   // The above loop doesnt set the prev for the first player or next for the last player
   // set those here:
-  allGames.games[message.gameCode].players[firstKey].prev = prevKey;
-  allGames.games[message.gameCode].players[prevKey].next = firstKey;
+  currentGame.players[firstKey].prev = prevKey;
+  currentGame.players[prevKey].next = firstKey;
 
   // set game mode to GAME
-  allGames.games[message.gameCode].gameMode = GameMode.GAME;
+  currentGame.gameMode = GameMode.GAME;
 
-  sendGameInfo(allGames, message.gameCode);
-  return allGames;
+  const newAllGames = iassign(allGames, s => {
+    s.games[gameCode] = currentGame;
+    return s;
+  });
+  sendGameInfo(newAllGames, gameCode);
+  return newAllGames;
 };
 
 export const handleAddPageMessage = (allGames: IStoreState, message: IAddPageMessage) => {
-  const currentGame = allGames.games[message.gameCode];
+  const { gameCode, playerId } = message;
+  const currentGame = allGames.games[gameCode];
   const numUsers = Object.keys(currentGame.players).length;
+  const currentPlayer = currentGame.players[playerId];
 
   // Add the page to the book map for the game
   currentGame.books[message.payload.bookId].pages.push(message.payload.page);
 
   // Add the page to the book map for the queue
-  currentGame.players[message.playerId].books[0].pages.push(message.payload.page);
+  currentPlayer.books[0].pages.push(message.payload.page);
 
   // Remove the book from the current player's queue and add it to the next player's queue.
-  const currBook = currentGame.players[message.playerId].books.shift();
+  const currBook = currentPlayer.books.shift();
 
   // Only add book to next player's queue if it's not full
 
-  const nextPlayer = currentGame.players[message.playerId].next;
+  const nextPlayer = currentPlayer.next;
   if (currBook.pages.length < numUsers) {
     currentGame.players[nextPlayer].books.push(currBook);
   }
@@ -153,8 +183,12 @@ export const handleAddPageMessage = (allGames: IStoreState, message: IAddPageMes
     currentGame.gameMode = GameMode.SHOWCASE;
   }
 
-  sendGameInfo(allGames, message.gameCode);
-  return allGames;
+  const newAllGames = iassign(allGames, s => {
+    s.games[gameCode].players[playerId] = currentPlayer;
+    return s;
+  });
+  sendGameInfo(newAllGames, gameCode);
+  return newAllGames;
 };
 
 export const handlePlayerWebsocketSet = (state, event) => {

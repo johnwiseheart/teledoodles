@@ -21,7 +21,7 @@ export class Doodle extends React.Component<IDoodleProps, {}> {
       <div className={Classes.flexContainer}>
         <div className={Classes.panel}>
           <h2>{this.props.text}</h2>
-          <span className="label">Doodle This</span>
+          <span className={Styles.label}>Doodle This</span>
         </div>
         <Canvas ref={this.refHandler.canvas} />
         <div className={Classes.flexPad} />
@@ -41,4 +41,12 @@ export class Doodle extends React.Component<IDoodleProps, {}> {
     const URL = await this.canvas.getURL();
     this.props.onDoodle(URL);
   };
+}
+
+namespace Styles {
+  export const label = style({
+    color: "#999",
+    fontSize: "12px",
+    textTransform: "uppercase",
+  })
 }

@@ -163,5 +163,5 @@ namespace Styles {
     backgroundColor: Colors.primary,
     boxShadow: Shadows.one,
     verticalAlign: "bottom",
-  })
+  }, csstips.margin(10, 0, 0, 0))
 }

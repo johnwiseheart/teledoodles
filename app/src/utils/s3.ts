@@ -15,6 +15,7 @@ export const initializeS3 = () => {
 
 export const sendToS3 = (blob: Blob): Promise<string> => {
   if (!blob) { return undefined; };
+  if (bucket === undefined) { initializeS3(); };
   return new Promise((resolve, reject) => {
     const fileId = uuidv4();
 
@@ -37,6 +38,7 @@ export const sendToS3 = (blob: Blob): Promise<string> => {
 
 export const getFromS3 = (fileId: string): Promise<string> => {
   if (!fileId) { return undefined; };
+  if (bucket === undefined) { initializeS3(); };
   return new Promise((resolve, reject) => {
     const params = {
       Bucket: 'teledoodles',
