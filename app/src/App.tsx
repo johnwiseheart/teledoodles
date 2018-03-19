@@ -4,7 +4,7 @@ import { Route, RouteComponentProps, withRouter } from "react-router";
 import { push } from 'react-router-redux';
 import { cssRule } from "typestyle";
 import { joinGame } from './actions';
-import { GameView, IStoreState, WebsocketStatus } from "./store";
+import { IStoreState, WebsocketStatus } from "./store";
 import { color, Colors, csstips, Shadows, style } from "./styles";
 import { getPlayerInfo } from "./utils";
 import { GameRoute } from './views/Game/routes';

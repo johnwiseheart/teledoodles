@@ -58,7 +58,6 @@ export class Showcase extends React.Component<IShowcaseProps> {
 
   public renderTextPage = (page: ITextPage, index: number) => {
     const { game } = this.props;
-
     const preText = index > 0 ? <div className="separator">which {game.players[page.playerId].username} thought was</div> : undefined;
 
     return (

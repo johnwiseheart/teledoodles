@@ -16,16 +16,6 @@ export enum WebsocketStatus {
   OPEN = "OPEN"
 }
 
-export enum GameView {
-  HOME = "HOME",
-  LOBBY = "LOBBY",
-  CHOOSE_WORD = "CHOOSE_WORD",
-  DOODLE_WORD = "DOODLE_WORD",
-  GUESS_DOODLE = "GUESS_DOODLE",
-  END = "END",
-  PLAYER_INFO = "PLAYER_INFO"
-}
-
 export interface IStoreState {
   game: IGame;
   router: Router;

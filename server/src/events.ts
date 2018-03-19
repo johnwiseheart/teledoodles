@@ -2,10 +2,13 @@ import iassign from "immutable-assign";
 import {
   GameMode,
   IAddPageMessage,
+  IErrorMessage,
+  IInfoMessage,
   IJoinMessage,
   IReadyMessage,
   IStartMessage,
-  messageIsJoinMessage
+  messageIsJoinMessage,
+  MessageType,
 } from "teledoodles-lib";
 import { IStoreState } from "./store";
 
@@ -16,16 +19,28 @@ export const sendGameInfo = (allGames: IStoreState, gameCode: string) => {
     .forEach(player => {
       const playerSocket = allGames.players[player.id];
       if (playerSocket.readyState === playerSocket.OPEN) {
-        playerSocket.send(JSON.stringify({ type: "INFO", game: allGames.games[gameCode] }));
+        const infoMessage: IInfoMessage = {
+          gameCode,
+          payload: { game: allGames.games[gameCode] },
+          playerId: player.id,
+          type: MessageType.INFO,
+        };
+        playerSocket.send(JSON.stringify(infoMessage));
       } else {
         // remove player
       }
     });
 };
 
-export const sendError = (allGames: IStoreState, playerId: string, error: string) => {
+export const sendError = (allGames: IStoreState, gameCode: string, playerId: string, error: string) => {
   const playerSocket = allGames.players[playerId];
   if (playerSocket.readyState === playerSocket.OPEN) {
+    const infoMessage: IErrorMessage = {
+      gameCode,
+      payload: { error },
+      playerId,
+      type: MessageType.ERROR,
+    };
     playerSocket.send(JSON.stringify({ type: "ERROR", error }));
   } else {
     // remove player
@@ -78,7 +93,7 @@ export const handleReadyMessage = (allGames: IStoreState, message: IReadyMessage
 
   // If we get a join message for a game that doesnt exist, return error
   if (currentGame === undefined) {
-    sendError(allGames, playerId, "Tried to ready up for a game that doesnt exist.")
+    sendError(allGames, gameCode, playerId, "Tried to ready up for a game that doesnt exist.");
     return allGames;
   } else if (currentGame.players[playerId] === undefined) {
     allGames[gameCode] = { errorMessage: "Tried to ready a player which doesnt exist" };
@@ -113,7 +128,7 @@ export const handleStartMessage = (allGames: IStoreState, message: IStartMessage
 
   // If we're trying to start a game that doesnt exist, return error
   if (currentGame === undefined) {
-    sendError(allGames, playerId, "Tried to start a game that doesnt exist.")
+    sendError(allGames, gameCode, playerId, "Tried to start a game that doesnt exist.");
     return allGames;
   }
 
@@ -129,7 +144,7 @@ export const handleStartMessage = (allGames: IStoreState, message: IStartMessage
     }
     currentGame.players[key].prev = prevKey;
     prevKey = key;
-  })
+  });
   // The above loop doesnt set the prev for the first player or next for the last player
   // set those here:
   currentGame.players[firstKey].prev = prevKey;

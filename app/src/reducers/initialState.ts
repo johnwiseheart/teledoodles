@@ -1,6 +1,5 @@
 import { Router } from "react-router";
-import { TurnType } from "teledoodles-lib";
-import { GameView, IStoreState, WebsocketStatus } from "../store";
+import { IStoreState, WebsocketStatus } from "../store";
 
 const initialState: IStoreState = {
   game: {

@@ -17,7 +17,7 @@ import {
 } from "teledoodles-lib";
 import { addPage as addPageAction, joinGame, readyGame as readyGameAction } from "../../actions";
 import { Button } from "../../components";
-import { GameView, IStoreState, WebsocketStatus } from "../../store";
+import { IStoreState, WebsocketStatus } from "../../store";
 import { Classes, csstips, style } from '../../styles';
 import { getPlayerInfo } from "../../utils";
 import { Choose } from "./Choose";

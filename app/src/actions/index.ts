@@ -1,8 +1,8 @@
 import { Dispatch } from "react-redux";
 import { push } from 'react-router-redux';
-import { IAddPageMessage, IGenericMessage, IJoinMessage, IPage, IReadyMessage, IStartMessage } from "teledoodles-lib";
+import { IAddPageMessage, IGenericMessage, IJoinMessage, IPage, IReadyMessage, IStartMessage, MessageType } from "teledoodles-lib";
 import actionCreatorFactory from "typescript-fsa";
-import { GameView, IStoreState, Message } from "../store";
+import { IStoreState, Message } from "../store";
 import { getPlayerInfo } from "../utils";
 
 const actionCreator = actionCreatorFactory();
@@ -27,7 +27,7 @@ export const joinGame = (gameCode: string) => {
       dispatch(gameJoin({ gameCode }));
       dispatch(
         websocketConnect({
-          messages: [{ type: "JOIN", gameCode, playerId, payload: { username } }]
+          messages: [{ type: MessageType.JOIN, gameCode, playerId, payload: { username } }]
         })
       );
       dispatch(push(`/game/${gameCode}`));
@@ -52,11 +52,10 @@ export const readyGame = (isReady: boolean) => {
       gameCode: getState().game.gameCode,
       payload: { isReady },
       playerId: getPlayerInfo().id,
-      type: "READY",
+      type: MessageType.READY,
     }
 
     dispatch(websocketSend(message));
-    // dispatch(gameReady(isReady));
   };
 };
 
@@ -66,11 +65,10 @@ export const startGame = () => {
       gameCode: getState().game.gameCode,
       payload: { },
       playerId: getPlayerInfo().id,
-      type: "START",
+      type: MessageType.START,
     }
 
     dispatch(websocketSend(message));
-    // dispatch(gameStart());
   };
 };
 
@@ -80,10 +78,9 @@ export const addPage = (bookId: string, page: IPage) => {
       gameCode: getState().game.gameCode,
       payload: { bookId, page },
       playerId: getPlayerInfo().id,
-      type: "ADD_PAGE",
+      type: MessageType.ADD_PAGE,
     }
 
     dispatch(websocketSend(message));
-    // dispatch(gameAddPage({ bookId, page }));
   };
 }

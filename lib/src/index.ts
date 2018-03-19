@@ -19,6 +19,15 @@ export enum GameMode {
   SHOWCASE = "SHOWCASE"
 }
 
+export enum MessageType {
+  JOIN = "JOIN",
+  READY = "READY",
+  START = "START",
+  ADD_PAGE = "ADD_PAGE",
+  INFO = "INFO",
+  ERROR = "ERROR",
+}
+
 export interface IPage {
   playerId: PlayerId;
   pageType: PageType;
@@ -48,37 +57,37 @@ export const pageIsImagePage = (page: any): page is IImagePage => {
 };
 
 export interface IJoinMessage extends IGenericMessage {
-  type: "JOIN";
+  type: MessageType.JOIN;
   payload: {
     username: string;
   };
 }
 
 export const messageIsJoinMessage = (message: any): message is IJoinMessage => {
-  return message.type === "JOIN";
+  return message.type === MessageType.JOIN;
 };
 
 export interface IReadyMessage extends IGenericMessage {
-  type: "READY";
+  type: MessageType.READY;
   payload: {
     isReady: boolean;
   };
 }
 
 export const messageIsReadyMessage = (message: any): message is IReadyMessage => {
-  return message.type === "READY";
+  return message.type === MessageType.READY;
 };
 
 export interface IStartMessage extends IGenericMessage {
-  type: "START";
+  type: MessageType.START;
 }
 
 export const messageIsStartMessage = (message: any): message is IStartMessage => {
-  return message.type === "START";
+  return message.type === MessageType.START;
 };
 
 export interface IAddPageMessage extends IGenericMessage {
-  type: "ADD_PAGE";
+  type: MessageType.ADD_PAGE;
   payload: {
     bookId: string;
     page: IPage;
@@ -86,16 +95,29 @@ export interface IAddPageMessage extends IGenericMessage {
 }
 
 export const messageIsAddPageMessage = (message: any): message is IAddPageMessage => {
-  return message.type === "ADD_PAGE";
+  return message.type === MessageType.ADD_PAGE;
 };
 
-export interface IInfo extends IGenericMessage {
-  type: "INFO";
-  game: IGame;
+export interface IInfoMessage extends IGenericMessage {
+  type: MessageType.INFO;
+  payload: {
+    game: IGame;
+  }
 }
 
-export const messageIsInfoMessage = (message: any): message is IStartMessage => {
-  return message.type === "INFO";
+export const messageIsInfoMessage = (message: any): message is IInfoMessage => {
+  return message.type === MessageType.INFO;
+};
+
+export interface IErrorMessage extends IGenericMessage {
+  type: MessageType.ERROR;
+  payload: {
+    error: string;
+  }
+}
+
+export const messageIsErrorMessage = (message: any): message is IErrorMessage => {
+  return message.type === MessageType.ERROR;
 };
 
 export interface IPlayer {
@@ -108,14 +130,6 @@ export interface IPlayer {
 }
 
 export const LISTENER_EVENT = "LISTENER_EVENT";
-
-export enum TurnType {
-  LOBBY = "LOBBY",
-  CHOOSE_WORD = "CHOOSE_WORD",
-  DOODLE_WORD = "DOODLE_WORD",
-  GUESS_DOODLE = "GUESS_DOODLE",
-  END = "END"
-}
 
 export interface IGame {
   gameCode: string;

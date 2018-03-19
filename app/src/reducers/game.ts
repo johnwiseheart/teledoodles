@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { IGame } from "teledoodles-lib";
+import { IGame, IGenericMessage, IInfoMessage, messageIsInfoMessage, MessageType } from "teledoodles-lib";
 import { isType } from "typescript-fsa";
 import {
   gameJoin,
@@ -8,7 +8,7 @@ import {
   websocketMessage,
   websocketOpen
 } from "../actions";
-import { GameView, WebsocketStatus } from "../store";
+import { WebsocketStatus } from "../store";
 import initialState from "./initialState";
 
 const game = (state: IGame = initialState.game, action: Action): IGame => {
@@ -20,12 +20,12 @@ const game = (state: IGame = initialState.game, action: Action): IGame => {
   }
 
   if (isType(action, websocketMessage)) {
-    const parsed = JSON.parse(action.payload.event.data);
+    const parsed: IGenericMessage = JSON.parse(action.payload.event.data);
 
-    if (parsed.type === "INFO") {
+    if (messageIsInfoMessage(parsed)) {
       return {
         ...state,
-        ...parsed.game,
+        ...parsed.payload.game,
       };
     }
   }
