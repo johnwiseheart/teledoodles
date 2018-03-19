@@ -32,7 +32,12 @@ export const sendGameInfo = (allGames: IStoreState, gameCode: string) => {
     });
 };
 
-export const sendError = (allGames: IStoreState, gameCode: string, playerId: string, error: string) => {
+export const sendError = (
+  allGames: IStoreState,
+  gameCode: string,
+  playerId: string,
+  error: string,
+) => {
   const playerSocket = allGames.players[playerId];
   if (playerSocket.readyState === playerSocket.OPEN) {
     const infoMessage: IErrorMessage = {

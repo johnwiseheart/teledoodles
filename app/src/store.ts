@@ -5,7 +5,7 @@ import {
   IGenericMessage,
   IJoinMessage,
   IReadyMessage,
-  IStartMessage
+  IStartMessage,
 } from "teledoodles-lib";
 
 export type Message = IJoinMessage | IReadyMessage | IStartMessage | IAddPageMessage;
@@ -13,7 +13,7 @@ export type Message = IJoinMessage | IReadyMessage | IStartMessage | IAddPageMes
 export enum WebsocketStatus {
   CLOSED = "CLOSED",
   OPENING = "OPENING",
-  OPEN = "OPEN"
+  OPEN = "OPEN",
 }
 
 export interface IStoreState {

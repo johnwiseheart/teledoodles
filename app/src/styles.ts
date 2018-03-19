@@ -1,5 +1,5 @@
 import * as csstips from "csstips";
-import { color } from 'csx';
+import { color } from "csx";
 import { classes, style } from "typestyle";
 
 const primaryColorHex = "#26A7FF";
@@ -7,9 +7,15 @@ const primaryColorTextHex = "#FEFEFE";
 
 namespace Colors {
   export const primary = color(primaryColorHex).toHexString();
-  export const primaryDark = color(primaryColorHex).darken(.1).toHexString();
-  export const primaryDarker = color(primaryColorHex).darken(.2).toHexString();
-  export const primaryLight = color(primaryColorHex).lighten(.2).toHexString();
+  export const primaryDark = color(primaryColorHex)
+    .darken(0.1)
+    .toHexString();
+  export const primaryDarker = color(primaryColorHex)
+    .darken(0.2)
+    .toHexString();
+  export const primaryLight = color(primaryColorHex)
+    .lighten(0.2)
+    .toHexString();
 
   export const primaryText = color(primaryColorTextHex).toHexString();
 }
@@ -20,13 +26,16 @@ namespace Shadows {
 }
 
 namespace Classes {
-  export const panel = style({
-    backgroundColor: '#fff',
-    boxShadow: Shadows.one,
-    margin: "5px 0",
-    padding: "0 5px",
-    textAlign: "center",
-  }, csstips.padding(5));
+  export const panel = style(
+    {
+      backgroundColor: "#fff",
+      boxShadow: Shadows.one,
+      margin: "5px 0",
+      padding: "0 5px",
+      textAlign: "center",
+    },
+    csstips.padding(5),
+  );
 
   export const flexPad = style(csstips.flex);
 

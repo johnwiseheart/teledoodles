@@ -1,12 +1,19 @@
 import { Action } from "redux";
-import { IGame, IGenericMessage, IInfoMessage, messageIsInfoMessage, MessageType } from "teledoodles-lib";
+import {
+  IGame,
+  IGenericMessage,
+  IInfoMessage,
+  messageIsErrorMessage,
+  messageIsInfoMessage,
+  MessageType,
+} from "teledoodles-lib";
 import { isType } from "typescript-fsa";
 import {
   gameJoin,
   websocketClose,
   websocketConnect,
   websocketMessage,
-  websocketOpen
+  websocketOpen,
 } from "../actions";
 import { WebsocketStatus } from "../store";
 import initialState from "./initialState";
@@ -15,7 +22,7 @@ const game = (state: IGame = initialState.game, action: Action): IGame => {
   if (isType(action, gameJoin)) {
     return {
       ...state,
-      gameCode: action.payload.gameCode
+      gameCode: action.payload.gameCode,
     };
   }
 
@@ -27,6 +34,10 @@ const game = (state: IGame = initialState.game, action: Action): IGame => {
         ...state,
         ...parsed.payload.game,
       };
+    }
+
+    if (messageIsErrorMessage(parsed)) {
+      alert(parsed.payload.error);
     }
   }
 

@@ -9,14 +9,14 @@ export interface IGenericMessage {
 
 export enum PageType {
   IMAGE = "IMAGE",
-  TEXT = "TEXT"
+  TEXT = "TEXT",
 }
 
 export enum GameMode {
   LOBBY = "LOBBY",
   LOBBY_READY = "LOBBY_READY",
   GAME = "GAME",
-  SHOWCASE = "SHOWCASE"
+  SHOWCASE = "SHOWCASE",
 }
 
 export enum MessageType {
@@ -91,7 +91,7 @@ export interface IAddPageMessage extends IGenericMessage {
   payload: {
     bookId: string;
     page: IPage;
-  }
+  };
 }
 
 export const messageIsAddPageMessage = (message: any): message is IAddPageMessage => {
@@ -102,7 +102,7 @@ export interface IInfoMessage extends IGenericMessage {
   type: MessageType.INFO;
   payload: {
     game: IGame;
-  }
+  };
 }
 
 export const messageIsInfoMessage = (message: any): message is IInfoMessage => {
@@ -113,7 +113,7 @@ export interface IErrorMessage extends IGenericMessage {
   type: MessageType.ERROR;
   payload: {
     error: string;
-  }
+  };
 }
 
 export const messageIsErrorMessage = (message: any): message is IErrorMessage => {

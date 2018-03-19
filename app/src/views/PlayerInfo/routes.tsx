@@ -3,7 +3,7 @@ import { connect, Dispatch } from "react-redux";
 import { push as historyPush } from "react-router-redux";
 import { Button, Input } from "../../components";
 import { IStoreState } from "../../store";
-import { Classes, csstips, style } from '../../styles';
+import { Classes, csstips, style } from "../../styles";
 import { getPlayerInfo, uuidv4 } from "../../utils";
 
 export interface IPlayerInfoRouteDispatchProps {
@@ -21,7 +21,7 @@ class UnconnectedPlayerInfoRoute extends React.Component<
   IPlayerInfoRouteState
 > {
   public state: IPlayerInfoRouteState = {
-    name: ""
+    name: "",
   };
 
   public componentDidMount() {
@@ -34,9 +34,7 @@ class UnconnectedPlayerInfoRoute extends React.Component<
     const { name } = this.state;
     return (
       <div className={Classes.flexContainer}>
-        <div className={Classes.panel}>
-          Player name
-        </div>
+        <div className={Classes.panel}>Player name</div>
         <Input value={name} onChange={this.handleNameChange} />
         <div className={Classes.flexPad} />
         <div>
@@ -57,8 +55,8 @@ class UnconnectedPlayerInfoRoute extends React.Component<
         "player",
         JSON.stringify({
           id: uuidv4(),
-          username: name
-        })
+          username: name,
+        }),
       );
       this.pushToHome();
     }
@@ -76,11 +74,11 @@ const mapStateToProps = (state: IStoreState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<IStoreState>) => {
   return {
-    push: (route: string) => dispatch(historyPush(route))
+    push: (route: string) => dispatch(historyPush(route)),
   };
 };
 
 export const PlayerInfoRoute = connect<{}, IPlayerInfoRouteDispatchProps, {}>(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(UnconnectedPlayerInfoRoute);

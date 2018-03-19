@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Colors, csstips, style } from '../styles';
+import { Colors, csstips, style } from "../styles";
 import { getFromS3 } from "../utils";
 
 export interface IDoodleViewerProps {
@@ -13,7 +13,7 @@ export interface IDoodleViewerState {
 export class DoodleViewer extends React.Component<IDoodleViewerProps, IDoodleViewerState> {
   public state: IDoodleViewerState = {
     imageUrl: undefined,
-  }
+  };
 
   public async componentDidMount() {
     const imageUrl = await getFromS3(this.props.imageId);
@@ -40,6 +40,5 @@ namespace Styles {
 
   export const image = style({
     width: "100%",
-  })
+  });
 }
-

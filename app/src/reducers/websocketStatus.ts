@@ -5,7 +5,7 @@ import {
   websocketClose,
   websocketConnect,
   websocketMessage,
-  websocketOpen
+  websocketOpen,
 } from "../actions";
 import { WebsocketStatus } from "../store";
 import initialState from "./initialState";

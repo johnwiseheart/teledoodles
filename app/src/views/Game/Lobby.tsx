@@ -7,7 +7,7 @@ import { GameMode, IGame, IPlayer } from "teledoodles-lib";
 import {
   joinGame,
   readyGame as readyGameAction,
-  startGame as startGameAction
+  startGame as startGameAction,
 } from "../../actions";
 import { Button } from "../../components";
 import { IStoreState, WebsocketStatus } from "../../store";
@@ -32,7 +32,7 @@ interface ILobbyRouteState {
 
 class UnconnectedLobbyRoute extends React.Component<LobbyRouteProps, ILobbyRouteState> {
   public state: ILobbyRouteState = {
-    isReady: false
+    isReady: false,
   };
 
   public render() {
@@ -94,29 +94,29 @@ namespace Styles {
   export const players = style(csstips.verticallySpaced(5));
 
   export const playerReady = style({
-    border: "1px solid green"
+    border: "1px solid green",
   });
 
   export const playerNotReady = style({
-    border: "1px solid red"
+    border: "1px solid red",
   });
 }
 
 const mapStateToProps = (state: IStoreState): ILobbyRouteStateProps => {
   return {
     game: state.game,
-    players: state.game.players
+    players: state.game.players,
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): ILobbyRouteDispatchProps => {
   return {
     readyGame: (isReady: boolean) => dispatch(readyGameAction(isReady)),
-    startGame: () => dispatch(startGameAction())
+    startGame: () => dispatch(startGameAction()),
   };
 };
 
 export const Lobby = connect<ILobbyRouteStateProps, ILobbyRouteDispatchProps, {}>(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(UnconnectedLobbyRoute);

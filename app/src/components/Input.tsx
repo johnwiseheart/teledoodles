@@ -1,6 +1,6 @@
 import { rem } from "csx";
 import * as React from "react";
-import { Colors, csstips, style } from '../styles';
+import { Colors, csstips, style } from "../styles";
 
 export interface IInputProps {
   autoFocus?: boolean;
@@ -10,9 +10,7 @@ export interface IInputProps {
 }
 
 export const Input = ({ autoFocus, placeholder, value, onChange }: IInputProps) => {
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(event.target.value);
-  };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => onChange(event.target.value);
 
   return (
     <div className={Styles.inputGroupClass}>
@@ -30,10 +28,15 @@ export const Input = ({ autoFocus, placeholder, value, onChange }: IInputProps) 
 namespace Styles {
   export const inputGroupClass = style(csstips.vertical);
 
-  export const inputClass = style({
-    border: `1px solid ${Colors.primary}`,
-    fontSize: rem(1),
-    lineHeight: "45px",
-    textAlign: "center",
-  }, csstips.flex, csstips.padding(0, 5), csstips.margin(5, 0));
+  export const inputClass = style(
+    {
+      border: `1px solid ${Colors.primary}`,
+      fontSize: rem(1),
+      lineHeight: "45px",
+      textAlign: "center",
+    },
+    csstips.flex,
+    csstips.padding(0, 5),
+    csstips.margin(5, 0),
+  );
 }

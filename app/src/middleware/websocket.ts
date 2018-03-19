@@ -6,19 +6,20 @@ import {
   websocketDisconnect,
   websocketMessage,
   websocketOpen,
-  websocketSend
+  websocketSend,
 } from "../actions";
+import { SERVER_URL } from '../config';
 
 let websocket: WebSocket;
 
 export const middleware: Middleware = (store: MiddlewareAPI<void>) => (next: Dispatch<void>) => <
   A extends Action
 >(
-  action: A
+  action: A,
 ) => {
   if (isType(action, websocketConnect)) {
     // Configure the object
-    websocket = new WebSocket("ws://localhost:5000/ws");
+    websocket = new WebSocket("ws://" + SERVER_URL + "/ws");
 
     // Attach the callbacks
     websocket.onopen = () => {

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { Button, Input } from "../../components";
-import { Classes, csstips, style } from '../../styles';
+import { Classes, csstips, style } from "../../styles";
 
 interface IChooseProps {
   onChoose: (text: string) => void;
@@ -13,7 +13,7 @@ interface IChooseState {
 
 export class Choose extends React.Component<IChooseProps, IChooseState> {
   public state: IChooseState = {
-    text: ""
+    text: "",
   };
 
   public render() {

@@ -1,10 +1,10 @@
-import { rgba } from 'csx';
+import { rgba } from "csx";
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 import { joinGame as joinGameAction, newGame as newGameAction } from "../../actions";
-import { Button, Input } from "../../components"
+import { Button, Input } from "../../components";
 import { IStoreState } from "../../store";
-import { Classes, classes, csstips, style } from '../../styles';
+import { Classes, classes, csstips, style } from "../../styles";
 
 export interface IHomeRouteDispatchProps {
   joinGame: (gameCode: string) => void;
@@ -18,11 +18,10 @@ interface IHomeRouteState {
   gameCode: string;
 }
 
-
 class UnconnectedHomeRoute extends React.Component<HomeRouteProps, IHomeRouteState> {
   public state: IHomeRouteState = {
     gameCode: "",
-    isOverlayOpen: false
+    isOverlayOpen: false,
   };
 
   public render() {
@@ -92,19 +91,30 @@ class UnconnectedHomeRoute extends React.Component<HomeRouteProps, IHomeRouteSta
 }
 
 namespace Styles {
-  export const overlay = style({
-    alignItems: "center",
-    backgroundColor: rgba(0, 0, 0, 0.6).toString(),
-    bottom: 0,
-    left: 0,
-    position: "absolute",
-    right: 0,
-    top: 0,
-  }, csstips.flexRoot, csstips.centerJustified)
+  export const overlay = style(
+    {
+      alignItems: "center",
+      backgroundColor: rgba(0, 0, 0, 0.6).toString(),
+      bottom: 0,
+      left: 0,
+      position: "absolute",
+      right: 0,
+      top: 0,
+    },
+    csstips.flexRoot,
+    csstips.centerJustified,
+  );
 
-  export const overlayPanel = classes(style({
-    maxWidth: "500px",
-  }, csstips.flex, csstips.padding(10)), Classes.panel)
+  export const overlayPanel = classes(
+    style(
+      {
+        maxWidth: "500px",
+      },
+      csstips.flex,
+      csstips.padding(10),
+    ),
+    Classes.panel,
+  );
 }
 
 const mapStateToProps = (state: IStoreState): {} => {
@@ -114,11 +124,11 @@ const mapStateToProps = (state: IStoreState): {} => {
 const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): IHomeRouteDispatchProps => {
   return {
     joinGame: (gameCode: string) => dispatch(joinGameAction(gameCode)),
-    newGame: () => dispatch(newGameAction())
+    newGame: () => dispatch(newGameAction()),
   };
 };
 
 export const HomeRoute = connect<{}, IHomeRouteDispatchProps, {}>(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(UnconnectedHomeRoute);

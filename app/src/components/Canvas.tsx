@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Colors, csstips, Shadows, style } from '../styles';
-import { sendToS3 } from '../utils';
+import { Colors, csstips, Shadows, style } from "../styles";
+import { sendToS3 } from "../utils";
 
 interface IPoint {
   x: number;
@@ -16,7 +16,7 @@ export class Canvas extends React.Component {
   private refHandlers = {
     canvas: (canvasElement: HTMLCanvasElement) => {
       this.canvas = canvasElement;
-    }
+    },
   };
 
   public componentDidMount() {
@@ -26,9 +26,7 @@ export class Canvas extends React.Component {
   }
 
   public render() {
-    return (
-      <canvas className={Styles.canvas} ref={this.refHandlers.canvas} />
-    );
+    return <canvas className={Styles.canvas} ref={this.refHandlers.canvas} />;
   }
 
   public clearCanvas = () => {
@@ -44,10 +42,10 @@ export class Canvas extends React.Component {
     return new Promise(resolve => {
       this.canvas.toBlob(async blob => {
         const fileName = await sendToS3(blob);
-        resolve(fileName)
-      })
-    })
-  }
+        resolve(fileName);
+      });
+    });
+  };
 
   private setupCanvas = () => {
     this.canvas.addEventListener("mousemove", this.handleDraw, false);
@@ -105,7 +103,7 @@ export class Canvas extends React.Component {
     this.prevMouse = this.currMouse;
     this.currMouse = {
       x: e.clientX - canvas.offsetLeft,
-      y: e.clientY - canvas.offsetTop
+      y: e.clientY - canvas.offsetTop,
     };
 
     this.isDrawing = true;
@@ -129,7 +127,7 @@ export class Canvas extends React.Component {
       this.prevMouse = this.currMouse;
       this.currMouse = {
         x: e.clientX - canvas.offsetLeft,
-        y: e.clientY - canvas.offsetTop
+        y: e.clientY - canvas.offsetTop,
       };
 
       ctx.beginPath();
@@ -159,9 +157,12 @@ export class Canvas extends React.Component {
 }
 
 namespace Styles {
-  export const canvas = style({
-    backgroundColor: Colors.primary,
-    boxShadow: Shadows.one,
-    verticalAlign: "bottom",
-  }, csstips.margin(10, 0, 0, 0))
+  export const canvas = style(
+    {
+      backgroundColor: Colors.primary,
+      boxShadow: Shadows.one,
+      verticalAlign: "bottom",
+    },
+    csstips.margin(10, 0, 0, 0),
+  );
 }

@@ -25,7 +25,7 @@ router.get("/ws", async ctx => {
       gameCode: parsed.gameCode,
       payload: ctx.websocket,
       playerId: parsed.playerId,
-      type: "PLAYER:WEBSOCKET:SET"
+      type: "PLAYER:WEBSOCKET:SET",
     });
     store.dispatch(parsed);
   });
@@ -35,7 +35,7 @@ router.get("/new", async ctx => {
   const gameCode = makeId();
 
   ctx.body = {
-    gameCode
+    gameCode,
   };
 });
 

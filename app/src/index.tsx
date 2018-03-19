@@ -25,11 +25,11 @@ const store = createStore(
   combineReducers({
     game: gameReducer,
     router: routerReducer,
-    websocketStatus: websocketReducer
+    websocketStatus: websocketReducer,
   }),
 
   initialState,
-  composeEnhancers(applyMiddleware(websocket, thunk, middleware))
+  composeEnhancers(applyMiddleware(websocket, thunk, middleware)),
 );
 
 ReactDOM.render(
@@ -38,5 +38,5 @@ ReactDOM.render(
       <App />
     </ConnectedRouter>
   </Provider>,
-  document.getElementById("root") as HTMLElement
+  document.getElementById("root") as HTMLElement,
 );

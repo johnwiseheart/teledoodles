@@ -13,12 +13,12 @@ import {
   ITextPage,
   pageIsImagePage,
   pageIsTextPage,
-  PageType
+  PageType,
 } from "teledoodles-lib";
 import { addPage as addPageAction, joinGame, readyGame as readyGameAction } from "../../actions";
 import { Button } from "../../components";
 import { IStoreState, WebsocketStatus } from "../../store";
-import { Classes, csstips, style } from '../../styles';
+import { Classes, csstips, style } from "../../styles";
 import { getPlayerInfo } from "../../utils";
 import { Choose } from "./Choose";
 import { Doodle } from "./Doodle";
@@ -75,9 +75,7 @@ class UnconnectedGameRoute extends React.Component<GameRouteProps> {
 
       return (
         <div className={Classes.flexContainer}>
-          <div className={Classes.panel}>
-            Waiting on {username}
-          </div>
+          <div className={Classes.panel}>Waiting on {username}</div>
         </div>
       );
     }
@@ -132,7 +130,7 @@ class UnconnectedGameRoute extends React.Component<GameRouteProps> {
 
     let currPlayer = game.players[game.players[playerId].prev];
     while (currPlayer.books.length === 0 && playersProcessed <= Object.keys(game.players).length) {
-      currPlayer = game.players[game.players[playerId].prev]
+      currPlayer = game.players[game.players[playerId].prev];
       playersProcessed += 1;
     }
 
@@ -141,13 +139,13 @@ class UnconnectedGameRoute extends React.Component<GameRouteProps> {
     }
 
     return currPlayer;
-  }
+  };
 }
 
 const mapStateToProps = (state: IStoreState): IGameRouteStateProps => {
   return {
     game: state.game,
-    websocketStatus: state.websocketStatus
+    websocketStatus: state.websocketStatus,
   };
 };
 
@@ -160,5 +158,5 @@ const mapDispatchToProps = (dispatch: Dispatch<IStoreState>): IGameRouteDispatch
 
 export const GameRoute = connect<IGameRouteStateProps, IGameRouteDispatchProps, IGameRouteOwnProps>(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(UnconnectedGameRoute);

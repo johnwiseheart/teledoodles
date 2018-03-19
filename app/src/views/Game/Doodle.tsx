@@ -13,7 +13,7 @@ export class Doodle extends React.Component<IDoodleProps, {}> {
   private refHandler = {
     canvas: (canvas: Canvas) => {
       this.canvas = canvas;
-    }
+    },
   };
 
   public render() {
@@ -48,5 +48,5 @@ namespace Styles {
     color: "#999",
     fontSize: "12px",
     textTransform: "uppercase",
-  })
+  });
 }

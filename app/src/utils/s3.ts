@@ -1,27 +1,31 @@
-import * as AWS from 'aws-sdk';
-import { uuidv4 } from '.';
+import * as AWS from "aws-sdk";
+import { uuidv4 } from ".";
+import { S3 } from '../config';
 
 let bucket: AWS.S3;
 
-
 export const initializeS3 = () => {
-    AWS.config.region = 'us-west-2';
-    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-      IdentityPoolId: 'us-west-2:b3de8aaa-e4be-4f9c-b16a-bb5954f442ad'
-    });
+  AWS.config.region = S3.region;
+  AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: S3.identityPoolId,
+  });
 
-    bucket = new AWS.S3();
-}
+  bucket = new AWS.S3();
+};
 
 export const sendToS3 = (blob: Blob): Promise<string> => {
-  if (!blob) { return undefined; };
-  if (bucket === undefined) { initializeS3(); };
+  if (!blob) {
+    return undefined;
+  }
+  if (bucket === undefined) {
+    initializeS3();
+  }
   return new Promise((resolve, reject) => {
     const fileId = uuidv4();
 
     const params = {
       Body: blob,
-      Bucket: 'teledoodles',
+      Bucket: S3.bucket,
       ContentType: "img/png",
       Key: `doodle/${fileId}.png`,
     };
@@ -34,14 +38,18 @@ export const sendToS3 = (blob: Blob): Promise<string> => {
       }
     });
   });
-}
+};
 
 export const getFromS3 = (fileId: string): Promise<string> => {
-  if (!fileId) { return undefined; };
-  if (bucket === undefined) { initializeS3(); };
+  if (!fileId) {
+    return undefined;
+  }
+  if (bucket === undefined) {
+    initializeS3();
+  }
   return new Promise((resolve, reject) => {
     const params = {
-      Bucket: 'teledoodles',
+      Bucket: S3.bucket,
       Key: `doodle/${fileId}.png`,
     };
 
@@ -53,4 +61,4 @@ export const getFromS3 = (fileId: string): Promise<string> => {
       }
     });
   });
-}
+};

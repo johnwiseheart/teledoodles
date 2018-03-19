@@ -1,7 +1,7 @@
 import * as React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { Button, DoodleViewer, Input } from "../../components";
-import { Classes, csstips, style } from '../../styles';
+import { Classes, csstips, style } from "../../styles";
 
 interface IGuessProps {
   imageId: string;
@@ -14,7 +14,7 @@ interface IGuessState {
 
 export class Guess extends React.Component<IGuessProps, IGuessState> {
   public state: IGuessState = {
-    text: ""
+    text: "",
   };
 
   public render() {
@@ -22,7 +22,9 @@ export class Guess extends React.Component<IGuessProps, IGuessState> {
     const { text } = this.state;
     return (
       <div className={Classes.flexContainer}>
-        <div className="panel"><h2>What is this?</h2></div>
+        <div className="panel">
+          <h2>What is this?</h2>
+        </div>
         <DoodleViewer imageId={imageId} />
         <div className={Classes.flexPad} />
         <Input value={text} onChange={this.handleChange} />

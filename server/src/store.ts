@@ -7,14 +7,14 @@ import {
   messageIsAddPageMessage,
   messageIsJoinMessage,
   messageIsReadyMessage,
-  messageIsStartMessage
+  messageIsStartMessage,
 } from "teledoodles-lib";
 import {
   handleAddPageMessage,
   handleJoinMessage,
   handlePlayerWebsocketSet,
   handleReadyMessage,
-  handleStartMessage
+  handleStartMessage,
 } from "./events";
 
 export interface IStoreState {
@@ -44,11 +44,11 @@ export const configureStore = (initState: IStoreState) => {
   return {
     dispatch: (event: IGenericMessage) => {
       return eventEmitter.emit(LISTENER_EVENT, event);
-    }
+    },
   };
 };
 
 export const initialState: IStoreState = {
   games: {},
-  players: {}
+  players: {},
 };
