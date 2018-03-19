@@ -25,7 +25,7 @@ export class Doodle extends React.Component<IDoodleProps, {}> {
         </div>
         <Canvas ref={this.refHandler.canvas} />
         <div className={Classes.flexPad} />
-        <div className={style(csstips.flexRoot)}>
+        <div className={Classes.buttonGroup}>
           <Button text="Clear" onClick={this.clearCanvas} />
           <Button text="Submit" onClick={this.handleSubmit} />
         </div>

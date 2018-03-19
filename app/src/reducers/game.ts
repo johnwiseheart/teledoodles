@@ -35,10 +35,6 @@ const game = (state: IGame = initialState.game, action: Action): IGame => {
         ...parsed.payload.game,
       };
     }
-
-    if (messageIsErrorMessage(parsed)) {
-      alert(parsed.payload.error);
-    }
   }
 
   return state;

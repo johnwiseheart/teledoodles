@@ -40,6 +40,8 @@ namespace Classes {
   export const flexPad = style(csstips.flex);
 
   export const flexContainer = style(csstips.vertical, csstips.flex);
+
+  export const buttonGroup = style(csstips.flexRoot, csstips.horizontallySpaced(10))
 }
 
 export { color, style, csstips, classes, Colors, Shadows, Classes };

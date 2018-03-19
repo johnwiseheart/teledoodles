@@ -45,6 +45,9 @@ export const configureStore = (initState: IStoreState) => {
     dispatch: (event: IGenericMessage) => {
       return eventEmitter.emit(LISTENER_EVENT, event);
     },
+    isGameCodeAvailable: (gameCode: string) => {
+      return Object.keys(allGames.games).indexOf(gameCode) === -1
+    }
   };
 };
 

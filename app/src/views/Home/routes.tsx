@@ -64,7 +64,7 @@ class UnconnectedHomeRoute extends React.Component<HomeRouteProps, IHomeRouteSta
         <div className={Styles.overlayPanel}>
           Enter your game code
           <Input value={gameCode} onChange={this.handleGameCodeChange} autoFocus={true} />
-          <div className={style(csstips.flexRoot)}>
+          <div className={Classes.buttonGroup}>
             <Button text="Cancel" onClick={this.toggleOverlay} />
             <Button text="Submit" onClick={this.handleSubmitGameCode} />
           </div>

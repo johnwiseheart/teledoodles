@@ -2,6 +2,7 @@ import { Router } from "react-router";
 import { IStoreState, WebsocketStatus } from "../store";
 
 const initialState: IStoreState = {
+  errors: [],
   game: {
     books: {},
     gameCode: "",

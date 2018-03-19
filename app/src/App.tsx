@@ -4,6 +4,7 @@ import { Route, RouteComponentProps, withRouter } from "react-router";
 import { push } from "react-router-redux";
 import { cssRule } from "typestyle";
 import { joinGame } from "./actions";
+import { Errors } from './components/Errors';
 import { IStoreState, WebsocketStatus } from "./store";
 import { Classes, color, Colors, csstips, Shadows, style } from "./styles";
 import { getPlayerInfo } from "./utils";
@@ -29,6 +30,7 @@ cssRule("#root", {
 export interface IAppOwnProps extends RouteComponentProps<{ gameCode: string }> {}
 
 export interface IAppStateProps {
+  errors: string[];
   websocketStatus: WebsocketStatus;
 }
 
@@ -46,9 +48,11 @@ class UnconnectedApp extends React.Component<AppProps, {}> {
   }
 
   public render() {
+    const { errors } = this.props;
     return (
       <div className={Styles.app}>
         <header className={Styles.header}>Teledoodles</header>
+        <Errors errors={errors} />
         <div className={Classes.flexContainer}>
           <Route exact={true} path="/" component={HomeRoute} />
           <Route path="/game/:gameCode" component={GameRoute} />
@@ -84,6 +88,7 @@ namespace Styles {
 
 const mapStateToProps = (state: IStoreState): IAppStateProps => {
   return {
+    errors: state.errors,
     websocketStatus: state.websocketStatus,
   };
 };

@@ -2,10 +2,8 @@ import * as cors from "@koa/cors";
 import * as Koa from "koa";
 import * as koaBody from "koa-body";
 import * as Router from "koa-router";
-
 import { configureStore, initialState } from "./store";
 import { makeId } from "./utils";
-
 // tslint:disable-next-line
 const websockify = require("koa-websocket");
 
@@ -32,7 +30,11 @@ router.get("/ws", async ctx => {
 });
 
 router.get("/new", async ctx => {
-  const gameCode = makeId();
+  // Generate game codes until we find an empty one
+  let gameCode = makeId();
+  while (!store.isGameCodeAvailable(gameCode)) {
+    gameCode = makeId();
+  }
 
   ctx.body = {
     gameCode,

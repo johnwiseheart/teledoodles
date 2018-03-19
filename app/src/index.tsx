@@ -8,6 +8,7 @@ import { applyMiddleware, combineReducers, compose, createStore, Middleware } fr
 import thunk from "redux-thunk";
 import { App } from "./App";
 import { middleware as websocket } from "./middleware/websocket";
+import errorReducer from "./reducers/error";
 import gameReducer from "./reducers/game";
 import initialState from "./reducers/initialState";
 import websocketReducer from "./reducers/websocketStatus";
@@ -23,6 +24,7 @@ const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
 
 const store = createStore(
   combineReducers({
+    errors: errorReducer,
     game: gameReducer,
     router: routerReducer,
     websocketStatus: websocketReducer,

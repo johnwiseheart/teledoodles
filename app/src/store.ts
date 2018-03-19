@@ -20,4 +20,5 @@ export interface IStoreState {
   game: IGame;
   router: Router;
   websocketStatus: WebsocketStatus;
+  errors: string[];
 }

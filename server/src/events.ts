@@ -46,7 +46,7 @@ export const sendError = (
       playerId,
       type: MessageType.ERROR,
     };
-    playerSocket.send(JSON.stringify({ type: "ERROR", error }));
+    playerSocket.send(JSON.stringify({ type: MessageType.ERROR, payload: { error } }));
   } else {
     // remove player
   }
@@ -68,8 +68,11 @@ export const handleJoinMessage = (allGames: IStoreState, message: IJoinMessage) 
     };
   }
 
-  // if the user is in the game already, then just send them the game info
-  if (currentGame.players[playerId] === undefined) {
+  if (currentGame.players[playerId] !== undefined) {
+    sendGameInfo(allGames, gameCode);
+  } else if (currentGame.gameMode === GameMode.GAME || currentGame.gameMode === GameMode.SHOWCASE) {
+    sendError(allGames, gameCode, playerId, "You can't join a game that has started");
+  } else {
     // Add user to game with readyState false
     currentGame.players[playerId] = {
       books: [{ pages: [], id: playerId }], // array with empty book
@@ -82,14 +85,15 @@ export const handleJoinMessage = (allGames: IStoreState, message: IJoinMessage) 
 
     // Add empty book for user
     currentGame.books[playerId] = { pages: [], id: playerId };
-  }
 
-  const newAllGames = iassign(allGames, s => {
-    s.games[gameCode] = currentGame;
-    return s;
-  });
-  sendGameInfo(newAllGames, gameCode);
-  return newAllGames;
+    const newAllGames = iassign(allGames, s => {
+      s.games[gameCode] = currentGame;
+      return s;
+    });
+    sendGameInfo(newAllGames, gameCode);
+    return newAllGames;
+  }
+  return allGames;
 };
 
 export const handleReadyMessage = (allGames: IStoreState, message: IReadyMessage) => {
