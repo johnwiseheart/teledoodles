@@ -1,4 +1,5 @@
 import iassign from "immutable-assign";
+import { every } from "lodash";
 import {
   GameMode,
   IAddPageMessage,
@@ -113,13 +114,7 @@ export const handleReadyMessage = (allGames: IStoreState, message: IReadyMessage
 
   // If all players are now ready && number of players is >= 4, set lobby state to LOBBY_READY
   if (Object.keys(currentGame.players).length >= 1) {
-    let allReady = true;
-    for (const key in currentGame.players) {
-      if (currentGame.players[key].isReady !== true) {
-        allReady = false;
-        break;
-      }
-    }
+    const allReady = every(currentGame.players, player => player.isReady);
     currentGame.gameMode = allReady ? GameMode.LOBBY_READY : GameMode.LOBBY;
   }
 
