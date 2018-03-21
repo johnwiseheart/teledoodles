@@ -1,15 +1,20 @@
 import {
   GameMode,
+  IAddPageMessage,
   IBook,
   IGame,
   IJoinMessage,
+  IPage,
   IPlayer,
   IReadyMessage,
   IStartMessage,
+  ITextPage,
   MessageType,
+  pageIsTextPage,
+  PageType,
 } from "teledoodles-lib";
-import { handleJoinMessage, handleMessage, handleReadyMessage, handleStartMessage } from "../events";
-import { initialState } from "../store";
+import { handleAddPageMessage, handleJoinMessage, handleMessage, handleReadyMessage, handleStartMessage } from "../events";
+import { initialState, IStoreState } from "../store";
 
 /*
  * These tests are kinda dodgy in that each subsequent group of tests strongly depends on the functionality
@@ -61,17 +66,32 @@ const createReadyMessage = (
   },
   playerId,
   type: MessageType.READY,
+});
+
+const createStartMessage = (
+  gameCode: string,
+  playerId: string,
+): IStartMessage => ({
+  gameCode,
+  payload: {},
+  playerId,
+  type: MessageType.START,
   });
 
-  const createStartMessage = (
-    gameCode: string,
-    playerId: string,
-  ): IStartMessage => ({
-    gameCode,
-    payload: {},
-    playerId,
-    type: MessageType.START,
-  });
+const createAddPageMessage = (
+  gameCode: string,
+  playerId: string,
+  bookId: string,
+  page: IPage,
+): IAddPageMessage => ({
+  gameCode,
+  payload: {
+    bookId,
+    page,
+  },
+  playerId,
+  type: MessageType.ADD_PAGE,
+});
 
 const createJoinMessage = (gameCode: string, playerId: string, username: string): IJoinMessage => ({
   gameCode,
@@ -84,7 +104,7 @@ const createJoinMessage = (gameCode: string, playerId: string, username: string)
 
 describe("Test game creation", () => {
   let events;
-  let allGames;
+  let allGames: IStoreState;
 
   // setup game
   const gameCode = "AAAA";
@@ -94,6 +114,7 @@ describe("Test game creation", () => {
   beforeAll(() => {
     events = require("../events");
     events.sendGameInfo = jest.fn();
+    events.handleJoinMessage = jest.fn(handleJoinMessage)
 
     // setup state
     const message: IJoinMessage = createJoinMessage(gameCode, playerId, username);
@@ -128,6 +149,10 @@ describe("Test game creation", () => {
     expect(allGames.games[gameCode].players[playerId].username).toBe(username);
   });
 
+  test("handleJoinMessage was called", () => {
+    expect(events.handleJoinMessage).toBeCalled();
+  });
+
   test("Game info sent to the players", () => {
     expect(events.sendGameInfo).toBeCalled();
   });
@@ -135,7 +160,7 @@ describe("Test game creation", () => {
 
 describe("Test game ready", () => {
   let events;
-  let allGames;
+  let allGames: IStoreState;
 
   // setup game
   const gameCode = "AAAA";
@@ -147,6 +172,7 @@ describe("Test game ready", () => {
   beforeAll(() => {
     events = require("../events");
     events.sendGameInfo = jest.fn();
+    events.handleReadyMessage = jest.fn(handleReadyMessage)
 
     // join one player
     allGames = handleMessage(initialState, createJoinMessage(gameCode, playerId1, username1));
@@ -182,6 +208,10 @@ describe("Test game ready", () => {
     expect(allGames.games[gameCode].gameMode).toBe(GameMode.LOBBY);
   });
 
+  test("handleReadyMessage was called", () => {
+    expect(events.handleReadyMessage).toBeCalled();
+  });
+
   test("Game info sent to the players", () => {
     expect(events.sendGameInfo).toBeCalled();
   });
@@ -189,7 +219,7 @@ describe("Test game ready", () => {
 
 describe("Test game start", () => {
   let events;
-  let allGames;
+  let allGames: IStoreState;
 
   // setup game
   const gameCode = "AAAA";
@@ -201,20 +231,82 @@ describe("Test game start", () => {
   beforeAll(() => {
     events = require("../events");
     events.sendGameInfo = jest.fn();
+    events.handleStartMessage = jest.fn(handleStartMessage)
 
     // setup state
     allGames = handleMessage(initialState, createJoinMessage(gameCode, playerId1, username1));
     allGames = handleMessage(allGames, createJoinMessage(gameCode, playerId2, username2));
     allGames = handleMessage(allGames, createReadyMessage(gameCode, playerId1, true));
     allGames = handleMessage(allGames, createReadyMessage(gameCode, playerId2, true));
+    allGames = handleMessage(allGames, createStartMessage(gameCode, playerId1));
   });
 
   test("GameMode is set to GAME if start message sent", () => {
-    allGames = handleMessage(allGames, createStartMessage(gameCode, playerId1));
     expect(allGames.games[gameCode].gameMode).toBe(GameMode.GAME);
+  });
+
+  // it would be better if we could check that they were correct
+  test("All players have a next and a previous", () => {
+    Object.keys(allGames.games[gameCode].players).forEach(key => {
+      const player = allGames.games[gameCode].players[key];
+      expect(player.prev).not.toBe(undefined);
+      expect(player.next).not.toBe(undefined);
+    });
+  })
+
+  test("handleStartMessage was called", () => {
+    expect(events.handleStartMessage).toBeCalled();
   });
 
   test("Game info sent to the players", () => {
     expect(events.sendGameInfo).toBeCalled();
   });
 });
+
+describe("Test game add page", () => {
+  let events;
+  let allGames: IStoreState;
+
+  // setup game
+  const gameCode = "AAAA";
+  const playerId1 = "1";
+  const username1 = "player1";
+  const playerId2 = "2";
+  const username2 = "player2";
+
+  beforeAll(() => {
+    events = require("../events");
+    events.sendGameInfo = jest.fn();
+    events.handleAddPageMessage = jest.fn(handleAddPageMessage)
+
+    // setup state
+    allGames = handleMessage(initialState, createJoinMessage(gameCode, playerId1, username1));
+    allGames = handleMessage(allGames, createJoinMessage(gameCode, playerId2, username2));
+    allGames = handleMessage(allGames, createReadyMessage(gameCode, playerId1, true));
+    allGames = handleMessage(allGames, createReadyMessage(gameCode, playerId2, true));
+    allGames = handleMessage(allGames, createStartMessage(gameCode, playerId1));
+  });
+
+  test("Created page gets put on the end of the next players queue", () => {
+    const textPage: ITextPage = {
+      pageType: PageType.TEXT,
+      playerId: playerId1,
+      text: "Hello",
+    }
+
+    allGames = handleMessage(allGames, createAddPageMessage(gameCode, playerId1, playerId1, textPage));
+    expect(pageIsTextPage(allGames.games[gameCode].players[playerId2].books[1].pages[0])).toBeTruthy();
+    expect(allGames.games[gameCode].players[playerId2].books[0].id).toBe(playerId2);
+    expect(allGames.games[gameCode].players[playerId2].books[1].id).toBe(playerId1);
+  });
+
+
+  test("handleAddPageMessage was called", () => {
+    expect(events.handleStartMessage).toBeCalled();
+  });
+
+  test("Game info sent to the players", () => {
+    expect(events.sendGameInfo).toBeCalled();
+  });
+});
+

@@ -163,8 +163,8 @@ export const handleStartMessage = (game: IGame, message: IStartMessage): IGame =
 
   return produce(game, newGame => {
     // Set prev/next for all players now that the game is ready to begin
-    let prevKey: string;
-    let firstKey: string;
+    let firstKey;
+    let prevKey;
     Object.keys(newGame.players).forEach(key => {
       if (firstKey === undefined) {
         firstKey = key;
@@ -187,6 +187,12 @@ export const handleStartMessage = (game: IGame, message: IStartMessage): IGame =
 
 export const handleAddPageMessage = (game: IGame, message: IAddPageMessage): IGame => {
   const { gameCode, playerId } = message;
+
+  // If we're trying to add a page on a game that doesnt exist, return error
+  if (game === undefined) {
+    throw new GameException("Tried to add a page to a game that doesnt exist.");
+  }
+
   return produce(game, newGame => {
     const numUsers = Object.keys(newGame.players).length;
     const currentPlayer = newGame.players[playerId];
@@ -201,23 +207,16 @@ export const handleAddPageMessage = (game: IGame, message: IAddPageMessage): IGa
     const currBook = currentPlayer.books.shift();
 
     // Only add book to next player's queue if it's not full
-
     const nextPlayer = currentPlayer.next;
     if (currBook.pages.length < numUsers) {
       newGame.players[nextPlayer].books.push(currBook);
+    } else {
+      // what happens if its full?
     }
 
     // Finally, check if the game is complete; if every book has as many pages as there are
     // players, set the game mode to SHOWCASE
-    let gameOver = true;
-
-    for (const key in newGame.books) {
-      if (newGame.books[key].pages.length < numUsers) {
-        gameOver = false;
-        break;
-      }
-    }
-
+    const gameOver = every(newGame.books, book => book.pages.length >= numUsers);
     if (gameOver) {
       newGame.gameMode = GameMode.SHOWCASE;
     }
