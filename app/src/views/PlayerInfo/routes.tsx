@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 import { push as historyPush } from "react-router-redux";
-import { Button, Input } from "../../components";
+import { Button, Canvas, Input } from "../../components";
 import { IStoreState } from "../../store";
 import { Classes, csstips, style } from "../../styles";
 import { getPlayerInfo, uuidv4 } from "../../utils";
@@ -24,6 +24,13 @@ class UnconnectedPlayerInfoRoute extends React.Component<
     name: "",
   };
 
+  private canvas: Canvas;
+  private refHandler = {
+    canvas: (canvas: Canvas) => {
+      this.canvas = canvas;
+    },
+  };
+
   public componentDidMount() {
     if (getPlayerInfo() != null) {
       this.pushToHome();
@@ -34,8 +41,9 @@ class UnconnectedPlayerInfoRoute extends React.Component<
     const { name } = this.state;
     return (
       <div className={Classes.flexContainer}>
-        <div className={Classes.panel}>Player name</div>
-        <Input value={name} onChange={this.handleNameChange} />
+        <div className={Classes.panel}>Draw an avatar</div>
+        <Canvas ref={this.refHandler.canvas} />
+        <Input value={name} onChange={this.handleNameChange} placeholder="Player name" />
         <div className={Classes.flexPad} />
         <div>
           <Button text="Submit" onClick={this.handleSubmit} />
@@ -50,15 +58,19 @@ class UnconnectedPlayerInfoRoute extends React.Component<
 
   private handleSubmit = () => {
     const { name } = this.state;
+
     if (name.length > 0) {
-      localStorage.setItem(
-        "player",
-        JSON.stringify({
-          id: uuidv4(),
-          username: name,
-        }),
-      );
-      this.pushToHome();
+      return this.canvas.getURL().then(fileId => {
+        localStorage.setItem(
+          "player",
+          JSON.stringify({
+            avatarFileId: fileId,
+            id: uuidv4(),
+            username: name,
+          }),
+        );
+        this.pushToHome();
+      });
     }
   };
 

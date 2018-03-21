@@ -17,6 +17,8 @@ namespace Colors {
     .lighten(0.2)
     .toHexString();
 
+  export const white = "#ffffff";
+
   export const primaryText = color(primaryColorTextHex).toHexString();
 }
 

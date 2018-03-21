@@ -163,6 +163,6 @@ namespace Styles {
       boxShadow: Shadows.one,
       verticalAlign: "bottom",
     },
-    csstips.margin(10, 0, 0, 0),
+    csstips.margin(10, 0),
   );
 }

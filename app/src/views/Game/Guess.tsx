@@ -1,7 +1,7 @@
 import * as React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import { Button, DoodleViewer, Input } from "../../components";
-import { Classes, csstips, style } from "../../styles";
+import { Button, Input, S3ImageWrapper } from "../../components";
+import { Classes, Colors, csstips, Shadows, style } from "../../styles";
 
 interface IGuessProps {
   imageId: string;
@@ -20,12 +20,19 @@ export class Guess extends React.Component<IGuessProps, IGuessState> {
   public render() {
     const { imageId } = this.props;
     const { text } = this.state;
+
+    const renderImage = (imageUrl: string) => (
+      <div className={Styles.imageContainer}>
+        <img className={Styles.image} src={imageUrl} />
+      </div>
+    )
+
     return (
       <div className={Classes.flexContainer}>
         <div className="panel">
           <h2>What is this?</h2>
         </div>
-        <DoodleViewer imageId={imageId} />
+        <S3ImageWrapper imageId={imageId} renderImage={renderImage}/>
         <div className={Classes.flexPad} />
         <Input value={text} onChange={this.handleChange} />
         <Button text="Submit" onClick={this.handleSubmit} />
@@ -42,4 +49,15 @@ export class Guess extends React.Component<IGuessProps, IGuessState> {
       this.props.onGuess(this.state.text);
     }
   };
+}
+
+namespace Styles {
+  export const imageContainer = style({
+    backgroundColor: Colors.white,
+    boxShadow: Shadows.one
+  });
+
+  export const image = style({
+    width: "100%",
+  });
 }
