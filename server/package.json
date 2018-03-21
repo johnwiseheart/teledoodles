@@ -10,6 +10,7 @@
         "@types/koa-websocket": "^2.1.2",
         "@types/node-fetch": "^1.6.7",
         "cross-env": "5.0.5",
+        "immer": "^1.2.0",
         "immutable-assign": "^2.0.4",
         "koa": "^2.4.1",
         "koa-body": "^2.5.0",

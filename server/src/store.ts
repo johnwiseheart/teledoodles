@@ -10,11 +10,7 @@ import {
   messageIsStartMessage,
 } from "teledoodles-lib";
 import {
-  handleAddPageMessage,
-  handleJoinMessage,
-  handlePlayerWebsocketSet,
-  handleReadyMessage,
-  handleStartMessage,
+  handleMessage,
 } from "./events";
 
 export interface IStoreState {
@@ -28,17 +24,7 @@ export const configureStore = (initState: IStoreState) => {
   let allGames: IStoreState = initState;
 
   eventEmitter.on(LISTENER_EVENT, message => {
-    if (messageIsJoinMessage(message)) {
-      allGames = handleJoinMessage(allGames, message);
-    } else if (messageIsReadyMessage(message)) {
-      allGames = handleReadyMessage(allGames, message);
-    } else if (messageIsStartMessage(message)) {
-      allGames = handleStartMessage(allGames, message);
-    } else if (messageIsAddPageMessage(message)) {
-      allGames = handleAddPageMessage(allGames, message);
-    } else if (message.type === "PLAYER:WEBSOCKET:SET") {
-      allGames = handlePlayerWebsocketSet(allGames, message);
-    }
+    allGames = handleMessage(allGames, message)
   });
 
   return {

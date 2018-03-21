@@ -8,7 +8,7 @@ import {
   IStartMessage,
   MessageType,
 } from "teledoodles-lib";
-import { handleJoinMessage, handleReadyMessage, handleStartMessage } from "../events";
+import { handleJoinMessage, handleMessage, handleReadyMessage, handleStartMessage } from "../events";
 import { initialState } from "../store";
 
 /*
@@ -97,7 +97,7 @@ describe("Test game creation", () => {
 
     // setup state
     const message: IJoinMessage = createJoinMessage(gameCode, playerId, username);
-    allGames = handleJoinMessage(initialState, message);
+    allGames = handleMessage(initialState, message);
   });
 
   test("Game exists", () => {
@@ -149,36 +149,36 @@ describe("Test game ready", () => {
     events.sendGameInfo = jest.fn();
 
     // join one player
-    allGames = handleJoinMessage(initialState, createJoinMessage(gameCode, playerId1, username1));
+    allGames = handleMessage(initialState, createJoinMessage(gameCode, playerId1, username1));
   });
 
   test("Player set to ready is ready", () => {
-    allGames = handleReadyMessage(allGames, createReadyMessage(gameCode, playerId1, true));
+    allGames = handleMessage(allGames, createReadyMessage(gameCode, playerId1, true));
     expect(allGames.games[gameCode].players[playerId1].isReady).toBe(true);
   });
 
   test("Player set to not-ready is not-ready", () => {
-    allGames = handleReadyMessage(allGames, createReadyMessage(gameCode, playerId1, false));
+    allGames = handleMessage(allGames, createReadyMessage(gameCode, playerId1, false));
     expect(allGames.games[gameCode].players[playerId1].isReady).toBe(false);
   });
 
   test("GameMode is not changed to LOBBY_READY if no players are ready", () => {
-    allGames = handleJoinMessage(allGames, createJoinMessage(gameCode, playerId2, username2));
+    allGames = handleMessage(allGames, createJoinMessage(gameCode, playerId2, username2));
     expect(allGames.games[gameCode].gameMode).toBe(GameMode.LOBBY);
   });
 
   test("GameMode is not changed to LOBBY_READY if some players are ready", () => {
-    allGames = handleReadyMessage(allGames, createReadyMessage(gameCode, playerId1, true));
+    allGames = handleMessage(allGames, createReadyMessage(gameCode, playerId1, true));
     expect(allGames.games[gameCode].gameMode).toBe(GameMode.LOBBY);
   });
 
   test("GameMode is changed to LOBBY_READY if all players are ready", () => {
-    allGames = handleReadyMessage(allGames, createReadyMessage(gameCode, playerId2, true));
+    allGames = handleMessage(allGames, createReadyMessage(gameCode, playerId2, true));
     expect(allGames.games[gameCode].gameMode).toBe(GameMode.LOBBY_READY);
   });
 
   test("GameMode is changed back to LOBBY if a players are un-readies", () => {
-    allGames = handleReadyMessage(allGames, createReadyMessage(gameCode, playerId1, false));
+    allGames = handleMessage(allGames, createReadyMessage(gameCode, playerId1, false));
     expect(allGames.games[gameCode].gameMode).toBe(GameMode.LOBBY);
   });
 
@@ -203,14 +203,14 @@ describe("Test game start", () => {
     events.sendGameInfo = jest.fn();
 
     // setup state
-    allGames = handleJoinMessage(initialState, createJoinMessage(gameCode, playerId1, username1));
-    allGames = handleJoinMessage(initialState, createJoinMessage(gameCode, playerId2, username2));
-    allGames = handleReadyMessage(initialState, createReadyMessage(gameCode, playerId1, true));
-    allGames = handleReadyMessage(initialState, createReadyMessage(gameCode, playerId2, true));
+    allGames = handleMessage(initialState, createJoinMessage(gameCode, playerId1, username1));
+    allGames = handleMessage(allGames, createJoinMessage(gameCode, playerId2, username2));
+    allGames = handleMessage(allGames, createReadyMessage(gameCode, playerId1, true));
+    allGames = handleMessage(allGames, createReadyMessage(gameCode, playerId2, true));
   });
 
   test("GameMode is set to GAME if start message sent", () => {
-    allGames = handleStartMessage(allGames, createStartMessage(gameCode, playerId1));
+    allGames = handleMessage(allGames, createStartMessage(gameCode, playerId1));
     expect(allGames.games[gameCode].gameMode).toBe(GameMode.GAME);
   });
 
