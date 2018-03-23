@@ -1,6 +1,7 @@
 import * as classNames from "classnames";
 import * as React from "react";
 import { classes, Classes, color, Colors, csstips, Shadows, style } from "../styles";
+import { Intent } from './utils';
 
 export interface IButtonProps {
   selected?: boolean;
@@ -8,13 +9,15 @@ export interface IButtonProps {
   text: string;
   disabled?: boolean;
   onClick: () => void;
+  intent?: Intent;
 }
 
-export const Button = ({ className, disabled, selected, text, onClick }: IButtonProps) => {
+export const Button = ({ className, disabled, intent, selected, text, onClick }: IButtonProps) => {
   const componentClassName = classes(
-    Styles.button,
     className,
-    selected && Styles.selected,
+    Styles.base,
+    !selected && !disabled && Styles.defaultStyle(intent || Intent.INFO),
+    selected && Styles.selected(intent || Intent.INFO),
     disabled && Styles.disabled,
   );
 
@@ -26,37 +29,57 @@ export const Button = ({ className, disabled, selected, text, onClick }: IButton
 };
 
 namespace Styles {
-  export const button = style(
+  const colors = {
+    [Intent.INFO]: Colors.primary,
+    [Intent.SUCCESS]: Colors.green,
+    [Intent.DANGER]: Colors.red,
+  }
+
+  export const base = style(
     {
-      $nest: {
-        "&:hover": {
-          backgroundColor: Colors.primaryDark,
-        },
-      },
-      backgroundColor: Colors.primary,
+      backgroundColor: Colors.white,
       boxShadow: Shadows.one,
-      color: Colors.primaryText,
       display: "block",
-      flex: 1,
       lineHeight: "30px",
       minHeight: "30px",
       textAlign: "center",
       textTransform: "uppercase",
     },
+    csstips.flex,
     csstips.padding(10, 0),
     csstips.margin(5, 0),
   );
 
-  export const selected = style({
-    backgroundColor: Colors.primaryDarker,
-  });
-
-  export const disabled = style({
+  export const defaultStyle = (intent: Intent) => style({
     $nest: {
+      "&&:active": {
+        backgroundColor: color(colors[intent]).darken(.1).toString(),
+        borderBottomColor: color(colors[intent]).darken(.1).toString()
+      },
       "&:hover": {
-        backgroundColor: Colors.primaryLight,
+        backgroundColor: colors[intent],
+        color: Colors.white,
       },
     },
-    backgroundColor: Colors.primaryLight,
+    borderBottom: `3px solid ${colors[intent]}`,
+    color: colors[intent],
+  })
+
+  export const selected = (intent: Intent) => style({
+    backgroundColor: colors[intent],
+    color: Colors.white,
+  });
+
+  const disabledStyle = {
+    backgroundColor: Colors.white,
+    borderBottom: `3px solid ${Colors.grey}`,
+    color: Colors.grey,
+  };
+  export const disabled = style({
+    $nest: {
+      "&&:active": disabledStyle,
+      "&:hover": disabledStyle,
+    },
+    ...disabledStyle,
   });
 }

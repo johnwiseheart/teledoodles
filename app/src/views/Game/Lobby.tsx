@@ -10,6 +10,9 @@ import {
   startGame as startGameAction,
 } from "../../actions";
 import { Button } from "../../components";
+import { EmptyPlayerCard } from '../../components/EmptyPlayerCard';
+import { PlayerCard } from '../../components/PlayerCard';
+import { Intent } from '../../components/utils';
 import { IStoreState, WebsocketStatus } from "../../store";
 import { Classes, classes, style } from "../../styles";
 import { getPlayerInfo } from "../../utils";
@@ -40,17 +43,15 @@ class UnconnectedLobbyRoute extends React.Component<LobbyRouteProps, ILobbyRoute
     const { isReady } = this.state;
     const { game, startGame } = this.props;
 
-    const readyText = isReady ? "Un-Ready" : "Ready Up";
+    const readyText = isReady ? "Ready" : "Not Ready";
+    const intent = isReady ? Intent.SUCCESS : Intent.DANGER;
     return (
       <div className={Classes.flexContainer}>
-        <div className={classes(Classes.panel)}>
-          <h2>Lobby {game.gameCode}</h2>
-          <p>At least 4 players must be ready for the host to start the game.</p>
-        </div>
-        <div className={classes(Classes.panel, Styles.players)}>{this.renderPlayers()}</div>
+        <div className={Classes.subheader}>Players</div>
+        <div className={classes(Styles.players)}>{this.renderPlayers()}</div>
         <div className={Classes.flexPad} />
-        <div>
-          <Button text={readyText} selected={isReady} onClick={this.toggleReady} />
+        <div className={Classes.buttonGroupVertical}>
+          <Button intent={intent} text={readyText} onClick={this.toggleReady} />
           {this.maybeRenderStartButton()}
         </div>
       </div>
@@ -70,16 +71,15 @@ class UnconnectedLobbyRoute extends React.Component<LobbyRouteProps, ILobbyRoute
 
   private renderPlayers = () => {
     const { players } = this.props;
-    return Object.keys(players)
+    const renderPlayers = Object.keys(players)
       .map(key => players[key])
-      .map(player => {
-        const className = player.isReady ? Styles.playerReady : Styles.playerNotReady;
-        return (
-          <div key={player.id} className={className}>
-            {player.username}
-          </div>
-        );
-      });
+      .map(player => <PlayerCard key={player.id} player={player} />);
+
+    const numEmptyPlayers = 4 - Object.keys(players).length;
+    const renderEmptyPlayers = numEmptyPlayers > 0 ?
+      Array.from(Array(numEmptyPlayers).keys()).map((index: number) => <EmptyPlayerCard key={index} />) : undefined;
+
+    return [...renderPlayers, renderEmptyPlayers]
   };
 
   private toggleReady = () => {
@@ -91,15 +91,7 @@ class UnconnectedLobbyRoute extends React.Component<LobbyRouteProps, ILobbyRoute
 }
 
 namespace Styles {
-  export const players = style(csstips.verticallySpaced(5));
-
-  export const playerReady = style({
-    border: "1px solid green",
-  });
-
-  export const playerNotReady = style({
-    border: "1px solid red",
-  });
+  export const players = style(csstips.verticallySpaced(10));
 }
 
 const mapStateToProps = (state: IStoreState): ILobbyRouteStateProps => {

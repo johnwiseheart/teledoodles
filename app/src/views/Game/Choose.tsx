@@ -20,12 +20,12 @@ export class Choose extends React.Component<IChooseProps, IChooseState> {
     const { text } = this.state;
     return (
       <div className={Classes.flexContainer}>
-        <div className={Classes.panel}>Pick a word or phrase for the other players to sketch.</div>
-        <div className={Classes.flexPad} />
+        <div className={Classes.subheader}>Choose</div>
+        <div className={Classes.description}>Choose some text for the other players to draw and guess.<br />It can be a word, phrase, or any other text that everyone will understand.</div>
         <Input value={text} onChange={this.handleChange} />
         <div className={Classes.flexPad} />
         <div>
-          <Button text="Submit" onClick={this.handleSubmit} />
+          <Button text="Submit" disabled={text.length === 0} onClick={this.handleSubmit} />
         </div>
       </div>
     );
@@ -36,8 +36,6 @@ export class Choose extends React.Component<IChooseProps, IChooseState> {
   };
 
   public handleSubmit = () => {
-    if (this.state.text.length > 0) {
-      this.props.onChoose(this.state.text);
-    }
+    this.props.onChoose(this.state.text);
   };
 }

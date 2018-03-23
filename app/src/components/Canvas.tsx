@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Colors, csstips, Shadows, style } from "../styles";
+import * as Iconicon from "react-ionicons";
+import { color, Colors, csstips, Shadows, style } from "../styles";
 import { sendToS3 } from "../utils";
 
 interface IPoint {
@@ -7,15 +8,23 @@ interface IPoint {
   y: number;
 }
 
-export class Canvas extends React.Component {
+export interface ICanvasProps {
+  onCanvasTouch: (isEmpty: boolean) => void;
+}
+
+export class Canvas extends React.Component<ICanvasProps, {}> {
   private isDrawing = false;
   private prevMouse: IPoint;
   private currMouse: IPoint;
 
   private canvas: HTMLCanvasElement;
+  private canvasContainer: HTMLDivElement;
   private refHandlers = {
     canvas: (canvasElement: HTMLCanvasElement) => {
       this.canvas = canvasElement;
+    },
+    canvasContainer: (canvasContainerElement: HTMLDivElement) => {
+      this.canvasContainer = canvasContainerElement;
     },
   };
 
@@ -26,16 +35,25 @@ export class Canvas extends React.Component {
   }
 
   public render() {
-    return <canvas className={Styles.canvas} ref={this.refHandlers.canvas} />;
+    return (
+      <div ref={this.refHandlers.canvasContainer} className={Styles.container}>
+        <canvas className={Styles.canvas} ref={this.refHandlers.canvas} />
+        <div className={Styles.trash} onClick={this.clearCanvas}>
+          <Iconicon className={Styles.trashIcon} icon="md-trash" color={Colors.grey} />
+        </div>
+      </div>
+    );
   }
 
   public clearCanvas = () => {
+    const { onCanvasTouch } = this.props;
     const ctx = this.canvas.getContext("2d");
     if (ctx == null) {
       return;
     }
 
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    onCanvasTouch(true);
   };
 
   public getURL = (): Promise<string> => {
@@ -94,16 +112,21 @@ export class Canvas extends React.Component {
   };
 
   private handleStartDrawing = (e: MouseEvent) => {
+    const { onCanvasTouch } = this.props;
+
     const canvas = this.canvas;
+    const canvasContainer = this.canvasContainer;
     const ctx = this.canvas.getContext("2d");
     if (ctx == null) {
       return;
     }
 
+    onCanvasTouch(false);
+
     this.prevMouse = this.currMouse;
     this.currMouse = {
-      x: e.clientX - canvas.offsetLeft,
-      y: e.clientY - canvas.offsetTop,
+      x: e.clientX - canvasContainer.offsetLeft,
+      y: e.clientY - canvasContainer.offsetTop,
     };
 
     this.isDrawing = true;
@@ -118,6 +141,7 @@ export class Canvas extends React.Component {
 
   private handleDraw = (e: MouseEvent) => {
     const canvas = this.canvas;
+    const canvasContainer = this.canvasContainer;
     const ctx = this.canvas.getContext("2d");
     if (ctx == null) {
       return;
@@ -126,8 +150,8 @@ export class Canvas extends React.Component {
     if (this.isDrawing) {
       this.prevMouse = this.currMouse;
       this.currMouse = {
-        x: e.clientX - canvas.offsetLeft,
-        y: e.clientY - canvas.offsetTop,
+        x: e.clientX - canvasContainer.offsetLeft,
+        y: e.clientY - canvasContainer.offsetTop,
       };
 
       ctx.beginPath();
@@ -147,7 +171,7 @@ export class Canvas extends React.Component {
     }
 
     const imgData = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-    const size = Math.min(window.innerWidth - 26, 500 - 6);
+    const size = Math.min(window.innerWidth - 20, 500);
 
     this.canvas.width = size;
     this.canvas.height = size;
@@ -157,12 +181,38 @@ export class Canvas extends React.Component {
 }
 
 namespace Styles {
+  export const container = style({
+    position: "relative",
+  },
+    csstips.margin(10, 0),
+  );
+
   export const canvas = style(
     {
-      backgroundColor: Colors.primary,
+      backgroundColor: Colors.white,
       boxShadow: Shadows.one,
       verticalAlign: "bottom",
     },
-    csstips.margin(10, 0),
   );
+
+  export const trash = style({
+    $nest: {
+      "&&:active": {
+        background: color(Colors.grey).lighten(.1).toString(),
+      },
+      "&:hover": {
+        background: color(Colors.grey).lighten(.15).toString(),
+      },
+    },
+    borderRadius: "5px",
+    bottom: 0,
+    height: "40px",
+    position: "absolute",
+    right: 0,
+    width: "40px",
+  }, csstips.flexRoot, csstips.center, csstips.centerJustified, csstips.margin(5), csstips.padding(5),)
+
+  export const trashIcon = style({
+    color: Colors.grey,
+  }, csstips.flex)
 }

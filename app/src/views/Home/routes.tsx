@@ -1,10 +1,11 @@
 import { rgba } from "csx";
 import * as React from "react";
+import ReactDOM = require('react-dom');
 import { connect, Dispatch } from "react-redux";
 import { joinGame as joinGameAction, newGame as newGameAction } from "../../actions";
 import { Button, Input } from "../../components";
 import { IStoreState } from "../../store";
-import { Classes, classes, csstips, style } from "../../styles";
+import { Classes, classes, Colors, csstips, Shadows, style } from "../../styles";
 
 export interface IHomeRouteDispatchProps {
   joinGame: (gameCode: string) => void;
@@ -23,6 +24,13 @@ class UnconnectedHomeRoute extends React.Component<HomeRouteProps, IHomeRouteSta
     gameCode: "",
     isOverlayOpen: false,
   };
+
+  private panel: HTMLDivElement;
+  private refHandlers = {
+    panel: (panel: HTMLDivElement) => {
+      this.panel = panel;
+    }
+  }
 
   public render() {
     const { isOverlayOpen } = this.state;
@@ -48,7 +56,7 @@ class UnconnectedHomeRoute extends React.Component<HomeRouteProps, IHomeRouteSta
           </p>
         </div>
         <div className={Classes.flexPad} />
-        <div>
+        <div className={Classes.buttonGroupVertical}>
           <Button text="Create" onClick={newGame} />
           <Button text="Join" onClick={this.toggleOverlay} />
         </div>
@@ -60,13 +68,12 @@ class UnconnectedHomeRoute extends React.Component<HomeRouteProps, IHomeRouteSta
     const { gameCode } = this.state;
 
     return (
-      <div className={Styles.overlay}>
-        <div className={Styles.overlayPanel}>
-          Enter your game code
-          <Input value={gameCode} onChange={this.handleGameCodeChange} autoFocus={true} />
+      <div className={Styles.overlay} onClick={this.handleClickOverlay}>
+        <div ref={this.refHandlers.panel} className={Styles.overlayPanel}>
+          <Input value={gameCode} placeholder="Game code" onChange={this.handleGameCodeChange} autoFocus={true} />
           <div className={Classes.buttonGroup}>
             <Button text="Cancel" onClick={this.toggleOverlay} />
-            <Button text="Submit" onClick={this.handleSubmitGameCode} />
+            <Button text="Submit" disabled={gameCode.length !== 4} onClick={this.handleSubmitGameCode} />
           </div>
         </div>
       </div>
@@ -84,6 +91,13 @@ class UnconnectedHomeRoute extends React.Component<HomeRouteProps, IHomeRouteSta
     }
   };
 
+  private handleClickOverlay = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (this.panel != null && !this.panel.contains(event.target as Node)) {
+      const { isOverlayOpen } = this.state;
+      this.setState({ isOverlayOpen: !isOverlayOpen });
+    }
+  }
+
   private toggleOverlay = () => {
     const { isOverlayOpen } = this.state;
     this.setState({ isOverlayOpen: !isOverlayOpen });
@@ -93,7 +107,6 @@ class UnconnectedHomeRoute extends React.Component<HomeRouteProps, IHomeRouteSta
 namespace Styles {
   export const overlay = style(
     {
-      alignItems: "center",
       backgroundColor: rgba(0, 0, 0, 0.6).toString(),
       bottom: 0,
       left: 0,
@@ -101,6 +114,7 @@ namespace Styles {
       right: 0,
       top: 0,
     },
+    csstips.center,
     csstips.flexRoot,
     csstips.centerJustified,
   );
@@ -108,10 +122,12 @@ namespace Styles {
   export const overlayPanel = classes(
     style(
       {
+        backgroundColor: Colors.background,
+        boxShadow: Shadows.one,
         maxWidth: "500px",
       },
       csstips.flex,
-      csstips.padding(10),
+      csstips.padding(10, 10, 5, 10),
     ),
     Classes.panel,
   );

@@ -2,6 +2,7 @@ import * as React from "react";
 import { connect, Dispatch } from "react-redux";
 import { Route, RouteComponentProps, withRouter } from "react-router";
 import { push } from "react-router-redux";
+import { IGame } from 'teledoodles-lib';
 import { cssRule } from "typestyle";
 import { joinGame } from "./actions";
 import { Errors } from './components/Errors';
@@ -19,17 +20,15 @@ cssRule("body", {
 });
 
 cssRule("html", {
-  backgroundColor: "#eee",
+  backgroundColor: Colors.background,
 });
 
-cssRule("#root", {
-  display: "flex",
-  justifyContent: "center",
-});
+cssRule("#root", csstips.flexRoot, csstips.centerJustified);
 
 export interface IAppOwnProps extends RouteComponentProps<{ gameCode: string }> {}
 
 export interface IAppStateProps {
+  game: IGame;
   errors: string[];
   websocketStatus: WebsocketStatus;
 }
@@ -48,10 +47,11 @@ class UnconnectedApp extends React.Component<AppProps, {}> {
   }
 
   public render() {
-    const { errors } = this.props;
+    const { game, errors } = this.props;
+    const maybeRenderGameCode = game.gameCode !== undefined ? ` · ${game.gameCode}` : undefined;
     return (
       <div className={Styles.app}>
-        <header className={Styles.header}>Teledoodles</header>
+        <header className={Styles.header}>Teledoodles{maybeRenderGameCode}</header>
         <Errors errors={errors} />
         <div className={Classes.flexContainer}>
           <Route exact={true} path="/" component={HomeRoute} />
@@ -70,7 +70,7 @@ namespace Styles {
     },
     csstips.flex,
     csstips.vertical,
-    csstips.margin(10),
+    csstips.margin(0, 10, 10, 10),
   );
 
   export const header = style(
@@ -78,7 +78,7 @@ namespace Styles {
       backgroundColor: Colors.primary,
       boxShadow: Shadows.one,
       color: Colors.primaryText,
-      fontSize: "30px",
+      fontSize: "26px",
       textAlign: "center",
     },
     csstips.padding(10),
@@ -89,6 +89,7 @@ namespace Styles {
 const mapStateToProps = (state: IStoreState): IAppStateProps => {
   return {
     errors: state.errors,
+    game: state.game,
     websocketStatus: state.websocketStatus,
   };
 };

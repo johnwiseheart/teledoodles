@@ -41,7 +41,8 @@ class UnconnectedPlayerInfoRoute extends React.Component<
     const { name } = this.state;
     return (
       <div className={Classes.flexContainer}>
-        <div className={Classes.panel}>Draw an avatar</div>
+        <div className={Classes.subheader}>Player Info</div>
+        <div className={Classes.description}>Pick a name and draw an avatar for yourself.</div>
         <Canvas ref={this.refHandler.canvas} />
         <Input value={name} onChange={this.handleNameChange} placeholder="Player name" />
         <div className={Classes.flexPad} />

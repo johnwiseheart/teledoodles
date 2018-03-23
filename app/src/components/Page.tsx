@@ -53,9 +53,6 @@ namespace Styles {
   })
 
   export const text = style({
-    alignItems: "center",
     height: "150px",
-    justifyContent: "center",
-    textAlign: "center",
-  }, csstips.flexRoot)
+  }, csstips.flexRoot, csstips.centerCenter)
 }

@@ -2,7 +2,7 @@ import * as csstips from "csstips";
 import { color } from "csx";
 import { classes, style } from "typestyle";
 
-const primaryColorHex = "#26A7FF";
+const primaryColorHex = "#4A90E2";
 const primaryColorTextHex = "#FEFEFE";
 
 namespace Colors {
@@ -18,6 +18,12 @@ namespace Colors {
     .toHexString();
 
   export const white = "#ffffff";
+
+  export const green = "#8DBE7B";
+  export const red = "#DA6464";
+  export const grey = "#ccc";
+
+  export const background = color("#97C4F8").lighten(0.18).toString();
 
   export const primaryText = color(primaryColorTextHex).toHexString();
 }
@@ -39,11 +45,24 @@ namespace Classes {
     csstips.padding(5),
   );
 
+  export const subheader = style({
+    color: Colors.primary,
+    fontSize: "14px",
+    textAlign: "center",
+    textTransform: "uppercase",
+  }, csstips.padding(10))
+
+  export const description = style({
+    color: Colors.primary,
+    textAlign: "center",
+  }, csstips.padding(10))
+
   export const flexPad = style(csstips.flex);
 
   export const flexContainer = style(csstips.vertical, csstips.flex);
 
   export const buttonGroup = style(csstips.flexRoot, csstips.horizontallySpaced(10))
+  export const buttonGroupVertical = style(csstips.vertical, csstips.verticallySpaced(10))
 }
 
 export { color, style, csstips, classes, Colors, Shadows, Classes };

@@ -5,7 +5,7 @@ const initialState: IStoreState = {
   errors: [],
   game: {
     books: {},
-    gameCode: "",
+    gameCode: undefined,
     gameMode: undefined,
     host: undefined,
     players: {},

@@ -8,7 +8,15 @@ export interface IDoodleProps {
   onDoodle: (doodleUrl: string) => void;
 }
 
+export interface IDoodleState {
+  isEmpty: boolean;
+}
+
 export class Doodle extends React.Component<IDoodleProps, {}> {
+  public state: IDoodleState = {
+    isEmpty: true,
+  }
+
   private canvas: Canvas;
   private refHandler = {
     canvas: (canvas: Canvas) => {
@@ -17,30 +25,31 @@ export class Doodle extends React.Component<IDoodleProps, {}> {
   };
 
   public render() {
+    const { isEmpty } = this.state;
     return (
       <div className={Classes.flexContainer}>
-        <div className={Classes.panel}>
-          <h2>{this.props.text}</h2>
-          <span className={Styles.label}>Doodle This</span>
-        </div>
-        <Canvas ref={this.refHandler.canvas} />
+       <div className={Classes.subheader}>Doodle</div>
+        <div className={Classes.description}>Doodle the word or phrase: {this.props.text}</div>
+        <Canvas ref={this.refHandler.canvas} onCanvasTouch={this.handleCanvasTouch} />
         <div className={Classes.flexPad} />
-        <div className={Classes.buttonGroup}>
-          <Button text="Clear" onClick={this.clearCanvas} />
-          <Button text="Submit" onClick={this.handleSubmit} />
+        <div>
+          <Button text="Submit" disabled={isEmpty} onClick={this.handleSubmit} />
         </div>
       </div>
     );
   }
 
-  private clearCanvas = () => {
-    this.canvas.clearCanvas();
-  };
-
   private handleSubmit = async () => {
-    const URL = await this.canvas.getURL();
-    this.props.onDoodle(URL);
-  };
+    if (!this.state.isEmpty) {
+      const URL = await this.canvas.getURL();
+      this.props.onDoodle(URL);
+
+    }
+  }
+
+  private handleCanvasTouch = (isEmpty: boolean) => {
+    this.setState({ isEmpty });
+  }
 }
 
 namespace Styles {
