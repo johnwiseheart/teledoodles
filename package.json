@@ -11,5 +11,8 @@
   ],
   "devDependencies": {
     "prettier": "1.11.1"
+  },
+  "scripts": {
+    "build-app": "cd packages/app; yarn build"
   }
 }
