@@ -19,7 +19,7 @@ namespace Styles {
     border: `1px dashed ${Colors.primary}`,
     boxShadow: Shadows.one,
     color: Colors.primary,
-    height: "40px",
+    height: "60px",
     position: "relative",
   }, csstips.flexRoot, csstips.centerCenter, csstips.padding(15))
 }

@@ -9,7 +9,7 @@ interface IPoint {
 }
 
 export interface ICanvasProps {
-  onCanvasTouch: (isEmpty: boolean) => void;
+  onCanvasChange?: (isEmpty: boolean) => void;
 }
 
 export class Canvas extends React.Component<ICanvasProps, {}> {
@@ -46,14 +46,13 @@ export class Canvas extends React.Component<ICanvasProps, {}> {
   }
 
   public clearCanvas = () => {
-    const { onCanvasTouch } = this.props;
     const ctx = this.canvas.getContext("2d");
     if (ctx == null) {
       return;
     }
 
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    onCanvasTouch(true);
+    this.onCanvasTouch(true);
   };
 
   public getURL = (): Promise<string> => {
@@ -65,6 +64,12 @@ export class Canvas extends React.Component<ICanvasProps, {}> {
     });
   };
 
+  private onCanvasTouch = (isEmpty: boolean) => {
+    const { onCanvasChange } = this.props;
+    if (onCanvasChange !== undefined) {
+      onCanvasChange(isEmpty);
+    }
+  }
   private setupCanvas = () => {
     this.canvas.addEventListener("mousemove", this.handleDraw, false);
     this.canvas.addEventListener("mousedown", this.handleStartDrawing, false);
@@ -112,8 +117,6 @@ export class Canvas extends React.Component<ICanvasProps, {}> {
   };
 
   private handleStartDrawing = (e: MouseEvent) => {
-    const { onCanvasTouch } = this.props;
-
     const canvas = this.canvas;
     const canvasContainer = this.canvasContainer;
     const ctx = this.canvas.getContext("2d");
@@ -121,7 +124,7 @@ export class Canvas extends React.Component<ICanvasProps, {}> {
       return;
     }
 
-    onCanvasTouch(false);
+    this.onCanvasTouch(false);
 
     this.prevMouse = this.currMouse;
     this.currMouse = {
@@ -131,7 +134,7 @@ export class Canvas extends React.Component<ICanvasProps, {}> {
 
     this.isDrawing = true;
     ctx.beginPath();
-    ctx.fillRect(this.currMouse.x, this.currMouse.y, 2, 2);
+    ctx.fillRect(this.currMouse.x, this.currMouse.y, 1, 1);
     ctx.closePath();
   };
 
@@ -158,7 +161,7 @@ export class Canvas extends React.Component<ICanvasProps, {}> {
       ctx.moveTo(this.prevMouse.x, this.prevMouse.y);
       ctx.lineTo(this.currMouse.x, this.currMouse.y);
 
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 5;
       ctx.stroke();
       ctx.closePath();
     }

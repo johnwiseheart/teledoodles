@@ -49,7 +49,6 @@ class UnconnectedLobbyRoute extends React.Component<LobbyRouteProps, ILobbyRoute
       <div className={Classes.flexContainer}>
         <div className={Classes.subheader}>Players</div>
         <div className={classes(Styles.players)}>{this.renderPlayers()}</div>
-        <div className={Classes.flexPad} />
         <div className={Classes.buttonGroupVertical}>
           <Button intent={intent} text={readyText} onClick={this.toggleReady} />
           {this.maybeRenderStartButton()}
@@ -91,7 +90,7 @@ class UnconnectedLobbyRoute extends React.Component<LobbyRouteProps, ILobbyRoute
 }
 
 namespace Styles {
-  export const players = style(csstips.verticallySpaced(10));
+  export const players = style(csstips.flex, csstips.scrollY, csstips.verticallySpaced(10));
 }
 
 const mapStateToProps = (state: IStoreState): ILobbyRouteStateProps => {

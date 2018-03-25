@@ -60,6 +60,7 @@ export interface IJoinMessage extends IGenericMessage {
   type: MessageType.JOIN;
   payload: {
     username: string;
+    avatarFileId: string;
   };
 }
 
@@ -122,6 +123,7 @@ export const messageIsErrorMessage = (message: any): message is IErrorMessage =>
 
 export interface IPlayer {
   id: string;
+  avatarFileId: string;
   username: string;
   isReady: boolean;
   prev: PlayerId;

@@ -26,7 +26,7 @@ export class S3ImageWrapper extends React.Component<IS3ImageWrapperProps, IS3Ima
     const { renderImage, renderLoader } = this.props
     const { imageUrl } = this.state;
     if (imageUrl === undefined) {
-      return renderLoader ? renderLoader : <div>Loading</div>;
+      return renderLoader ? renderLoader() : <div>Loading</div>;
     }
     return renderImage(imageUrl);
   }

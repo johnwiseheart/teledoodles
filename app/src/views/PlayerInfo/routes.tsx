@@ -14,6 +14,7 @@ export type IPlayerInfoRouteProps = IPlayerInfoRouteDispatchProps;
 
 interface IPlayerInfoRouteState {
   name: string;
+  canvasEmpty: boolean;
 }
 
 class UnconnectedPlayerInfoRoute extends React.Component<
@@ -21,6 +22,7 @@ class UnconnectedPlayerInfoRoute extends React.Component<
   IPlayerInfoRouteState
 > {
   public state: IPlayerInfoRouteState = {
+    canvasEmpty: true,
     name: "",
   };
 
@@ -38,19 +40,23 @@ class UnconnectedPlayerInfoRoute extends React.Component<
   }
 
   public render() {
-    const { name } = this.state;
+    const { canvasEmpty, name } = this.state;
     return (
       <div className={Classes.flexContainer}>
         <div className={Classes.subheader}>Player Info</div>
         <div className={Classes.description}>Pick a name and draw an avatar for yourself.</div>
-        <Canvas ref={this.refHandler.canvas} />
+        <Canvas ref={this.refHandler.canvas} onCanvasChange={this.handleCanvasChange}/>
         <Input value={name} onChange={this.handleNameChange} placeholder="Player name" />
         <div className={Classes.flexPad} />
         <div>
-          <Button text="Submit" onClick={this.handleSubmit} />
+          <Button text="Submit" disabled={canvasEmpty || name.length === 0} onClick={this.handleSubmit} />
         </div>
       </div>
     );
+  }
+
+  private handleCanvasChange = (canvasEmpty: boolean) => {
+    this.setState({ canvasEmpty });
   }
 
   private handleNameChange = (name: string) => {

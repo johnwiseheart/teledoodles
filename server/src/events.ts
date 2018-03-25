@@ -118,6 +118,7 @@ export const handleJoinMessage = (game: IGame, message: IJoinMessage): IGame => 
   return produce(initialGame, newGame => {
     // Add user to game with readyState false
     newGame.players[playerId] = {
+      avatarFileId: message.payload.avatarFileId,
       books: [{ pages: [], id: playerId }], // array with empty book
       id: playerId,
       isReady: false,

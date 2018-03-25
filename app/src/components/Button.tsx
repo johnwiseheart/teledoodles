@@ -41,7 +41,7 @@ namespace Styles {
       boxShadow: Shadows.one,
       display: "block",
       lineHeight: "30px",
-      minHeight: "30px",
+      minHeight: "50px",
       textAlign: "center",
       textTransform: "uppercase",
     },

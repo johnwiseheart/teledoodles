@@ -11,7 +11,13 @@ export const uuidv4 = () => {
 };
 // tslint:enable:no-bitwise
 
-export const getPlayerInfo = () => {
+export interface IPlayerInfo {
+  avatarFileId: string;
+  username: string;
+  id: string;
+}
+
+export const getPlayerInfo = (): IPlayerInfo => {
   const playerInfo = localStorage.getItem("player");
   return playerInfo != null ? JSON.parse(playerInfo) : null;
 };

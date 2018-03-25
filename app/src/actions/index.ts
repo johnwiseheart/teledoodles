@@ -32,11 +32,11 @@ export const joinGame = (gameCode: string) => {
   return (dispatch: Dispatch<IStoreState>) => {
     const playerInfo = getPlayerInfo();
     if (playerInfo) {
-      const { id: playerId, username } = playerInfo;
+      const { avatarFileId, id: playerId, username } = playerInfo;
       dispatch(gameJoin({ gameCode }));
       dispatch(
         websocketConnect({
-          messages: [{ type: MessageType.JOIN, gameCode, playerId, payload: { username } }],
+          messages: [{ type: MessageType.JOIN, gameCode, playerId, payload: { avatarFileId, username } }],
         }),
       );
       dispatch(push(`/game/${gameCode}`));

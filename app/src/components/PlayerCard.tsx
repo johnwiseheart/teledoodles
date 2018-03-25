@@ -2,6 +2,7 @@ import * as classNames from "classnames";
 import { quote } from 'csx';
 import * as React from "react";
 import { IPlayer } from 'teledoodles-lib';
+import { S3ImageWrapper } from '.';
 import { classes, Classes, color, Colors, csstips, Shadows, style } from "../styles";
 import { Intent } from './utils';
 
@@ -10,9 +11,18 @@ export interface IPlayerCardProps {
 }
 
 export const PlayerCard = ({ player }: IPlayerCardProps) => {
+  const renderImage = (imgSrc: string) => {
+    return <img className={Styles.image} src={imgSrc} />;
+  };
+
+  const renderLoader = () => {
+    return <div className={Styles.image} />
+  };
+
   return (
     <div className={classes(Classes.panel, Styles.player(player.isReady))}>
-      {player.username}
+      <S3ImageWrapper imageId={player.avatarFileId} renderLoader={renderLoader} renderImage={renderImage} />
+      <div className={Styles.username}>{player.username}</div>
     </div>
   );
 };
@@ -31,7 +41,16 @@ namespace Styles {
         width: "5px",
       }
     },
-    height: "40px",
+    height: "60px",
     position: "relative",
-  }, csstips.flexRoot, csstips.center, csstips.padding(15))
+  }, csstips.flexRoot, csstips.center, csstips.padding(0, 5));
+
+  export const image = style({
+    height: "60px",
+    width: "60px",
+  });
+
+  export const username = style({
+    marginLeft: "5px",
+  })
 }

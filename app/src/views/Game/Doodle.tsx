@@ -30,7 +30,7 @@ export class Doodle extends React.Component<IDoodleProps, {}> {
       <div className={Classes.flexContainer}>
        <div className={Classes.subheader}>Doodle</div>
         <div className={Classes.description}>Doodle the word or phrase: {this.props.text}</div>
-        <Canvas ref={this.refHandler.canvas} onCanvasTouch={this.handleCanvasTouch} />
+        <Canvas ref={this.refHandler.canvas} onCanvasChange={this.handleCanvasChange} />
         <div className={Classes.flexPad} />
         <div>
           <Button text="Submit" disabled={isEmpty} onClick={this.handleSubmit} />
@@ -47,7 +47,7 @@ export class Doodle extends React.Component<IDoodleProps, {}> {
     }
   }
 
-  private handleCanvasTouch = (isEmpty: boolean) => {
+  private handleCanvasChange = (isEmpty: boolean) => {
     this.setState({ isEmpty });
   }
 }
