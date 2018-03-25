@@ -7,4 +7,4 @@ git push -d $GITHUB_URL gh-pages
 
 git add app/dist -f
 git commit --allow-empty -m "Commiting built assets for gh-pages"
-git subtree push --prefix packages/app/dist $GITHUB_URL gh-pages
+git subtree push --prefix app/dist $GITHUB_URL gh-pages
