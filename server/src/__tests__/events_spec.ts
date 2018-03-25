@@ -13,7 +13,13 @@ import {
   pageIsTextPage,
   PageType,
 } from "teledoodles-lib";
-import { handleAddPageMessage, handleJoinMessage, handleMessage, handleReadyMessage, handleStartMessage } from "../events";
+import {
+  handleAddPageMessage,
+  handleJoinMessage,
+  handleMessage,
+  handleReadyMessage,
+  handleStartMessage,
+} from "../events";
 import { initialState, IStoreState } from "../store";
 
 /*
@@ -47,6 +53,7 @@ const createPlayer = (
   username: string = "player1",
   isReady: boolean = false,
 ): IPlayer => ({
+  avatarFileId: "",
   books,
   id: "id",
   isReady,
@@ -68,15 +75,12 @@ const createReadyMessage = (
   type: MessageType.READY,
 });
 
-const createStartMessage = (
-  gameCode: string,
-  playerId: string,
-): IStartMessage => ({
+const createStartMessage = (gameCode: string, playerId: string): IStartMessage => ({
   gameCode,
   payload: {},
   playerId,
   type: MessageType.START,
-  });
+});
 
 const createAddPageMessage = (
   gameCode: string,
@@ -96,6 +100,7 @@ const createAddPageMessage = (
 const createJoinMessage = (gameCode: string, playerId: string, username: string): IJoinMessage => ({
   gameCode,
   payload: {
+    avatarFileId: "",
     username,
   },
   playerId,
@@ -114,7 +119,7 @@ describe("Test game creation", () => {
   beforeAll(() => {
     events = require("../events");
     events.sendGameInfo = jest.fn();
-    events.handleJoinMessage = jest.fn(handleJoinMessage)
+    events.handleJoinMessage = jest.fn(handleJoinMessage);
 
     // setup state
     const message: IJoinMessage = createJoinMessage(gameCode, playerId, username);
@@ -172,7 +177,7 @@ describe("Test game ready", () => {
   beforeAll(() => {
     events = require("../events");
     events.sendGameInfo = jest.fn();
-    events.handleReadyMessage = jest.fn(handleReadyMessage)
+    events.handleReadyMessage = jest.fn(handleReadyMessage);
 
     // join one player
     allGames = handleMessage(initialState, createJoinMessage(gameCode, playerId1, username1));
@@ -231,7 +236,7 @@ describe("Test game start", () => {
   beforeAll(() => {
     events = require("../events");
     events.sendGameInfo = jest.fn();
-    events.handleStartMessage = jest.fn(handleStartMessage)
+    events.handleStartMessage = jest.fn(handleStartMessage);
 
     // setup state
     allGames = handleMessage(initialState, createJoinMessage(gameCode, playerId1, username1));
@@ -252,7 +257,7 @@ describe("Test game start", () => {
       expect(player.prev).not.toBe(undefined);
       expect(player.next).not.toBe(undefined);
     });
-  })
+  });
 
   test("handleStartMessage was called", () => {
     expect(events.handleStartMessage).toBeCalled();
@@ -277,7 +282,7 @@ describe("Test game add page", () => {
   beforeAll(() => {
     events = require("../events");
     events.sendGameInfo = jest.fn();
-    events.handleAddPageMessage = jest.fn(handleAddPageMessage)
+    events.handleAddPageMessage = jest.fn(handleAddPageMessage);
 
     // setup state
     allGames = handleMessage(initialState, createJoinMessage(gameCode, playerId1, username1));
@@ -292,14 +297,18 @@ describe("Test game add page", () => {
       pageType: PageType.TEXT,
       playerId: playerId1,
       text: "Hello",
-    }
+    };
 
-    allGames = handleMessage(allGames, createAddPageMessage(gameCode, playerId1, playerId1, textPage));
-    expect(pageIsTextPage(allGames.games[gameCode].players[playerId2].books[1].pages[0])).toBeTruthy();
+    allGames = handleMessage(
+      allGames,
+      createAddPageMessage(gameCode, playerId1, playerId1, textPage),
+    );
+    expect(
+      pageIsTextPage(allGames.games[gameCode].players[playerId2].books[1].pages[0]),
+    ).toBeTruthy();
     expect(allGames.games[gameCode].players[playerId2].books[0].id).toBe(playerId2);
     expect(allGames.games[gameCode].players[playerId2].books[1].id).toBe(playerId1);
   });
-
 
   test("handleAddPageMessage was called", () => {
     expect(events.handleStartMessage).toBeCalled();
@@ -309,4 +318,3 @@ describe("Test game add page", () => {
     expect(events.sendGameInfo).toBeCalled();
   });
 });
-
