@@ -35,7 +35,7 @@
   },
   "scripts": {
     "dev": "webpack-serve --config serve.config.js",
-    "build": "webpack --mode production",
+    "build": "NODE_ENV=production webpack --mode production --env.NODE_ENV=production",
     "prettier": "prettier \"src/**/*.ts*\" --write"
   },
   "devDependencies": {

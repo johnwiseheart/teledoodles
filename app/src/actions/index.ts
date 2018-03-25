@@ -10,7 +10,7 @@ import {
   MessageType,
 } from "teledoodles-lib";
 import actionCreatorFactory from "typescript-fsa";
-import { SERVER_URL } from '../config';
+import { HTTP_PROTOCOL, SERVER_URL } from "../config";
 import { IStoreState, Message } from "../store";
 import { getPlayerInfo } from "../utils";
 
@@ -36,7 +36,9 @@ export const joinGame = (gameCode: string) => {
       dispatch(gameJoin({ gameCode }));
       dispatch(
         websocketConnect({
-          messages: [{ type: MessageType.JOIN, gameCode, playerId, payload: { avatarFileId, username } }],
+          messages: [
+            { type: MessageType.JOIN, gameCode, playerId, payload: { avatarFileId, username } },
+          ],
         }),
       );
       dispatch(push(`/game/${gameCode}`));
@@ -46,7 +48,7 @@ export const joinGame = (gameCode: string) => {
 
 export const newGame = () => {
   return (dispatch: Dispatch<IStoreState>) => {
-    return fetch("http://" + SERVER_URL + "/new")
+    return fetch(HTTP_PROTOCOL + SERVER_URL + "/new")
       .then((resp: Response) => resp.json())
       .then(json => {
         const { gameCode } = json;

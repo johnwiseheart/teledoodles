@@ -8,7 +8,7 @@ import {
   websocketOpen,
   websocketSend,
 } from "../actions";
-import { SERVER_URL } from '../config';
+import { SERVER_URL, WS_PROTOCOL } from "../config";
 
 let websocket: WebSocket;
 
@@ -19,7 +19,7 @@ export const middleware: Middleware = (store: MiddlewareAPI<void>) => (next: Dis
 ) => {
   if (isType(action, websocketConnect)) {
     // Configure the object
-    websocket = new WebSocket("ws://" + SERVER_URL + "/ws");
+    websocket = new WebSocket(WS_PROTOCOL + SERVER_URL + "/ws");
 
     // Attach the callbacks
     websocket.onopen = () => {
