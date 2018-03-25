@@ -10,10 +10,10 @@
     "lib"
   ],
   "devDependencies": {
-    "lerna": "^2.5.1",
     "prettier": "1.11.1"
   },
   "scripts": {
-    "build-app": "cd app; yarn build"
+    "build-app": "cd app; yarn build",
+    "build-lib": "cd lib; yarn build"
   }
 }
