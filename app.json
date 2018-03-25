@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dokku": {
-      "predeploy": "tsc -p ./server/tsconfig.json"
+      "predeploy": "yarn build-lib; tsc -p ./server/tsconfig.json"
     }
   }
 }
